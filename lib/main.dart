@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:location/location.dart';
 
 void main() {
@@ -93,6 +94,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
     print(
         "latitude: ${_locationData.latitude}\nlongitude: ${_locationData.longitude}");
+
+    List<geocoding.Location> locations =
+        await geocoding.locationFromAddress("Gronausestraat 710, Enschede");
+    for (final element in locations) {
+      print("latitude: ${element.latitude}\nlongitude: ${element.longitude}");
+    }
   }
 
   @override

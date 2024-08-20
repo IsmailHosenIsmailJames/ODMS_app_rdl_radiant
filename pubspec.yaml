@@ -12,6 +12,7 @@ dependencies:
   awesome_notifications_core: ^0.9.3
   flutter:
     sdk: flutter
+  geocoding: ^3.0.0
   google_maps_flutter: ^2.9.0
   location: ^7.0.0
   url_launcher: ^6.2.5
