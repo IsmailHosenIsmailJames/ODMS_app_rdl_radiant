@@ -1,12 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:geocoding/geocoding.dart' as geocoding;
-import 'package:location/location.dart';
+import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-void main() {
+import 'src/screens/auth/login/login_page.dart';
+import 'src/screens/permissions/cheak_and_request_permissions.dart';
+
+Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  runApp(const MyApp());
+  await Hive.initFlutter();
   runApp(const MyApp());
 }
 
@@ -15,93 +20,43 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
+    return GetMaterialApp(
+      theme: ThemeData.light().copyWith(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: Colors.purple,
+            shadowColor: Colors.transparent,
+          ),
+        ),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const InitPage(),
+      onInit: () async {
+        FlutterNativeSplash.remove();
+
+        final locationAlwaysStatus = await Permission.locationAlways.status;
+        if (locationAlwaysStatus.isGranted) {
+          await Get.off(() => const LoginPage());
+        } else {
+          await Get.off(() => const CheakAndRequestPermissions());
+        }
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  Future<void> _incrementCounter() async {
-    setState(() {
-      _counter++;
-    });
-    final location = Location();
-
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
-
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    _locationData = await location.getLocation();
-
-    print(
-        "latitude: ${_locationData.latitude}\nlongitude: ${_locationData.longitude}");
-
-    final locations =
-        await geocoding.locationFromAddress("Gronausestraat 710, Enschede");
-    for (final element in locations) {
-      print("latitude: ${element.latitude}\nlongitude: ${element.longitude}");
-    }
-  }
+class InitPage extends StatelessWidget {
+  const InitPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    FlutterNativeSplash.remove();
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
+    return const Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+        child: CupertinoActivityIndicator(
+          color: Colors.purple,
+          radius: 15,
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

@@ -15,6 +15,8 @@ dependencies:
     sdk: flutter
   flutter_native_splash: ^2.4.1
   flutter_polyline_points: ^2.1.0
+  fluttertoast: ^8.2.8
+  gap: ^3.0.1
   geocoding: ^3.0.0
   get: ^5.0.0-release-candidate-6
   google_maps_flutter: ^2.9.0
@@ -22,6 +24,9 @@ dependencies:
   hive_flutter: ^1.1.0
   http: ^1.2.2
   location: ^7.0.0
+  path_provider: ^2.1.4
+  permission_handler: ^11.3.1
+  simple_icons: ^10.1.3
   url_launcher: ^6.2.5
 
 dev_dependencies:
@@ -29,6 +34,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/allow_location.png
 
 
 flutter_native_splash:
