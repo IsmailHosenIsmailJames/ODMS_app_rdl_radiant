@@ -13,6 +13,7 @@ dependencies:
   dio: ^5.6.0
   flutter:
     sdk: flutter
+  flutter_native_splash: ^2.4.1
   flutter_polyline_points: ^2.1.0
   geocoding: ^3.0.0
   get: ^5.0.0-release-candidate-6
@@ -28,3 +29,16 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+
+flutter_native_splash:
+  color: "##D7D6DA"
+  image: assets/splash.png
+  color_dark: "##D7D6DA"
+  image_dark: assets/splash.png
+
+  android_12:
+    image: assets/splash.png
+    icon_background_color: "##D7D6DA"
+    image_dark: assets/splash.png
+    icon_background_color_dark: "##D7D6DA"
