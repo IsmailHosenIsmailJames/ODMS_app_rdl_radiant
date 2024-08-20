@@ -10,10 +10,16 @@ environment:
 dependencies:
   awesome_notifications: ^0.9.3+1
   awesome_notifications_core: ^0.9.3
+  dio: ^5.6.0
   flutter:
     sdk: flutter
+  flutter_polyline_points: ^2.1.0
   geocoding: ^3.0.0
+  get: ^5.0.0-release-candidate-6
   google_maps_flutter: ^2.9.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  http: ^1.2.2
   location: ^7.0.0
   url_launcher: ^6.2.5
 
