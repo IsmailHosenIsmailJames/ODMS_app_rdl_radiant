@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
+      defaultTransition: Transition.leftToRight,
       home: const InitPage(),
       onInit: () async {
         FlutterNativeSplash.remove();
