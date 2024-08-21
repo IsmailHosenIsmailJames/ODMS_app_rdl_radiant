@@ -1,9 +1,17 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:hive/hive.dart';
+import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
+import 'package:rdl_radiant/src/apis/apis.dart';
+
+import '../../core/login/login_function.dart';
+import '../auth/login/login_page.dart';
 
 class AttendencePage extends StatefulWidget {
   const AttendencePage({super.key});
@@ -23,6 +31,8 @@ class _AttendencePageState extends State<AttendencePage> {
     jsonUserdata = Map<String, dynamic>.from(jsonUserdata['result'] as Map);
     super.initState();
   }
+
+  bool sendingData = false;
 
   @override
   Widget build(BuildContext context) {
@@ -162,17 +172,77 @@ class _AttendencePageState extends State<AttendencePage> {
                       ),
                     ),
                   ),
-                  onPressed: () {},
-                  icon: const Icon(
-                    Icons.start,
-                  ),
-                  label: const Text(
-                    'Start Work',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  onPressed: () async {
+                    setState(() {
+                      sendingData = true;
+                    });
+                    final box = Hive.box('info');
+                    final data = await box.get('userData') as String;
+                    final decodeData =
+                        Map<String, dynamic>.from(jsonDecode(data) as Map);
+                    final uri = Uri.parse(
+                      base + startWorkPath,
+                    );
+                    final request = http.MultipartRequest('POST', uri);
+
+                    request.fields['sap_id'] =
+                        // ignore: avoid_dynamic_calls
+                        decodeData['result']['sap_id'].toString();
+                    final location = Location();
+
+                    final locationData = await location.getLocation();
+
+                    request.fields['start_latitude'] =
+                        locationData.latitude.toString();
+
+                    request.fields['start_longitude'] =
+                        locationData.longitude.toString();
+                    final response = await request.send();
+                    setState(() {
+                      sendingData = false;
+                    });
+                    if (response.statusCode == 200) {
+                      unawaited(Fluttertoast.showToast(msg: 'Successfull'));
+                      final userLoginDataCridential = Map<String, dynamic>.from(
+                        Hive.box('info').get(
+                          'userLoginCradintial',
+                          defaultValue: Map<String, dynamic>.from({}),
+                        ) as Map,
+                      );
+                      if (userLoginDataCridential.isNotEmpty) {
+                        unawaited(
+                          loginAndGetJsonResponse(userLoginDataCridential).then(
+                            (value) async {
+                              await analyzeResponseLogin(
+                                value,
+                                userLoginDataCridential,
+                              );
+                            },
+                          ),
+                        );
+                      }
+                    } else {
+                      unawaited(
+                        Fluttertoast.showToast(msg: 'Something went worng'),
+                      );
+                    }
+                  },
+                  icon: sendingData
+                      ? null
+                      : const Icon(
+                          Icons.start,
+                        ),
+                  label: sendingData
+                      ? const CircularProgressIndicator(
+                          color: Colors.white,
+                        )
+                      : const Text(
+                          'Start Work',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                 ),
               ),
             ],
