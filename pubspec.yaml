@@ -20,6 +20,7 @@ dependencies:
   flutter_native_splash: ^2.4.1
   flutter_polyline_points: ^2.1.0
   fluttertoast: ^8.2.8
+  font_awesome_flutter: ^10.7.0
   gap: ^3.0.1
   geocoding: ^3.0.0
   get: ^5.0.0-release-candidate-6
@@ -44,6 +45,10 @@ flutter:
     - assets/allow_location.png
     - assets/ic_logo_color.png
     - assets/No_Internet_Connection.png
+    - assets/delivery-truck.png
+    - assets/delivery_done.png
+    - assets/cash_collection.png
+    - assets/delivery_back.png
 
 
 flutter_native_splash:

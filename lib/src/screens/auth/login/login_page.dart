@@ -235,13 +235,13 @@ Future<void> analyzeResponseLogin(
         if (locationAlwaysStatus.isGranted) {
           if ((jsonMapData['is_start_work'] ?? false) == true) {
             unawaited(
-              Get.to(
+              Get.offAll(
                 () => const HomePage(),
               ),
             );
           } else {
             unawaited(
-              Get.to(
+              Get.offAll(
                 () => const AttendencePage(),
               ),
             );
@@ -267,7 +267,7 @@ Future<void> analyzeResponseLogin(
         );
         if (Get.currentRoute != 'LoginPage') {
           unawaited(
-            Get.to(
+            Get.offAll(
               () => const LoginPage(),
             ),
           );
@@ -282,7 +282,7 @@ Future<void> analyzeResponseLogin(
       );
       if (Get.currentRoute != 'LoginPage') {
         unawaited(
-          Get.to(
+          Get.offAll(
             () => const LoginPage(),
           ),
         );
