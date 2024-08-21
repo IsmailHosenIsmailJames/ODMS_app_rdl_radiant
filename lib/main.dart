@@ -9,6 +9,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:rdl_radiant/src/screens/permissions/internet_connection_off_notify.dart';
 
+import 'src/core/login/login_function.dart';
 import 'src/screens/auth/login/login_page.dart';
 import 'src/screens/permissions/cheak_and_request_permissions.dart';
 
@@ -47,11 +48,31 @@ class MyApp extends StatelessWidget {
           if (connectivityResult.contains(ConnectivityResult.mobile) ||
               connectivityResult.contains(ConnectivityResult.ethernet) ||
               connectivityResult.contains(ConnectivityResult.wifi)) {
-            unawaited(
-              Get.to(
-                () => const LoginPage(),
-              ),
+            final userLoginDataCridential = Map<String, dynamic>.from(
+              Hive.box('info').get(
+                'userLoginCradintial',
+                defaultValue: Map<String, dynamic>.from({}),
+              ) as Map,
             );
+            if (userLoginDataCridential.isNotEmpty) {
+              unawaited(
+                loginAndGetJsonResponse(userLoginDataCridential).then(
+                  (value) async {
+                    await analyzeResponseLogin(
+                      value,
+                      userLoginDataCridential,
+                    );
+                  },
+                ),
+              );
+            } else {
+              unawaited(
+                Get.to(
+                  () => const LoginPage(),
+                ),
+              );
+            }
+            return;
           } else {
             unawaited(
               Get.to(
@@ -59,8 +80,6 @@ class MyApp extends StatelessWidget {
               ),
             );
           }
-
-          await Get.off(() => const LoginPage());
         } else {
           await Get.off(() => const CheakAndRequestPermissions());
         }

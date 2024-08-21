@@ -31,26 +31,6 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
-  @override
-  void initState() {
-    final userLoginDataCridential = Map<String, dynamic>.from(
-      Hive.box('info').get(
-        'userLoginCradintial',
-        defaultValue: Map<String, dynamic>.from({}),
-      ) as Map,
-    );
-    if (userLoginDataCridential.isNotEmpty) {
-      loginAndGetJsonResponse(userLoginDataCridential).then(
-        (value) async {
-          await analyzeResponseLogin(
-            value,
-            userLoginDataCridential,
-          );
-        },
-      );
-    }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -278,6 +258,13 @@ Future<void> analyzeResponseLogin(
             toastLength: Toast.LENGTH_LONG,
           ),
         );
+        if (Get.currentRoute != 'LoginPage') {
+          unawaited(
+            Get.to(
+              () => const LoginPage(),
+            ),
+          );
+        }
       }
     } catch (e) {
       unawaited(
@@ -286,6 +273,13 @@ Future<void> analyzeResponseLogin(
           toastLength: Toast.LENGTH_LONG,
         ),
       );
+      if (Get.currentRoute != 'LoginPage') {
+        unawaited(
+          Get.to(
+            () => const LoginPage(),
+          ),
+        );
+      }
     }
   }
 }
