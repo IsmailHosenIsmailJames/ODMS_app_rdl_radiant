@@ -15,6 +15,7 @@ dependencies:
   email_validator: ^3.0.0
   flutter:
     sdk: flutter
+  flutter_animate: ^4.5.0
   flutter_native_splash: ^2.4.1
   flutter_polyline_points: ^2.1.0
   fluttertoast: ^8.2.8
