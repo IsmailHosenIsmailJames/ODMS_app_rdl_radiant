@@ -1,4 +1,4 @@
-package com.example.rdl_radiant;
+package com.ismail.rdl_radiant;
 
 import io.flutter.embedding.android.FlutterActivity;
 

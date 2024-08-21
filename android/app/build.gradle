@@ -24,10 +24,10 @@ if (flutterVersionName == null) {
 
 android {
     compileSdk = 34
-    namespace = "com.example.rdl_radiant"
+    namespace = "com.ismail.rdl_radiant"
 
     defaultConfig {
-        applicationId = "com.example.rdl_radiant"
+        applicationId = "com.ismail.rdl_radiant"
         minSdk = 21
         targetSdk = 34
         versionCode = flutterVersionCode.toInteger()
