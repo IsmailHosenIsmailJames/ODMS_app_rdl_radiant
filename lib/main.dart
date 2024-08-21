@@ -6,12 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:rdl_radiant/src/screens/permissions/internet_connection_off_notify.dart';
 
 import 'src/core/login/login_function.dart';
 import 'src/screens/auth/login/login_page.dart';
-import 'src/screens/permissions/cheak_and_request_permissions.dart';
 
 Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -41,47 +39,41 @@ class MyApp extends StatelessWidget {
       home: const InitPage(),
       onInit: () async {
         FlutterNativeSplash.remove();
-
-        final locationAlwaysStatus = await Permission.locationAlways.status;
-        if (locationAlwaysStatus.isGranted) {
-          final connectivityResult = await Connectivity().checkConnectivity();
-          if (connectivityResult.contains(ConnectivityResult.mobile) ||
-              connectivityResult.contains(ConnectivityResult.ethernet) ||
-              connectivityResult.contains(ConnectivityResult.wifi)) {
-            final userLoginDataCridential = Map<String, dynamic>.from(
-              Hive.box('info').get(
-                'userLoginCradintial',
-                defaultValue: Map<String, dynamic>.from({}),
-              ) as Map,
+        final connectivityResult = await Connectivity().checkConnectivity();
+        if (connectivityResult.contains(ConnectivityResult.mobile) ||
+            connectivityResult.contains(ConnectivityResult.ethernet) ||
+            connectivityResult.contains(ConnectivityResult.wifi)) {
+          final userLoginDataCridential = Map<String, dynamic>.from(
+            Hive.box('info').get(
+              'userLoginCradintial',
+              defaultValue: Map<String, dynamic>.from({}),
+            ) as Map,
+          );
+          if (userLoginDataCridential.isNotEmpty) {
+            unawaited(
+              loginAndGetJsonResponse(userLoginDataCridential).then(
+                (value) async {
+                  await analyzeResponseLogin(
+                    value,
+                    userLoginDataCridential,
+                  );
+                },
+              ),
             );
-            if (userLoginDataCridential.isNotEmpty) {
-              unawaited(
-                loginAndGetJsonResponse(userLoginDataCridential).then(
-                  (value) async {
-                    await analyzeResponseLogin(
-                      value,
-                      userLoginDataCridential,
-                    );
-                  },
-                ),
-              );
-            } else {
-              unawaited(
-                Get.to(
-                  () => const LoginPage(),
-                ),
-              );
-            }
-            return;
           } else {
             unawaited(
               Get.to(
-                () => const InternetConnectionOffNotify(),
+                () => const LoginPage(),
               ),
             );
           }
+          return;
         } else {
-          await Get.off(() => const CheakAndRequestPermissions());
+          unawaited(
+            Get.to(
+              () => const InternetConnectionOffNotify(),
+            ),
+          );
         }
       },
     );

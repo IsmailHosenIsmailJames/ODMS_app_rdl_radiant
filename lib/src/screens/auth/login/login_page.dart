@@ -8,11 +8,13 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:rdl_radiant/src/core/login/login_function.dart';
 import 'package:rdl_radiant/src/screens/attendence/attendence_page.dart';
 import 'package:rdl_radiant/src/screens/home/home_page.dart';
 
 import '../../../theme/textfield_theme.dart';
+import '../../permissions/cheak_and_request_permissions.dart';
 import '../register/register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -229,18 +231,23 @@ Future<void> analyzeResponseLogin(
           'userLoginCradintial',
           userCrid,
         );
-        if ((jsonMapData['is_start_work'] ?? false) == true) {
-          unawaited(
-            Get.to(
-              () => const HomePage(),
-            ),
-          );
+        final locationAlwaysStatus = await Permission.locationAlways.status;
+        if (locationAlwaysStatus.isGranted) {
+          if ((jsonMapData['is_start_work'] ?? false) == true) {
+            unawaited(
+              Get.to(
+                () => const HomePage(),
+              ),
+            );
+          } else {
+            unawaited(
+              Get.to(
+                () => const AttendencePage(),
+              ),
+            );
+          }
         } else {
-          unawaited(
-            Get.to(
-              () => const AttendencePage(),
-            ),
-          );
+          await Get.off(() => const CheakAndRequestPermissions());
         }
         if (kDebugMode) {
           print(response.body);
