@@ -1,10 +1,15 @@
-import 'package:email_validator/email_validator.dart';
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:rdl_radiant/src/core/login/login_function.dart';
 
+import '../../../theme/textfield_theme.dart';
 import '../register/register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -23,12 +28,6 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
-
-  TextStyle textStyleForField = TextStyle(
-    fontWeight: FontWeight.w500,
-    fontSize: 16,
-    color: Colors.grey.shade800,
-  );
 
   bool isSignUp = true;
   @override
@@ -71,30 +70,29 @@ class _LoginPageState extends State<LoginPage> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                 ),
-                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(10),
                 child: Form(
                   key: formKey,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                        decoration: textFiendBoxDecoration,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 8,
                         ),
                         child: TextFormField(
                           validator: (value) {
-                            if (EmailValidator.validate(value ?? '')) {
-                              return null;
+                            if (int.tryParse(value ?? '') == null) {
+                              return 'SAP ID is not valid';
                             } else {
-                              return 'Email is not valid';
+                              return null;
                             }
                           },
                           autovalidateMode: AutovalidateMode.onUserInteraction,
+                          keyboardType: TextInputType.number,
                           focusNode: sapIDFocusNode,
                           controller: sapIDController,
                           decoration: const InputDecoration(
@@ -102,28 +100,25 @@ class _LoginPageState extends State<LoginPage> {
                             hintText: 'SAP ID',
                           ),
                           style: textStyleForField,
-                          onChanged: (value) {},
                         ),
                       ),
                       const Gap(10),
                       Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                        decoration: textFiendBoxDecoration,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 8,
                         ),
                         child: TextFormField(
                           validator: (value) {
-                            if ((value ?? '').length >= 8) {
+                            if ((value ?? '').length >= 4) {
                               return null;
                             } else {
                               return 'Password is short';
                             }
                           },
                           autovalidateMode: AutovalidateMode.onUserInteraction,
+                          keyboardType: TextInputType.visiblePassword,
                           focusNode: passwordFocusNode,
                           controller: passwordController,
                           decoration: const InputDecoration(
@@ -140,19 +135,61 @@ class _LoginPageState extends State<LoginPage> {
                         height: 64,
                         child: ElevatedButton(
                           onPressed: () async {
-                            final response = await loginAndGetJsonResponse(
-                              {
-                                'sap_id': sapIDController.text.trim(),
-                                'password': passwordController.text.trim(),
-                              },
-                            );
-                            if (response == null) {
-                              if (kDebugMode) {
-                                print('Response was null');
-                              }
-                            } else {
-                              if (kDebugMode) {
-                                print(response.body);
+                            if (formKey.currentState!.validate()) {
+                              final response = await loginAndGetJsonResponse(
+                                {
+                                  'sap_id': sapIDController.text.trim(),
+                                  'password': passwordController.text.trim(),
+                                },
+                              );
+                              if (response == null) {
+                                if (kDebugMode) {
+                                  print('Response was null');
+                                }
+                              } else {
+                                try {
+                                  final jsonMapData = Map<String, dynamic>.from(
+                                    jsonDecode(response.body) as Map,
+                                  );
+                                  if ((jsonMapData['success'] ?? false) ==
+                                      true) {
+                                    final box = Hive.box('info');
+                                    await box.put('userData', response.body);
+                                    await box.put(
+                                      'userLoginCradintial',
+                                      {
+                                        'sap_id': sapIDController.text.trim(),
+                                        'password':
+                                            passwordController.text.trim(),
+                                      },
+                                    );
+                                    if (kDebugMode) {
+                                      print(response.body);
+                                    }
+                                    unawaited(
+                                      Fluttertoast.showToast(
+                                        msg: 'Login Successfull',
+                                        toastLength: Toast.LENGTH_LONG,
+                                      ),
+                                    );
+                                  } else {
+                                    unawaited(
+                                      Fluttertoast.showToast(
+                                        msg: (jsonMapData['message'] ??
+                                                'Something Went Worng')
+                                            .toString(),
+                                        toastLength: Toast.LENGTH_LONG,
+                                      ),
+                                    );
+                                  }
+                                } catch (e) {
+                                  unawaited(
+                                    Fluttertoast.showToast(
+                                      msg: 'Something Went Worng',
+                                      toastLength: Toast.LENGTH_LONG,
+                                    ),
+                                  );
+                                }
                               }
                             }
                           },
