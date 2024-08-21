@@ -1,0 +1,13 @@
+{
+    "delivery_remaining": 8,
+    "delivery_done": 0,
+    "cash_remaining": 0,
+    "cash_done": 0,
+    "sap_id": 50009,
+    "total_gate_pass_amount": 8785.06,
+    "total_collection_amount": 0.0,
+    "total_return_amount": 0.0,
+    "total_return_quantity": 0.0,
+    "due_amount_total": null,
+    "previous_day_due": 0
+  }
