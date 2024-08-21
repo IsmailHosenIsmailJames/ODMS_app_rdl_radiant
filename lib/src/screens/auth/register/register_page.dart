@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
@@ -279,7 +280,23 @@ class _RegisterPageState extends State<RegisterPage> {
                                 );
                                 return;
                               }
-                              print(
+                              if (kDebugMode) {
+                                print(
+                                  {
+                                    'sap_id': int.parse(
+                                      sapCodeController.text.trim(),
+                                    ),
+                                    'full_name': fullNameController.text.trim(),
+                                    'mobile_number':
+                                        phoneNumberController.text.trim(),
+                                    'user_type': userType,
+                                    'password':
+                                        confirmPasswordController.text.trim(),
+                                  },
+                                );
+                              }
+
+                              await registationAndGetJsonResponse(
                                 {
                                   'sap_id':
                                       int.parse(sapCodeController.text.trim()),
@@ -290,18 +307,18 @@ class _RegisterPageState extends State<RegisterPage> {
                                   'password':
                                       confirmPasswordController.text.trim(),
                                 },
-                              );
-                              final response =
-                                  await registationAndGetJsonResponse(
-                                {
-                                  'sap_id':
-                                      int.parse(sapCodeController.text.trim()),
-                                  'full_name': fullNameController.text.trim(),
-                                  'mobile_number':
-                                      phoneNumberController.text.trim(),
-                                  'user_type': userType,
-                                  'password':
-                                      confirmPasswordController.text.trim(),
+                              ).then(
+                                (value) async {
+                                  await analyzeResponseLogin(
+                                    value,
+                                    {
+                                      'sap_id': int.parse(
+                                        sapCodeController.text.trim(),
+                                      ),
+                                      'password':
+                                          confirmPasswordController.text.trim(),
+                                    },
+                                  );
                                 },
                               );
                             }

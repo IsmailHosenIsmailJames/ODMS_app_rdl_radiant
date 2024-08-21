@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:rdl_radiant/main.dart';
+import 'package:rdl_radiant/src/screens/auth/login/login_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
               await Hive.openBox('info');
               unawaited(
                 Get.offAll(
-                  () => const InitPage(),
+                  () => const LoginPage(),
                 ),
               );
             },

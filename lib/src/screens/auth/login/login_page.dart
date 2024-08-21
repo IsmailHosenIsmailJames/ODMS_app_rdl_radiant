@@ -7,7 +7,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:rdl_radiant/src/core/login/login_function.dart';
+import 'package:rdl_radiant/src/screens/attendence/attendence_page.dart';
+import 'package:rdl_radiant/src/screens/home/home_page.dart';
 
 import '../../../theme/textfield_theme.dart';
 import '../register/register_page.dart';
@@ -28,8 +31,27 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
+  @override
+  void initState() {
+    final userLoginDataCridential = Map<String, dynamic>.from(
+      Hive.box('info').get(
+        'userLoginCradintial',
+        defaultValue: Map<String, dynamic>.from({}),
+      ) as Map,
+    );
+    if (userLoginDataCridential.isNotEmpty) {
+      loginAndGetJsonResponse(userLoginDataCridential).then(
+        (value) async {
+          await analyzeResponseLogin(
+            value,
+            userLoginDataCridential,
+          );
+        },
+      );
+    }
+    super.initState();
+  }
 
-  bool isSignUp = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,55 +164,13 @@ class _LoginPageState extends State<LoginPage> {
                                   'password': passwordController.text.trim(),
                                 },
                               );
-                              if (response == null) {
-                                if (kDebugMode) {
-                                  print('Response was null');
-                                }
-                              } else {
-                                try {
-                                  final jsonMapData = Map<String, dynamic>.from(
-                                    jsonDecode(response.body) as Map,
-                                  );
-                                  if ((jsonMapData['success'] ?? false) ==
-                                      true) {
-                                    final box = Hive.box('info');
-                                    await box.put('userData', response.body);
-                                    await box.put(
-                                      'userLoginCradintial',
-                                      {
-                                        'sap_id': sapIDController.text.trim(),
-                                        'password':
-                                            passwordController.text.trim(),
-                                      },
-                                    );
-                                    if (kDebugMode) {
-                                      print(response.body);
-                                    }
-                                    unawaited(
-                                      Fluttertoast.showToast(
-                                        msg: 'Login Successfull',
-                                        toastLength: Toast.LENGTH_LONG,
-                                      ),
-                                    );
-                                  } else {
-                                    unawaited(
-                                      Fluttertoast.showToast(
-                                        msg: (jsonMapData['message'] ??
-                                                'Something Went Worng')
-                                            .toString(),
-                                        toastLength: Toast.LENGTH_LONG,
-                                      ),
-                                    );
-                                  }
-                                } catch (e) {
-                                  unawaited(
-                                    Fluttertoast.showToast(
-                                      msg: 'Something Went Worng',
-                                      toastLength: Toast.LENGTH_LONG,
-                                    ),
-                                  );
-                                }
-                              }
+                              await analyzeResponseLogin(
+                                response,
+                                {
+                                  'sap_id': sapIDController.text.trim(),
+                                  'password': passwordController.text.trim(),
+                                },
+                              );
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -246,5 +226,66 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+}
+
+Future<void> analyzeResponseLogin(
+  http.Response? response,
+  Map<String, dynamic> userCrid,
+) async {
+  if (response == null) {
+    if (kDebugMode) {
+      print('Response was null');
+    }
+  } else {
+    try {
+      final jsonMapData = Map<String, dynamic>.from(
+        jsonDecode(response.body) as Map,
+      );
+      if ((jsonMapData['success'] ?? false) == true) {
+        final box = Hive.box('info');
+        await box.put('userData', response.body);
+        await box.put(
+          'userLoginCradintial',
+          userCrid,
+        );
+        if ((jsonMapData['is_start_work'] ?? false) == true) {
+          unawaited(
+            Get.to(
+              () => const HomePage(),
+            ),
+          );
+        } else {
+          unawaited(
+            Get.to(
+              () => const AttendencePage(),
+            ),
+          );
+        }
+        if (kDebugMode) {
+          print(response.body);
+        }
+        unawaited(
+          Fluttertoast.showToast(
+            msg: 'Login Successfull',
+            toastLength: Toast.LENGTH_LONG,
+          ),
+        );
+      } else {
+        unawaited(
+          Fluttertoast.showToast(
+            msg: (jsonMapData['message'] ?? 'Something Went Worng').toString(),
+            toastLength: Toast.LENGTH_LONG,
+          ),
+        );
+      }
+    } catch (e) {
+      unawaited(
+        Fluttertoast.showToast(
+          msg: 'Something Went Worng',
+          toastLength: Toast.LENGTH_LONG,
+        ),
+      );
+    }
   }
 }
