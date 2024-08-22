@@ -17,6 +17,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.0
+  flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.4.1
   flutter_polyline_points: ^2.1.0
   fluttertoast: ^8.2.8
@@ -30,7 +31,8 @@ dependencies:
   http: ^1.2.2
   location: ^7.0.0
   path_provider: ^2.1.4
-  permission_handler: ^11.3.1
+  # permission_handler: ^11.3.1
+  rive: ^0.13.12
   simple_icons: ^10.1.3
   url_launcher: ^6.2.5
   webview_flutter: ^4.9.0
@@ -49,6 +51,7 @@ flutter:
     - assets/delivery_done.png
     - assets/cash_collection.png
     - assets/delivery_back.png
+    - assets/animations/bubnly.riv
 
 
 flutter_native_splash:
@@ -62,3 +65,9 @@ flutter_native_splash:
     icon_background_color: "##D7D6DA"
     image_dark: assets/splash.png
     icon_background_color_dark: "##D7D6DA"
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: false
+  image_path: "assets/logo.png"
+  min_sdk_android: 21
