@@ -176,21 +176,18 @@ class _AttendenceEveningState extends State<AttendenceEvening> {
                         Map<String, dynamic>.from(jsonDecode(data) as Map);
                     final uri = Uri.parse(
                       // ignore: avoid_dynamic_calls
-                      '$base$startWorkPath/${decodeData['result']['sap_id']}',
+                      '$base$endWorkPath/${decodeData['result']['sap_id']}',
                     );
                     final request = http.MultipartRequest('PUT', uri);
 
-                    request.fields['sap_id'] =
-                        // ignore: avoid_dynamic_calls
-                        decodeData['result']['sap_id'].toString();
                     final location = Location();
 
                     final locationData = await location.getLocation();
 
-                    request.fields['start_latitude'] =
+                    request.fields['end_latitude'] =
                         locationData.latitude.toString();
 
-                    request.fields['start_longitude'] =
+                    request.fields['end_longitude'] =
                         locationData.longitude.toString();
                     final response = await request.send();
                     setState(() {
@@ -217,6 +214,7 @@ class _AttendenceEveningState extends State<AttendenceEvening> {
                         );
                       }
                     } else {
+                      print(response.statusCode);
                       unawaited(
                         Fluttertoast.showToast(msg: 'Something went worng'),
                       );
