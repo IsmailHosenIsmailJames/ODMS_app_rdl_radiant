@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:location/location.dart';
 import 'package:rdl_radiant/src/screens/auth/login/login_page.dart';
 import 'package:simple_icons/simple_icons.dart';
 
@@ -63,8 +63,21 @@ class _CheakAndRequestPermissionsState
           const Gap(30),
           ElevatedButton.icon(
             onPressed: () async {
-              final status = await Permission.locationAlways.request();
-              if (status.isGranted) {
+              final location = Location();
+
+              var serviceEnabled = await location.serviceEnabled();
+              if (!serviceEnabled) {
+                serviceEnabled = await location.requestService();
+                if (!serviceEnabled) {
+                  return;
+                }
+              }
+
+              var status = await location.hasPermission();
+              if (status == PermissionStatus.denied) {
+                status = await location.requestPermission();
+              }
+              if (status == PermissionStatus.granted) {
                 unawaited(
                   Fluttertoast.showToast(
                     msg: 'You did allow location access',
@@ -76,7 +89,7 @@ class _CheakAndRequestPermissionsState
                     () => const LoginPage(),
                   ),
                 );
-              } else if (status.isDenied) {
+              } else if (status == PermissionStatus.denied) {
                 unawaited(
                   Fluttertoast.showToast(
                     msg: 'You denied location access',
@@ -86,17 +99,17 @@ class _CheakAndRequestPermissionsState
                 setState(() {
                   accestStatusText = 'You denied location access';
                 });
-              } else if (status.isRestricted) {
+              } else if (status == PermissionStatus.grantedLimited) {
                 unawaited(
                   Fluttertoast.showToast(
-                    msg: 'You restricted location access',
+                    msg: 'You Granted Limited location access',
                     toastLength: Toast.LENGTH_LONG,
                   ),
                 );
                 setState(() {
                   accestStatusText = 'You restricted location access';
                 });
-              } else if (status.isPermanentlyDenied) {
+              } else if (status == PermissionStatus.deniedForever) {
                 unawaited(
                   Fluttertoast.showToast(
                     msg: 'You permanently denied location access',

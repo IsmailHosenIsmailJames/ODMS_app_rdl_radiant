@@ -8,10 +8,11 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:permission_handler/permission_handler.dart';
+import 'package:location/location.dart';
 import 'package:rdl_radiant/src/core/login/login_function.dart';
 import 'package:rdl_radiant/src/screens/attendence/attendence_page.dart';
 import 'package:rdl_radiant/src/screens/home/home_page.dart';
+import 'package:rdl_radiant/src/screens/permissions/unable_to_connect.dart';
 
 import '../../../theme/textfield_theme.dart';
 import '../../permissions/cheak_and_request_permissions.dart';
@@ -219,6 +220,11 @@ Future<void> analyzeResponseLogin(
     if (kDebugMode) {
       print('Response was null');
     }
+    unawaited(
+      Get.to(
+        () => const UnableToConnect(),
+      ),
+    );
   } else {
     try {
       final jsonMapData = Map<String, dynamic>.from(
@@ -231,8 +237,19 @@ Future<void> analyzeResponseLogin(
           'userLoginCradintial',
           userCrid,
         );
-        final locationAlwaysStatus = await Permission.locationAlways.status;
-        if (locationAlwaysStatus.isGranted) {
+        final location = Location();
+
+        var serviceEnabled = await location.serviceEnabled();
+        if (!serviceEnabled) {
+          serviceEnabled = await location.requestService();
+          if (!serviceEnabled) {
+            return;
+          }
+        }
+
+        final locationAlwaysStatus = await location.hasPermission();
+
+        if (locationAlwaysStatus == PermissionStatus.granted) {
           if ((jsonMapData['is_start_work'] ?? false) == true) {
             unawaited(
               Get.offAll(

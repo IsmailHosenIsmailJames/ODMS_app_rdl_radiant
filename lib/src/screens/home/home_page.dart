@@ -4,6 +4,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -40,12 +41,14 @@ class _HomePageState extends State<HomePage> {
             letterSpacing: 2,
           ),
         ),
+        backgroundColor: Colors.blue.withOpacity(0.3),
       ),
       drawer: const Drawer(),
       body: MediaQuery(
         data: const MediaQueryData(textScaler: TextScaler.linear(0.85)),
         child: Column(
           children: [
+            const Gap(10),
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: Row(
@@ -57,13 +60,21 @@ class _HomePageState extends State<HomePage> {
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
-                  ),
+                  )
+                      .animate(onPlay: (controller) => controller.repeat())
+                      .shimmer(
+                        duration: 1200.ms,
+                        color: const Color.fromARGB(255, 45, 195, 250),
+                      )
+                      .animate()
+                      .fadeIn(duration: 1200.ms, curve: Curves.easeOutQuad)
+                      .slide(),
                   Text(
                     jsonUserdata['sap_id'].toString(),
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue,
+                      color: Colors.blue.shade900,
                     ),
                   ),
                 ],
@@ -93,6 +104,7 @@ class _HomePageState extends State<HomePage> {
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
+                          childAspectRatio: 0.8,
                           crossAxisSpacing: 10,
                           mainAxisSpacing: 10,
                         ),
@@ -146,44 +158,75 @@ class _HomePageState extends State<HomePage> {
 
   Widget getCardView(String count, Widget iconWidget, String titleText) {
     return Container(
+      padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(10),
+        gradient: const LinearGradient(
+          colors: [
+            Colors.deepPurple,
+            Colors.yellow,
+            Colors.deepOrange,
+          ],
+          begin: Alignment.bottomCenter,
+          end: Alignment.topCenter,
+        ),
+        borderRadius: BorderRadius.circular(11),
       ),
-      padding: const EdgeInsets.all(3),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Text(
-                  count,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Colors.blue.shade300,
+              Colors.blue.shade100,
+            ],
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: const EdgeInsets.all(3),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Text(
+                    count,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const Spacer(),
-          SizedBox(height: 60, width: 60, child: iconWidget),
-          const Spacer(),
-          Text(
-            titleText,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
+              ],
             ),
-          ),
-        ],
+            const Spacer(),
+            Container(
+              height: 80,
+              width: 80,
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                color: Colors.lightBlue.withOpacity(0.3),
+              ),
+              child: iconWidget,
+            ),
+            const Spacer(),
+            Text(
+              titleText,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
