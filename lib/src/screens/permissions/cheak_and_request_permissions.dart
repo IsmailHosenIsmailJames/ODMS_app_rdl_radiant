@@ -4,9 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:location/location.dart';
-import 'package:rdl_radiant/src/screens/auth/login/login_page.dart';
 import 'package:simple_icons/simple_icons.dart';
+
+import '../attendence/attendence_page.dart';
+import '../home/home_page.dart';
 
 class CheakAndRequestPermissions extends StatefulWidget {
   const CheakAndRequestPermissions({super.key});
@@ -84,11 +87,26 @@ class _CheakAndRequestPermissionsState
                     toastLength: Toast.LENGTH_LONG,
                   ),
                 );
-                unawaited(
-                  Get.off(
-                    () => const LoginPage(),
-                  ),
+                final userLoginDataCridential = Map<String, dynamic>.from(
+                  Hive.box('info').get(
+                    'userData',
+                    defaultValue: Map<String, dynamic>.from({}),
+                  ) as Map,
                 );
+                if ((userLoginDataCridential['is_start_work'] ?? false) ==
+                    true) {
+                  unawaited(
+                    Get.offAll(
+                      () => const HomePage(),
+                    ),
+                  );
+                } else {
+                  unawaited(
+                    Get.offAll(
+                      () => const AttendencePage(),
+                    ),
+                  );
+                }
               } else if (status == PermissionStatus.denied) {
                 unawaited(
                   Fluttertoast.showToast(
