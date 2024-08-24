@@ -5,11 +5,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:rdl_radiant/src/apis/apis.dart';
+import 'package:rdl_radiant/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
 import 'package:rdl_radiant/src/screens/home/drawer/drawer.dart';
+import 'package:socket_io_client/socket_io_client.dart' as socket_io;
+
+import '../../core/background/background_setup.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,6 +25,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final socketConnectionStateGetx = Get.put(SocketConnectionState());
+
   Map<String, dynamic> jsonUserdata = {};
 
   @override
@@ -28,7 +36,49 @@ class _HomePageState extends State<HomePage> {
       jsonDecode(box.get('userData', defaultValue: '{}') as String) as Map,
     );
     jsonUserdata = Map<String, dynamic>.from(jsonUserdata['result'] as Map);
+
+    FlutterForegroundTask.addTaskDataCallback(onReceiveTaskData);
+    final socket = socket_io.io(
+      'http://174.138.120.140:6044',
+      socket_io.OptionBuilder()
+          .setTransports(['websocket']) // for Flutter or Dart VM
+          .disableAutoConnect() // disable auto-connection
+          .build(),
+    );
+    socket.onConnect(
+      (_) {
+        if (kDebugMode) {
+          print('Connected');
+        }
+        socketConnectionStateGetx.socketConnected.value = true;
+      },
+    );
+    socket.onDisconnect(
+      (_) {
+        if (kDebugMode) {
+          print('Disconnected');
+        }
+        socketConnectionStateGetx.socketConnected.value = false;
+      },
+    );
+    socket.connect();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Request permissions and initialize the service.
+      requestPermissions().then((value) {
+        initService().then((value) {
+          startService();
+        });
+      });
+    });
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // Remove a callback to receive data sent from the TaskHandler.
+    FlutterForegroundTask.removeTaskDataCallback(onReceiveTaskData);
+    super.dispose();
   }
 
   @override

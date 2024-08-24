@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -88,9 +89,11 @@ class _CheakAndRequestPermissionsState
                   ),
                 );
                 final userLoginDataCridential = Map<String, dynamic>.from(
-                  Hive.box('info').get(
-                    'userData',
-                    defaultValue: Map<String, dynamic>.from({}),
+                  jsonDecode(
+                    Hive.box('info').get(
+                      'userData',
+                      defaultValue: '{}',
+                    ) as String,
                   ) as Map,
                 );
                 if ((userLoginDataCridential['is_start_work'] ?? false) ==
