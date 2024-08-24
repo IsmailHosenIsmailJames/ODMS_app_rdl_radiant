@@ -5,10 +5,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:location/location.dart';
 import 'package:rdl_radiant/src/core/login/login_function.dart';
 import 'package:rdl_radiant/src/screens/attendence/attendence_page.dart';
 import 'package:rdl_radiant/src/screens/home/home_page.dart';
@@ -237,19 +237,16 @@ Future<void> analyzeResponseLogin(
           'userLoginCradintial',
           userCrid,
         );
-        final location = Location();
 
-        var serviceEnabled = await location.serviceEnabled();
+        final serviceEnabled = await Geolocator.isLocationServiceEnabled();
         if (!serviceEnabled) {
-          serviceEnabled = await location.requestService();
-          if (!serviceEnabled) {
-            return;
-          }
+          return;
         }
 
-        final locationAlwaysStatus = await location.hasPermission();
+        final locationAlwaysStatus = await Geolocator.checkPermission();
 
-        if (locationAlwaysStatus == PermissionStatus.granted) {
+        if (locationAlwaysStatus == LocationPermission.whileInUse ||
+            locationAlwaysStatus == LocationPermission.always) {
           if ((jsonMapData['is_start_work'] ?? false) == true) {
             unawaited(
               Get.offAll(

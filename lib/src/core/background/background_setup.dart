@@ -1,4 +1,4 @@
-import 'dart:math';
+// ignore_for_file: avoid_redundant_argument_values
 
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
@@ -21,7 +21,7 @@ Future<void> initService() async {
       channelId: 'foreground_service',
       channelName: 'Foreground Service Notification',
       channelDescription:
-          'This notification appears when the foreground service is running.',
+          'This notification appears when the foreground location service is running.',
       channelImportance: NotificationChannelImportance.LOW,
       priority: NotificationPriority.LOW,
     ),
@@ -65,10 +65,4 @@ void onReceiveTaskData(Object data) {
   if (data is int) {
     print('count: $data');
   }
-}
-
-void sendRandomData() {
-  final Random random = Random();
-  final int data = random.nextInt(100);
-  FlutterForegroundTask.sendDataToTask(data);
 }

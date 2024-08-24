@@ -4,9 +4,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:location/location.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
 
 import '../../core/login/login_function.dart';
@@ -180,9 +180,7 @@ class _AttendenceEveningState extends State<AttendenceEvening> {
                     );
                     final request = http.MultipartRequest('PUT', uri);
 
-                    final location = Location();
-
-                    final locationData = await location.getLocation();
+                    final locationData = await Geolocator.getCurrentPosition();
 
                     request.fields['end_latitude'] =
                         locationData.latitude.toString();

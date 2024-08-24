@@ -1,6 +1,7 @@
 // The callback function should always be a top-level function.
 import 'package:flutter/foundation.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:rdl_radiant/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket;
@@ -27,8 +28,13 @@ class MyTaskHandler extends TaskHandler {
   @override
   Future<void> onRepeatEvent(DateTime timestamp) async {
     if (socket.io('http://174.138.120.140:6044').active) {
+      final position = await Geolocator.getCurrentPosition();
+      print("longitude: ${position.longitude}");
+      print("latitude: ${position.latitude}");
+      print("accuracy: ${position.accuracy}");
+      print("timestamp: ${position.timestamp}\n");
+
       count++;
-      print("Going to access location");
     }
 
     await FlutterForegroundTask.updateService(
