@@ -1,10 +1,12 @@
 // The callback function should always be a top-level function.
+// ignore_for_file: avoid_dynamic_calls
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:rdl_radiant/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
-import 'package:socket_io_client/socket_io_client.dart' as socket;
+import 'package:rdl_radiant/src/core/background/socket_manager/socket_manager.dart';
 
 @pragma('vm:entry-point')
 void startCallback() {
@@ -14,6 +16,7 @@ void startCallback() {
 
 class MyTaskHandler extends TaskHandler {
   final socketConnectionStateGetx = Get.put(SocketConnectionState());
+
   int count = 0;
 
   // Called when the task is started.
@@ -27,39 +30,49 @@ class MyTaskHandler extends TaskHandler {
   // Called every [ForegroundTaskOptions.interval] milliseconds.
   @override
   Future<void> onRepeatEvent(DateTime timestamp) async {
-    if (socket.io('http://174.138.120.140:6044').active) {
-      final position = await Geolocator.getCurrentPosition();
-      print("longitude: ${position.longitude}");
-      print("latitude: ${position.latitude}");
-      print("accuracy: ${position.accuracy}");
-      print("timestamp: ${position.timestamp}\n");
-
-      count++;
+    if (SocketManager().isConnected()) {
+      await Geolocator.getCurrentPosition().then(
+        (position) async {
+          count++;
+          await SocketManager().sendLocationViaSocket(
+            latitude: position.latitude,
+            longitude: position.longitude,
+            altitude: position.altitude,
+            accuracy: position.accuracy,
+            bearing: 0,
+            speed: position.speed,
+          );
+        },
+      );
     }
-
     await FlutterForegroundTask.updateService(
-      notificationText: 'Your location accessed: $count times',
+      notificationText: 'Your location is tracking!',
     );
-
     FlutterForegroundTask.sendDataToMain(count);
   }
 
   // Called when the task is destroyed.
   @override
   void onDestroy(DateTime timestamp) {
-    print('onDestroy');
+    if (kDebugMode) {
+      print('onDestroy');
+    }
   }
 
   // Called when data is sent using [FlutterForegroundTask.sendDataToTask].
   @override
   void onReceiveData(Object data) {
-    print('onReceiveData: $data');
+    if (kDebugMode) {
+      print('onReceiveData: $data');
+    }
   }
 
   // Called when the notification button is pressed.
   @override
   void onNotificationButtonPressed(String id) {
-    print('onNotificationButtonPressed: $id');
+    if (kDebugMode) {
+      print('onNotificationButtonPressed: $id');
+    }
   }
 
   // Called when the notification itself is pressed.
@@ -69,7 +82,9 @@ class MyTaskHandler extends TaskHandler {
   @override
   void onNotificationPressed() {
     FlutterForegroundTask.launchApp('/');
-    print('onNotificationPressed');
+    if (kDebugMode) {
+      print('onNotificationPressed');
+    }
   }
 
   // Called when the notification itself is dismissed.
@@ -78,6 +93,8 @@ class MyTaskHandler extends TaskHandler {
   // iOS: only work iOS 10+
   @override
   void onNotificationDismissed() {
-    print('onNotificationDismissed');
+    if (kDebugMode) {
+      print('onNotificationDismissed');
+    }
   }
 }

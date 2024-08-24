@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
@@ -212,7 +213,9 @@ class _AttendenceEveningState extends State<AttendenceEvening> {
                         );
                       }
                     } else {
-                      print(response.statusCode);
+                      if (kDebugMode) {
+                        print(response.statusCode);
+                      }
                       unawaited(
                         Fluttertoast.showToast(msg: 'Something went worng'),
                       );

@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_redundant_argument_values
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
 import 'background_task.dart';
@@ -8,7 +9,7 @@ Future<void> requestPermissions() async {
   // Android 13+, you need to allow notification permission to display foreground service notification.
   //
   // iOS: If you need notification, ask for permission.
-  final NotificationPermission notificationPermissionStatus =
+  final notificationPermissionStatus =
       await FlutterForegroundTask.checkNotificationPermission();
   if (notificationPermissionStatus != NotificationPermission.granted) {
     await FlutterForegroundTask.requestNotificationPermission();
@@ -30,7 +31,7 @@ Future<void> initService() async {
       playSound: false,
     ),
     foregroundTaskOptions: const ForegroundTaskOptions(
-      interval: 5000,
+      interval: 10000,
       isOnceEvent: false,
       autoRunOnBoot: true,
       autoRunOnMyPackageReplaced: true,
@@ -49,9 +50,6 @@ Future<ServiceRequestResult> startService() async {
       notificationTitle: 'Foreground Service is running',
       notificationText: 'Tap to return to the app',
       notificationIcon: null,
-      notificationButtons: [
-        const NotificationButton(id: 'btn_hello', text: 'hello'),
-      ],
       callback: startCallback,
     );
   }
@@ -63,6 +61,8 @@ Future<ServiceRequestResult> stopService() async {
 
 void onReceiveTaskData(Object data) {
   if (data is int) {
-    print('count: $data');
+    if (kDebugMode) {
+      print('count: $data');
+    }
   }
 }

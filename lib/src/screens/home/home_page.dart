@@ -12,8 +12,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:rdl_radiant/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
+import 'package:rdl_radiant/src/core/background/socket_manager/socket_manager.dart';
 import 'package:rdl_radiant/src/screens/home/drawer/drawer.dart';
-import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 
 import '../../core/background/background_setup.dart';
 
@@ -38,30 +38,8 @@ class _HomePageState extends State<HomePage> {
     jsonUserdata = Map<String, dynamic>.from(jsonUserdata['result'] as Map);
 
     FlutterForegroundTask.addTaskDataCallback(onReceiveTaskData);
-    final socket = socket_io.io(
-      'http://174.138.120.140:6044',
-      socket_io.OptionBuilder()
-          .setTransports(['websocket']) // for Flutter or Dart VM
-          .disableAutoConnect() // disable auto-connection
-          .build(),
-    );
-    socket.onConnect(
-      (_) {
-        if (kDebugMode) {
-          print('Connected');
-        }
-        socketConnectionStateGetx.socketConnected.value = true;
-      },
-    );
-    socket.onDisconnect(
-      (_) {
-        if (kDebugMode) {
-          print('Disconnected');
-        }
-        socketConnectionStateGetx.socketConnected.value = false;
-      },
-    );
-    socket.connect();
+    SocketManager().connect();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // Request permissions and initialize the service.
       requestPermissions().then((value) {

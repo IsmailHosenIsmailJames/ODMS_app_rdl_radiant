@@ -13,6 +13,7 @@ import 'package:rdl_radiant/src/core/login/login_function.dart';
 import 'package:rdl_radiant/src/screens/attendence/attendence_page.dart';
 import 'package:rdl_radiant/src/screens/home/home_page.dart';
 import 'package:rdl_radiant/src/screens/permissions/unable_to_connect.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../theme/textfield_theme.dart';
 import '../../permissions/cheak_and_request_permissions.dart';
@@ -238,6 +239,14 @@ Future<void> analyzeResponseLogin(
           userCrid,
         );
 
+        await SharedPreferences.getInstance().then((instance) async {
+          await instance.setString(
+            'userLoginCradintial',
+            jsonEncode(userCrid),
+          );
+          await instance.setString('userData', response.body);
+        });
+
         final serviceEnabled = await Geolocator.isLocationServiceEnabled();
         if (!serviceEnabled) {
           return;
@@ -266,6 +275,7 @@ Future<void> analyzeResponseLogin(
         if (kDebugMode) {
           print(response.body);
         }
+
         unawaited(
           Fluttertoast.showToast(
             msg: 'Login Successfull',
