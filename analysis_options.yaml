@@ -2,3 +2,4 @@ include: package:leancode_lint/analysis_options.yaml
 analyzer:
   errors:
     inference_failure_on_function_invocation: ignore
+    cascade_invocations: ignore

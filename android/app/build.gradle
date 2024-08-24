@@ -22,6 +22,12 @@ if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
 
+def args = ["-Xlint:deprecation", "-Xlint:unchecked", "-Werror"]
+
+project.getTasks().withType(JavaCompile) {
+    options.compilerArgs.addAll(args)
+}
+
 android {
     compileSdk = 34
     namespace = "com.ismail.rdl_radiant"
@@ -29,7 +35,7 @@ android {
     defaultConfig {
         applicationId = "com.ismail.rdl_radiant"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
     }
