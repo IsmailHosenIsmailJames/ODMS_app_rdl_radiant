@@ -5,10 +5,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:rdl_radiant/src/screens/home/invoice_list/invoice_list_page.dart';
 
 import '../../../apis/apis.dart';
 
@@ -24,6 +26,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
   List<Result> listOfReamingDelivery = [];
   late DeliveryRemaing deliveryRemaing;
   late List<Result> constListOfReamingDelivery = [];
+  DateTime dateTime = DateTime.now();
   @override
   void initState() {
     deliveryRemaing = widget.deliveryRemaing;
@@ -57,9 +60,10 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                    blurRadius: 10,
-                    color: Colors.grey.shade400,
-                    offset: const Offset(0, 5))
+                  blurRadius: 10,
+                  color: Colors.grey.shade400,
+                  offset: const Offset(0, 5),
+                ),
               ],
             ),
             child: SizedBox(
@@ -124,6 +128,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                                 DateTime.now())
                             .toIso8601String()
                             .split('T')[0],
+                        result: listOfReamingDelivery[index],
                       );
                     },
                   ),
@@ -185,6 +190,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
           deliveryRemaing = DeliveryRemaing.fromJson(response.body);
           listOfReamingDelivery = deliveryRemaing.result ?? [];
           constListOfReamingDelivery = deliveryRemaing.result ?? [];
+          dateTime = pickedDateTime!;
         });
       } else {
         if (kDebugMode) {
@@ -205,95 +211,105 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
     required String quantitty,
     required String amount,
     required String date,
+    required Result result,
   }) {
-    return Container(
-      margin: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.grey.shade300)),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding:
-                const EdgeInsets.only(top: 8, bottom: 2, left: 8, right: 8),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.2),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
+    return GestureDetector(
+      onTap: () {
+        Get.to(() => InvoiceListPage(
+              dateTime: dateTime,
+              result: result,
+              totalAmount: amount,
+            ));
+      },
+      child: Container(
+        margin: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade300)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding:
+                  const EdgeInsets.only(top: 8, bottom: 2, left: 8, right: 8),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.2),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    address,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                  Text("Date: $date"),
+                  const Gap(3),
+                ],
               ),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: const TextStyle(
-                      fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  address,
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey.shade700,
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      Text(
+                        "Total Invoice",
+                        style: style,
+                      ),
+                      Text(
+                        invoiceLen,
+                        style: style,
+                      ),
+                    ],
                   ),
-                ),
-                Text("Date: $date"),
-                const Gap(3),
-              ],
+                  Column(
+                    children: [
+                      Text(
+                        "Quantity",
+                        style: style,
+                      ),
+                      Text(
+                        quantitty,
+                        style: style,
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        "Amount",
+                        style: style,
+                      ),
+                      Text(
+                        amount,
+                        style: style,
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      "Total Invoice",
-                      style: style,
-                    ),
-                    Text(
-                      invoiceLen,
-                      style: style,
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      "Quantity",
-                      style: style,
-                    ),
-                    Text(
-                      invoiceLen,
-                      style: style,
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      "Amount",
-                      style: style,
-                    ),
-                    Text(
-                      invoiceLen,
-                      style: style,
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -1,1 +1,1 @@
-String baseSocketURL = 'http://174.138.120.140:6044';
+String baseSocketURL = 'http://192.168.194.221:6044';
