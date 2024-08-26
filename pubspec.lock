@@ -49,6 +49,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3"
+  bottom_picker:
+    dependency: "direct main"
+    description:
+      name: bottom_picker
+      sha256: "7c690407c6c489bc7c556858c3f1b804aac73c3a128559f328cc829ba12983ad"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.8.0"
   characters:
     dependency: transitive
     description:
@@ -476,7 +484,7 @@ packages:
     source: hosted
     version: "4.2.0"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf

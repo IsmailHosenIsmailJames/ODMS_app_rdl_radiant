@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -144,19 +145,42 @@ class _LoginPageState extends State<LoginPage> {
                         child: ElevatedButton(
                           onPressed: () async {
                             if (formKey.currentState!.validate()) {
+                              showCupertinoModalPopup(
+                                context: context,
+                                builder: (context) => Scaffold(
+                                  backgroundColor:
+                                      Colors.white.withOpacity(0.1),
+                                  body: const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Color.fromARGB(255, 74, 174, 255),
+                                    ),
+                                  ),
+                                ),
+                              );
+
                               final response = await loginAndGetJsonResponse(
                                 {
                                   'sap_id': sapIDController.text.trim(),
                                   'password': passwordController.text.trim(),
                                 },
                               );
-                              await analyzeResponseLogin(
-                                response,
-                                {
-                                  'sap_id': sapIDController.text.trim(),
-                                  'password': passwordController.text.trim(),
-                                },
-                              );
+
+                              if (Navigator.canPop(context)) {
+                                Navigator.pop(context);
+                              }
+                              if (response != null) {
+                                await analyzeResponseLogin(
+                                  response,
+                                  {
+                                    'sap_id': sapIDController.text.trim(),
+                                    'password': passwordController.text.trim(),
+                                  },
+                                );
+                              } else {
+                                Get.to(
+                                  () => const UnableToConnect(),
+                                );
+                              }
                             }
                           },
                           style: ElevatedButton.styleFrom(
