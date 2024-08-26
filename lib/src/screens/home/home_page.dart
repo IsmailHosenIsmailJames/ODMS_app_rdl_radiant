@@ -10,6 +10,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:rdl_radiant/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
 import 'package:rdl_radiant/src/core/background/socket_manager/socket_manager.dart';
@@ -179,7 +180,7 @@ class _HomePageState extends State<HomePage> {
                             onPressed: () async {
                               final box = Hive.box('info');
                               final url = Uri.parse(
-                                "$base$getDelivaryList/${box.get('sap_id')}?type=Remaining",
+                                "$base$getDelivaryList/${box.get('sap_id')}?type=Remaining&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
                               );
 
                               showCupertinoModalPopup(
@@ -206,7 +207,6 @@ class _HomePageState extends State<HomePage> {
                                   print("Got Delivery Remaning List");
                                   print(response.body);
                                 }
-                                DeliveryRemaing.fromJson(response.body).toMap();
 
                                 Get.to(
                                   () => DeliveryRemainingPage(
