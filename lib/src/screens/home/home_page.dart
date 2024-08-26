@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:rdl_radiant/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
 import 'package:rdl_radiant/src/core/background/socket_manager/socket_manager.dart';
+import 'package:rdl_radiant/src/screens/home/delivary_ramaining/delivery_remaining_page.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
 import 'package:rdl_radiant/src/screens/home/drawer/drawer.dart';
 
@@ -181,15 +182,44 @@ class _HomePageState extends State<HomePage> {
                                 "$base$getDelivaryList/${box.get('sap_id')}?type=Remaining",
                               );
 
+                              showCupertinoModalPopup(
+                                context: context,
+                                builder: (context) => Scaffold(
+                                  backgroundColor:
+                                      Colors.white.withOpacity(0.1),
+                                  body: const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Color.fromARGB(255, 74, 174, 255),
+                                    ),
+                                  ),
+                                ),
+                              );
+
                               final response = await http.get(url);
+
+                              if (Navigator.canPop(context)) {
+                                Navigator.pop(context);
+                              }
 
                               if (response.statusCode == 200) {
                                 if (kDebugMode) {
                                   print("Got Delivery Remaning List");
                                   print(response.body);
                                 }
+                                DeliveryRemaing.fromJson(response.body).toMap();
 
-                                DeliveryRemaing.fromJson(response.body);
+                                Get.to(
+                                  () => DeliveryRemainingPage(
+                                    deliveryRemaing:
+                                        DeliveryRemaing.fromJson(response.body),
+                                  ),
+                                );
+                              } else {
+                                if (kDebugMode) {
+                                  print(
+                                    "Delivery Remaining response error : ${response.statusCode}",
+                                  );
+                                }
                               }
                             },
                           ),

@@ -42,7 +42,7 @@ class Result {
   DateTime? billingDate;
   String? routeCode;
   String? routeName;
-  int? daCode;
+  double? daCode;
   String? daName;
   String? partner;
   String? customerName;
@@ -73,7 +73,7 @@ class Result {
     DateTime? billingDate,
     String? routeCode,
     String? routeName,
-    int? daCode,
+    double? daCode,
     String? daName,
     String? partner,
     String? customerName,
@@ -110,7 +110,7 @@ class Result {
             : DateTime.parse(json["billing_date"]),
         routeCode: json["route_code"],
         routeName: json["route_name"],
-        daCode: json["da_code"],
+        daCode: double.parse("${json['da_code'] ?? 0}"),
         daName: json["da_name"],
         partner: json["partner"],
         customerName: json["customer_name"],
@@ -151,7 +151,7 @@ class InvoiceList {
   DateTime? billingDate;
   String? routeCode;
   String? routeName;
-  int? daCode;
+  double? daCode;
   String? daName;
   String? partner;
   String? customerName;
@@ -160,7 +160,7 @@ class InvoiceList {
   dynamic latitude;
   dynamic longitude;
   String? deliveryStatus;
-  int? cashCollection;
+  double? cashCollection;
   String? cashCollectionStatus;
   String? gatePassNo;
   String? vehicleNo;
@@ -196,7 +196,7 @@ class InvoiceList {
     DateTime? billingDate,
     String? routeCode,
     String? routeName,
-    int? daCode,
+    double? daCode,
     String? daName,
     String? partner,
     String? customerName,
@@ -205,7 +205,7 @@ class InvoiceList {
     dynamic latitude,
     dynamic longitude,
     String? deliveryStatus,
-    int? cashCollection,
+    double? cashCollection,
     String? cashCollectionStatus,
     String? gatePassNo,
     String? vehicleNo,
@@ -248,7 +248,7 @@ class InvoiceList {
             : DateTime.parse(json["billing_date"]),
         routeCode: json["route_code"],
         routeName: json["route_name"],
-        daCode: json["da_code"],
+        daCode: double.parse("${json['da_code'] ?? 0}"),
         daName: json["da_name"],
         partner: json["partner"],
         customerName: json["customer_name"],
@@ -257,7 +257,7 @@ class InvoiceList {
         latitude: json["latitude"],
         longitude: json["longitude"],
         deliveryStatus: json["delivery_status"],
-        cashCollection: json["cash_collection"],
+        cashCollection: double.parse("${json['cash_collection'] ?? 0}"),
         cashCollectionStatus: json["cash_collection_status"],
         gatePassNo: json["gate_pass_no"],
         vehicleNo: json["vehicle_no"],
@@ -298,7 +298,7 @@ class InvoiceList {
 class ProductList {
   dynamic id;
   String? matnr;
-  int? quantity;
+  double? quantity;
   double? tp;
   double? vat;
   double? netVal;
@@ -306,10 +306,10 @@ class ProductList {
   String? materialName;
   String? brandDescription;
   String? brandName;
-  int? deliveryQuantity;
-  int? deliveryNetVal;
-  int? returnQuantity;
-  int? returnNetVal;
+  double? deliveryQuantity;
+  double? deliveryNetVal;
+  double? returnQuantity;
+  double? returnNetVal;
 
   ProductList({
     this.id,
@@ -331,7 +331,7 @@ class ProductList {
   ProductList copyWith({
     dynamic id,
     String? matnr,
-    int? quantity,
+    double? quantity,
     double? tp,
     double? vat,
     double? netVal,
@@ -339,10 +339,10 @@ class ProductList {
     String? materialName,
     String? brandDescription,
     String? brandName,
-    int? deliveryQuantity,
-    int? deliveryNetVal,
-    int? returnQuantity,
-    int? returnNetVal,
+    double? deliveryQuantity,
+    double? deliveryNetVal,
+    double? returnQuantity,
+    double? returnNetVal,
   }) =>
       ProductList(
         id: id ?? this.id,
@@ -370,17 +370,17 @@ class ProductList {
         id: json["id"],
         matnr: json["matnr"],
         quantity: json["quantity"],
-        tp: json["tp"]?.toDouble(),
-        vat: json["vat"]?.toDouble(),
-        netVal: json["net_val"]?.toDouble(),
+        tp: double.parse('${json['tp'] ?? 0}'),
+        vat: double.parse('${json['vat'] ?? 0}'),
+        netVal: double.parse('${json['net_val'] ?? 0}'),
         batch: json["batch"],
         materialName: json["material_name"],
         brandDescription: json["brand_description"],
         brandName: json["brand_name"],
-        deliveryQuantity: json["delivery_quantity"],
-        deliveryNetVal: json["delivery_net_val"],
-        returnQuantity: json["return_quantity"],
-        returnNetVal: json["return_net_val"],
+        deliveryQuantity: double.parse("${json['delivery_quantity'] ?? 0}"),
+        deliveryNetVal: double.parse("${json['delivery_net_val'] ?? 0}"),
+        returnQuantity: double.parse("${json['return_quantity'] ?? 0}"),
+        returnNetVal: double.parse("${json['return_net_val'] ?? 0}"),
       );
 
   Map<String, dynamic> toMap() => {
