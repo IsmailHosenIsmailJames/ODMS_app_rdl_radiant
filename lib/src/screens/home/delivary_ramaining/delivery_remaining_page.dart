@@ -214,6 +214,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
     required Result result,
   }) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: () {
         Get.to(() => InvoiceListPage(
               dateTime: dateTime,

@@ -2,30 +2,28 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
-import 'package:rdl_radiant/src/screens/home/product_list/prodouct_list_page.dart';
-import 'package:simple_icons/simple_icons.dart';
 
-class InvoiceListPage extends StatefulWidget {
-  final DateTime dateTime;
-  final Result result;
+class ProdouctListPage extends StatefulWidget {
+  final InvoiceList invoice;
+  final String invioceNo;
   final String totalAmount;
-  const InvoiceListPage(
-      {super.key,
-      required this.dateTime,
-      required this.result,
-      required this.totalAmount});
+  const ProdouctListPage({
+    super.key,
+    required this.invoice,
+    required this.invioceNo,
+    required this.totalAmount,
+  });
 
   @override
-  State<InvoiceListPage> createState() => _InvoiceListPageState();
+  State<ProdouctListPage> createState() => _ProdouctListPageState();
 }
 
-class _InvoiceListPageState extends State<InvoiceListPage> {
-  late List<InvoiceList> invoiceList;
+class _ProdouctListPageState extends State<ProdouctListPage> {
+  late List<ProductList> productList;
   @override
   void initState() {
-    invoiceList = widget.result.invoiceList ?? [];
+    productList = widget.invoice.productList ?? [];
     super.initState();
   }
 
@@ -33,26 +31,13 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Delivery Details"),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.grey.shade800,
-            ),
-            borderRadius: BorderRadius.circular(100),
-          ),
-          child: const Icon(
-            SimpleIcons.googlemaps,
-          ),
+        title: const Text(
+          "Product List",
         ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(10),
-        children: [
+        children: <Widget>[
               Container(
                 decoration: BoxDecoration(
                   color: Colors.blue.withOpacity(0.1),
@@ -66,7 +51,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            widget.dateTime.toIso8601String().split('T')[0],
+                            widget.invioceNo,
                             style: topContainerTextStyle,
                           ),
                         ],
@@ -83,76 +68,6 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                       padding: const EdgeInsets.all(10),
                       child: Column(
                         children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Container(
-                                  padding: const EdgeInsets.all(5),
-                                  child: const Text(
-                                    "Route Name",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const Text(
-                                ":  ",
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              Expanded(
-                                flex: 4,
-                                child: Container(
-                                  padding: const EdgeInsets.all(5),
-                                  child: Text(
-                                    widget.result.routeName ?? "",
-                                    style: topContainerTextStyle,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Divider(
-                            color: Colors.white,
-                            height: 1,
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Container(
-                                  padding: const EdgeInsets.all(5),
-                                  child: const Text(
-                                    "Da Name",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const Text(
-                                ":  ",
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              Expanded(
-                                flex: 4,
-                                child: Container(
-                                  padding: const EdgeInsets.all(5),
-                                  child: Text(
-                                    widget.result.daName ?? "",
-                                    style: topContainerTextStyle,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Divider(
-                            color: Colors.white,
-                            height: 1,
-                          ),
                           Row(
                             children: [
                               Expanded(
@@ -177,7 +92,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                 child: Container(
                                   padding: const EdgeInsets.all(5),
                                   child: Text(
-                                    widget.result.customerName ?? "",
+                                    widget.invoice.customerName ?? "",
                                     style: topContainerTextStyle,
                                   ),
                                 ),
@@ -212,7 +127,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                 child: Container(
                                   padding: const EdgeInsets.all(5),
                                   child: Text(
-                                    widget.result.customerAddress ?? "",
+                                    widget.invoice.customerAddress ?? "",
                                     style: topContainerTextStyle,
                                   ),
                                 ),
@@ -250,7 +165,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
-                                        widget.result.customerMobile ?? "",
+                                        widget.invoice.customerMobile ?? "",
                                         style: topContainerTextStyle,
                                       ),
                                       SizedBox(
@@ -260,7 +175,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                           padding: EdgeInsets.zero,
                                           onPressed: () {
                                             FlutterClipboard.copy(
-                                              widget.result.customerMobile ??
+                                              widget.invoice.customerMobile ??
                                                   "",
                                             ).then((value) {
                                               Fluttertoast.showToast(
@@ -307,7 +222,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                 child: Container(
                                   padding: const EdgeInsets.all(5),
                                   child: Text(
-                                    widget.result.gatePassNo ?? "",
+                                    widget.invoice.gatePassNo ?? "",
                                     style: topContainerTextStyle,
                                   ),
                                 ),
@@ -325,7 +240,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                 child: Container(
                                   padding: const EdgeInsets.all(5),
                                   child: const Text(
-                                    "Map View",
+                                    "Vehicle No",
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
@@ -340,9 +255,11 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                               Expanded(
                                 flex: 4,
                                 child: Container(
-                                  alignment: Alignment.centerLeft,
                                   padding: const EdgeInsets.all(5),
-                                  child: const Icon(SimpleIcons.googlemaps),
+                                  child: Text(
+                                    widget.invoice.vehicleNo ?? "",
+                                    style: topContainerTextStyle,
+                                  ),
                                 ),
                               ),
                             ],
@@ -391,124 +308,174 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
               const Gap(15),
             ] +
             List.generate(
-              invoiceList.length,
+              productList.length,
               (index) {
-                double amount = 0;
-                for (final ProductList productList
-                    in invoiceList[index].productList ?? []) {
-                  amount += productList.tp ?? 0;
-                }
-                return GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: () {
-                    Get.to(
-                      () => ProdouctListPage(
-                        invoice: invoiceList[index],
-                        invioceNo:
-                            (invoiceList[index].billingDocNo ?? 0).toString(),
-                        totalAmount: amount.toString().split('.')[0] +
-                            ".${amount.toString().split('.')[1]}00"
-                                .substring(0, 3),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 5, bottom: 5),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey.shade300)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.only(
-                              top: 8, bottom: 5, left: 8, right: 8),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.2),
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                            ),
+                return Container(
+                  margin: const EdgeInsets.only(top: 5, bottom: 5),
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.grey.shade300)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(
+                            top: 8, bottom: 5, left: 8, right: 8),
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withOpacity(0.2),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
                           ),
-                          child: Row(
-                            children: [
-                              Text(
-                                (invoiceList[index].billingDocNo ?? 0)
-                                    .toString(),
-                                style: style,
-                              ),
-                              const Spacer(),
-                              Text(
-                                invoiceList[index].deliveryStatus ?? "",
-                                style: style.copyWith(
-                                  color: Colors.grey.shade600,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "Product Name: ",
+                                  style: style,
                                 ),
-                              )
-                            ],
-                          ),
+                                const Gap(5),
+                                Text(
+                                  productList[index].materialName ?? '',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey.shade800,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Divider(
+                              height: 4,
+                              color: Colors.white,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  "Quantity : ",
+                                  style: style,
+                                ),
+                                const Gap(5),
+                                Text(
+                                  (productList[index].quantity ?? 0).toString(),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey.shade800,
+                                  ),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  "Invoice Amount : ",
+                                  style: style,
+                                ),
+                                const Gap(5),
+                                Text(
+                                  (productList[index].tp ?? 0).toString(),
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey.shade800,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                children: [
-                                  Text(
-                                    "Type",
-                                    style: style,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: "Received Qty.",
+                                      labelText: "Received Qty.",
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
                                   ),
-                                  Text(
-                                    "Invoice",
-                                    style: style,
+                                ),
+                                const Gap(20),
+                                Expanded(
+                                  child: TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: "Return Qty.",
+                                      labelText: "Return Qty.",
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
                                   ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Text(
-                                    "Quantity",
-                                    style: style,
+                                ),
+                              ],
+                            ),
+                            const Gap(5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Rec. Amount :  0.0",
+                                  style: style.copyWith(
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  Text(
-                                    (invoiceList[index].productList ?? [])
-                                        .length
-                                        .toString(),
-                                    style: style,
+                                ),
+                                Text(
+                                  "Ret. Amount :  0.0",
+                                  style: style.copyWith(
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  Text(
-                                    "Amount",
-                                    style: style,
-                                  ),
-                                  Text(
-                                    amount.toString().split('.')[0] +
-                                        ".${amount.toString().split('.')[1]}00"
-                                            .substring(0, 3),
-                                    style: style,
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
+                                ),
+                              ],
+                            )
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
               },
-            ),
+            ) +
+            <Widget>[
+              const Gap(50),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: const Text("Cancel"),
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    child: ElevatedButton(
+                      onPressed: () {},
+                      child: const Text("Delivered"),
+                    ),
+                  ),
+                ],
+              ),
+            ],
       ),
     );
   }
 
   TextStyle style = const TextStyle(fontSize: 17, fontWeight: FontWeight.bold);
+
   TextStyle topContainerTextStyle = const TextStyle(
     fontSize: 16,
     fontWeight: FontWeight.bold,
