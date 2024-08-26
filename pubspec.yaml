@@ -20,6 +20,7 @@ dependencies:
   flutter_animate: ^4.5.0
   flutter_foreground_task: ^8.4.0
   flutter_launcher_icons: ^0.13.1
+  flutter_lints: ^4.0.0
   flutter_native_splash: ^2.4.1
   flutter_polyline_points: ^2.1.0
   fluttertoast: ^8.2.8

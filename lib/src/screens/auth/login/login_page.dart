@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_dynamic_calls
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -234,6 +236,7 @@ Future<void> analyzeResponseLogin(
       if ((jsonMapData['success'] ?? false) == true) {
         final box = Hive.box('info');
         await box.put('userData', response.body);
+        await box.put('sap_id', jsonMapData['result']['sap_id']);
         await box.put(
           'userLoginCradintial',
           userCrid,
