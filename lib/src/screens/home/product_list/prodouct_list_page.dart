@@ -440,10 +440,13 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                         if (totalQuentaty >
                                             (productList[index].quantity ??
                                                 0)) {
-                                          Fluttertoast.showToast(
-                                              msg:
-                                                  "Ensure that the receive & return quantity does not exceed with specified quantity in invoice");
-
+                                          Fluttertoast.cancel().then(
+                                            (value) {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      "Ensure that the receive & return quantity does not exceed with specified quantity in invoice");
+                                            },
+                                          );
                                           return "Not valid";
                                         }
 
@@ -465,9 +468,6 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                         if (totalQuentaty >
                                             (productList[index].quantity ??
                                                 0)) {
-                                          Fluttertoast.showToast(
-                                              msg:
-                                                  "Ensure that the receive & return quantity does not exceed with specified quantity in invoice");
                                           WidgetsBinding.instance
                                               .addPostFrameCallback((_) {
                                             setState(() {
@@ -523,9 +523,13 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                         if (totalQuentaty >
                                             (productList[index].quantity ??
                                                 0)) {
-                                          Fluttertoast.showToast(
-                                              msg:
-                                                  "Ensure that the receive & return quantity does not exceed with specified quantity in invoice");
+                                          Fluttertoast.cancel().then(
+                                            (value) {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      "Ensure that the receive & return quantity does not exceed with specified quantity in invoice");
+                                            },
+                                          );
 
                                           return "Not valid";
                                         }
@@ -548,9 +552,6 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                         if (totalQuentaty >
                                             (productList[index].quantity ??
                                                 0)) {
-                                          Fluttertoast.showToast(
-                                              msg:
-                                                  "Ensure that the receive & return quantity does not exceed with specified quantity in invoice");
                                           WidgetsBinding.instance
                                               .addPostFrameCallback((_) {
                                             setState(() {
