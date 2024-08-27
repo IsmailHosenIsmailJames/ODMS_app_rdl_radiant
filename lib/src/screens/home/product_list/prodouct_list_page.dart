@@ -2,9 +2,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
-import 'package:rdl_radiant/src/screens/home/product_list/getxStateController/product_list_getx_state_controller.dart';
 
 class ProdouctListPage extends StatefulWidget {
   final InvoiceList invoice;
@@ -445,13 +443,37 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                           Fluttertoast.showToast(
                                               msg:
                                                   "Ensure that the receive & return quantity does not exceed with specified quantity in invoice");
+
+                                          return "Not valid";
+                                        }
+
+                                        return null;
+                                      } else {
+                                        return "Not a valid digit";
+                                      }
+                                    },
+                                    onChanged: (value) {
+                                      int? recQuentaty = int.tryParse(value);
+                                      if (recQuentaty != null) {
+                                        int? retQuentaty = int.tryParse(
+                                            returnTextEditingControllerList[
+                                                    index]
+                                                .text);
+                                        retQuentaty ??= 0;
+                                        int totalQuentaty =
+                                            recQuentaty + retQuentaty;
+                                        if (totalQuentaty >
+                                            (productList[index].quantity ??
+                                                0)) {
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  "Ensure that the receive & return quantity does not exceed with specified quantity in invoice");
                                           WidgetsBinding.instance
                                               .addPostFrameCallback((_) {
                                             setState(() {
                                               receiveAmountList[index] = 0;
                                             });
                                           });
-                                          return "Not valid";
                                         }
                                         WidgetsBinding.instance
                                             .addPostFrameCallback((_) {
@@ -462,8 +484,6 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                                 perProduct * recQuentaty;
                                           });
                                         });
-
-                                        return null;
                                       } else {
                                         WidgetsBinding.instance
                                             .addPostFrameCallback((_) {
@@ -471,7 +491,6 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                             receiveAmountList[index] = 0;
                                           });
                                         });
-                                        return "Not a valid digit";
                                       }
                                     },
                                     controller:
@@ -507,13 +526,37 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                           Fluttertoast.showToast(
                                               msg:
                                                   "Ensure that the receive & return quantity does not exceed with specified quantity in invoice");
+
+                                          return "Not valid";
+                                        }
+
+                                        return null;
+                                      } else {
+                                        return "Not a valid digit";
+                                      }
+                                    },
+                                    onChanged: (value) {
+                                      int? retQuentaty = int.tryParse(value);
+                                      if (retQuentaty != null) {
+                                        int? recQuentaty = int.tryParse(
+                                            receiveTextEditingControllerList[
+                                                    index]
+                                                .text);
+                                        recQuentaty ??= 0;
+                                        int totalQuentaty =
+                                            retQuentaty + recQuentaty;
+                                        if (totalQuentaty >
+                                            (productList[index].quantity ??
+                                                0)) {
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  "Ensure that the receive & return quantity does not exceed with specified quantity in invoice");
                                           WidgetsBinding.instance
                                               .addPostFrameCallback((_) {
                                             setState(() {
                                               receiveAmountList[index] = 0;
                                             });
                                           });
-                                          return "Not valid";
                                         }
                                         WidgetsBinding.instance
                                             .addPostFrameCallback((_) {
@@ -524,7 +567,6 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                                 perProduct * (recQuentaty ?? 0);
                                           });
                                         });
-                                        return null;
                                       } else {
                                         WidgetsBinding.instance
                                             .addPostFrameCallback((_) {
@@ -532,7 +574,6 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                             receiveAmountList[index] = 0;
                                           });
                                         });
-                                        return "Not a valid digit";
                                       }
                                     },
                                     controller:
