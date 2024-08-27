@@ -2,7 +2,9 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
+import 'package:rdl_radiant/src/screens/home/product_list/getxStateController/product_list_getx_state_controller.dart';
 
 class ProdouctListPage extends StatefulWidget {
   final InvoiceList invoice;
@@ -21,14 +23,34 @@ class ProdouctListPage extends StatefulWidget {
 
 class _ProdouctListPageState extends State<ProdouctListPage> {
   late List<ProductList> productList;
+  List<TextEditingController> receiveTextEditingControllerList = [];
+  List<TextEditingController> returnTextEditingControllerList = [];
+  List<double> receiveAmountList = [];
+  List<double> returnAmountList = [];
+
   @override
   void initState() {
     productList = widget.invoice.productList ?? [];
+    for (int i = 0; i < productList.length; i++) {
+      receiveTextEditingControllerList.add(TextEditingController());
+      receiveAmountList.add(0);
+      returnTextEditingControllerList.add(TextEditingController());
+      returnAmountList.add(0);
+    }
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    double totalReceiveAmmount = 0;
+    for (var e in receiveAmountList) {
+      totalReceiveAmmount += e;
+    }
+    double totalRetrunAmmount = 0;
+    for (var e in returnAmountList) {
+      totalRetrunAmmount += e;
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -310,6 +332,9 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
             List.generate(
               productList.length,
               (index) {
+                double perProduct = ((productList[index].netVal ?? 0) +
+                        (productList[index].vat ?? 0)) /
+                    (productList[index].quantity ?? 0);
                 return Container(
                   margin: const EdgeInsets.only(top: 5, bottom: 5),
                   decoration: BoxDecoration(
@@ -378,7 +403,9 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                 ),
                                 const Gap(5),
                                 Text(
-                                  (productList[index].tp ?? 0).toString(),
+                                  ((productList[index].vat ?? 0) +
+                                          (productList[index].netVal ?? 0))
+                                      .toStringAsFixed(2),
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
@@ -399,6 +426,56 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                               children: [
                                 Expanded(
                                   child: TextFormField(
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      int? recQuentaty =
+                                          int.tryParse(value ?? "");
+                                      if (recQuentaty != null) {
+                                        int? retQuentaty = int.tryParse(
+                                            returnTextEditingControllerList[
+                                                    index]
+                                                .text);
+                                        retQuentaty ??= 0;
+                                        int totalQuentaty =
+                                            recQuentaty + retQuentaty;
+                                        if (totalQuentaty >
+                                            (productList[index].quantity ??
+                                                0)) {
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  "Ensure that the receive & return quantity does not exceed with specified quantity in invoice");
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            setState(() {
+                                              receiveAmountList[index] = 0;
+                                            });
+                                          });
+                                          return "Not valid";
+                                        }
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          setState(() {
+                                            returnAmountList[index] =
+                                                perProduct * (retQuentaty ?? 0);
+                                            receiveAmountList[index] =
+                                                perProduct * recQuentaty;
+                                          });
+                                        });
+
+                                        return null;
+                                      } else {
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          setState(() {
+                                            receiveAmountList[index] = 0;
+                                          });
+                                        });
+                                        return "Not a valid digit";
+                                      }
+                                    },
+                                    controller:
+                                        receiveTextEditingControllerList[index],
                                     decoration: InputDecoration(
                                       hintText: "Received Qty.",
                                       labelText: "Received Qty.",
@@ -411,6 +488,55 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                 const Gap(20),
                                 Expanded(
                                   child: TextFormField(
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      int? retQuentaty =
+                                          int.tryParse(value ?? "");
+                                      if (retQuentaty != null) {
+                                        int? recQuentaty = int.tryParse(
+                                            receiveTextEditingControllerList[
+                                                    index]
+                                                .text);
+                                        recQuentaty ??= 0;
+                                        int totalQuentaty =
+                                            retQuentaty + recQuentaty;
+                                        if (totalQuentaty >
+                                            (productList[index].quantity ??
+                                                0)) {
+                                          Fluttertoast.showToast(
+                                              msg:
+                                                  "Ensure that the receive & return quantity does not exceed with specified quantity in invoice");
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            setState(() {
+                                              receiveAmountList[index] = 0;
+                                            });
+                                          });
+                                          return "Not valid";
+                                        }
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          setState(() {
+                                            returnAmountList[index] =
+                                                perProduct * retQuentaty;
+                                            receiveAmountList[index] =
+                                                perProduct * (recQuentaty ?? 0);
+                                          });
+                                        });
+                                        return null;
+                                      } else {
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          setState(() {
+                                            receiveAmountList[index] = 0;
+                                          });
+                                        });
+                                        return "Not a valid digit";
+                                      }
+                                    },
+                                    controller:
+                                        returnTextEditingControllerList[index],
                                     decoration: InputDecoration(
                                       hintText: "Return Qty.",
                                       labelText: "Return Qty.",
@@ -427,19 +553,19 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "Rec. Amount :  0.0",
+                                  "Rec. Amount :  ${receiveAmountList[index].toStringAsFixed(2)}",
                                   style: style.copyWith(
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                                 Text(
-                                  "Ret. Amount :  0.0",
+                                  "Ret. Amount :  ${returnAmountList[index].toStringAsFixed(2)}",
                                   style: style.copyWith(
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
                               ],
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -449,19 +575,65 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
               },
             ) +
             <Widget>[
-              const Gap(50),
+              const Gap(20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(100),
+                        bottomLeft: Radius.circular(100),
+                      ),
+                      color: Colors.blue.shade200,
+                    ),
+                    width: MediaQuery.of(context).size.width * .45,
+                    height: 40,
+                    child: Center(
+                      child: Text(
+                          "Total Rec.: ${totalReceiveAmmount.toStringAsFixed(2)}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
+                        topRight: Radius.circular(100),
+                        bottomRight: Radius.circular(100),
+                      ),
+                      color: Colors.red.shade200,
+                    ),
+                    width: MediaQuery.of(context).size.width * .45,
+                    height: 40,
+                    child: Center(
+                      child: Text(
+                        "Total Rec.: ${totalRetrunAmmount.toStringAsFixed(2)}",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const Gap(30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.4,
+                    width: MediaQuery.of(context).size.width * 0.45,
                     child: ElevatedButton(
                       onPressed: () {},
                       child: const Text("Cancel"),
                     ),
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.4,
+                    width: MediaQuery.of(context).size.width * 0.45,
                     child: ElevatedButton(
                       onPressed: () {},
                       child: const Text("Delivered"),

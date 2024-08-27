@@ -396,7 +396,8 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                 double amount = 0;
                 for (final ProductList productList
                     in invoiceList[index].productList ?? []) {
-                  amount += productList.tp ?? 0;
+                  amount += productList.vat ?? 0;
+                  amount += productList.netVal ?? 0;
                 }
                 return GestureDetector(
                   behavior: HitTestBehavior.translucent,
@@ -406,9 +407,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                         invoice: invoiceList[index],
                         invioceNo:
                             (invoiceList[index].billingDocNo ?? 0).toString(),
-                        totalAmount: amount.toString().split('.')[0] +
-                            ".${amount.toString().split('.')[1]}00"
-                                .substring(0, 3),
+                        totalAmount: widget.totalAmount,
                       ),
                     );
                   },
@@ -488,9 +487,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                     style: style,
                                   ),
                                   Text(
-                                    amount.toString().split('.')[0] +
-                                        ".${amount.toString().split('.')[1]}00"
-                                            .substring(0, 3),
+                                    amount.toStringAsFixed(2),
                                     style: style,
                                   ),
                                 ],

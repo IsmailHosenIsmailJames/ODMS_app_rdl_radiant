@@ -88,8 +88,14 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
           ),
           Expanded(
             child: listOfReamingDelivery.isEmpty
-                ? const Center(
-                    child: Text("Empty"),
+                ? Center(
+                    child: Text(
+                      "There is no delivery available on this date : ${dateTime.toIso8601String().split('T')[0]}",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   )
                 : ListView.builder(
                     padding: const EdgeInsets.only(top: 10),
@@ -108,13 +114,11 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                             invoice.productList ?? [];
                         for (ProductList product in droductList) {
                           quantitty += product.quantity ?? 0;
-                          amount += product.tp ?? 0;
+                          amount += product.netVal ?? 0;
                           amount += product.vat ?? 0;
                         }
                       }
-                      String floatingAmount =
-                          ("${amount.toString().split('.')[1]}000")
-                              .substring(0, 2);
+                      String floating2Amount = amount.toStringAsFixed(2);
 
                       return card(
                         index: index,
@@ -122,8 +126,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                         address: address,
                         invoiceLen: invoiceList.length.toString(),
                         quantitty: quantitty.toInt().toString(),
-                        amount:
-                            '${amount.toString().split('.')[0]}.$floatingAmount',
+                        amount: floating2Amount,
                         date: (listOfReamingDelivery[index].billingDate ??
                                 DateTime.now())
                             .toIso8601String()
