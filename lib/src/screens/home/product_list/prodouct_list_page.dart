@@ -653,7 +653,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                     height: 40,
                     child: Center(
                       child: Text(
-                        "Total Rec.: ${totalRetrunAmmount.toStringAsFixed(2)}",
+                        "Total Ret.: ${totalRetrunAmmount.toStringAsFixed(2)}",
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

@@ -1,0 +1,35 @@
+{
+    "billing_doc_no": "string_value",
+    "billing_date": "string_value",
+    "route_code": "string_value",
+    "partner": "string_value",
+    "gate_pass_no": "string_value",
+    "da_code": "string_value",
+    "vehicle_no": "string_value",
+    "delivery_latitude": "string_value",
+    "delivery_longitude": "string_value",
+    "transport_type": "string_value",
+    "delivery_status": "string_value",
+    "last_status": "string_value",
+    "type": "string_value",
+    "cash_collection": 0.0,
+    "cash_collection_latitude": "string_value_or_null",
+    "cash_collection_longitude": "string_value_or_null",
+    "cash_collection_status": "string_value_or_null",
+    "deliverys": [
+      {
+        "matnr": "string_value",
+        "batch": "string_value",
+        "quantity": 0,
+        "tp": 0.0,
+        "vat": 0.0,
+        "net_val": 0.0,
+        "delivery_quantity": 0,
+        "delivery_net_val": 0.0,
+        "return_quantity": 0,
+        "return_net_val": 0.0,
+        "id": 909
+      }
+    ]
+  }
+  
