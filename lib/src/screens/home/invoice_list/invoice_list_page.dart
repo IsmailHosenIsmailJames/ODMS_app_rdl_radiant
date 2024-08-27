@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
 import 'package:rdl_radiant/src/screens/home/product_list/prodouct_list_page.dart';
+import 'package:rdl_radiant/src/screens/maps/map_view.dart';
 import 'package:simple_icons/simple_icons.dart';
 
 class InvoiceListPage extends StatefulWidget {
@@ -36,7 +37,11 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
         title: const Text("Delivery Details"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Get.to(
+            () => const MyMapView(lat: 25.1193, lng: 55.3773),
+          );
+        },
         child: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
@@ -310,39 +315,6 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                     widget.result.gatePassNo ?? "",
                                     style: topContainerTextStyle,
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Divider(
-                            color: Colors.white,
-                            height: 1,
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Container(
-                                  padding: const EdgeInsets.all(5),
-                                  child: const Text(
-                                    "Map View",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const Text(
-                                ":  ",
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              Expanded(
-                                flex: 4,
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  padding: const EdgeInsets.all(5),
-                                  child: const Icon(SimpleIcons.googlemaps),
                                 ),
                               ),
                             ],
