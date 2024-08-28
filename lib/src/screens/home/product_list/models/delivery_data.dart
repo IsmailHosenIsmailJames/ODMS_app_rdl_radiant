@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class DeliveryRemaing {
+class DeliveryData {
   String? billingDocNo;
   String? billingDate;
   String? routeCode;
@@ -14,13 +14,13 @@ class DeliveryRemaing {
   String? deliveryStatus;
   String? lastStatus;
   String? type;
-  int? cashCollection;
+  double? cashCollection;
   String? cashCollectionLatitude;
   String? cashCollectionLongitude;
   String? cashCollectionStatus;
-  List<Delivery>? deliverys;
+  List<Delivery> deliverys;
 
-  DeliveryRemaing({
+  DeliveryData({
     this.billingDocNo,
     this.billingDate,
     this.routeCode,
@@ -38,10 +38,10 @@ class DeliveryRemaing {
     this.cashCollectionLatitude,
     this.cashCollectionLongitude,
     this.cashCollectionStatus,
-    this.deliverys,
+    required this.deliverys,
   });
 
-  DeliveryRemaing copyWith({
+  DeliveryData copyWith({
     String? billingDocNo,
     String? billingDate,
     String? routeCode,
@@ -55,13 +55,13 @@ class DeliveryRemaing {
     String? deliveryStatus,
     String? lastStatus,
     String? type,
-    int? cashCollection,
+    double? cashCollection,
     String? cashCollectionLatitude,
     String? cashCollectionLongitude,
     String? cashCollectionStatus,
     List<Delivery>? deliverys,
   }) =>
-      DeliveryRemaing(
+      DeliveryData(
         billingDocNo: billingDocNo ?? this.billingDocNo,
         billingDate: billingDate ?? this.billingDate,
         routeCode: routeCode ?? this.routeCode,
@@ -84,12 +84,12 @@ class DeliveryRemaing {
         deliverys: deliverys ?? this.deliverys,
       );
 
-  factory DeliveryRemaing.fromJson(String str) =>
-      DeliveryRemaing.fromMap(json.decode(str));
+  factory DeliveryData.fromJson(String str) =>
+      DeliveryData.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory DeliveryRemaing.fromMap(Map<String, dynamic> json) => DeliveryRemaing(
+  factory DeliveryData.fromMap(Map<String, dynamic> json) => DeliveryData(
         billingDocNo: json["billing_doc_no"],
         billingDate: json["billing_date"],
         routeCode: json["route_code"],
@@ -107,10 +107,8 @@ class DeliveryRemaing {
         cashCollectionLatitude: json["cash_collection_latitude"],
         cashCollectionLongitude: json["cash_collection_longitude"],
         cashCollectionStatus: json["cash_collection_status"],
-        deliverys: json["deliverys"] == null
-            ? []
-            : List<Delivery>.from(
-                json["deliverys"]!.map((x) => Delivery.fromMap(x))),
+        deliverys: List<Delivery>.from(
+            json["deliverys"].map((x) => Delivery.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
@@ -131,9 +129,7 @@ class DeliveryRemaing {
         "cash_collection_latitude": cashCollectionLatitude,
         "cash_collection_longitude": cashCollectionLongitude,
         "cash_collection_status": cashCollectionStatus,
-        "deliverys": deliverys == null
-            ? []
-            : List<dynamic>.from(deliverys!.map((x) => x.toMap())),
+        "deliverys": List<dynamic>.from(deliverys.map((x) => x.toMap())),
       };
 }
 
@@ -141,13 +137,13 @@ class Delivery {
   String? matnr;
   String? batch;
   int? quantity;
-  int? tp;
-  int? vat;
-  int? netVal;
+  double? tp;
+  double? vat;
+  double? netVal;
   int? deliveryQuantity;
-  int? deliveryNetVal;
+  double? deliveryNetVal;
   int? returnQuantity;
-  int? returnNetVal;
+  double? returnNetVal;
   int? id;
 
   Delivery({
@@ -168,13 +164,13 @@ class Delivery {
     String? matnr,
     String? batch,
     int? quantity,
-    int? tp,
-    int? vat,
-    int? netVal,
+    double? tp,
+    double? vat,
+    double? netVal,
     int? deliveryQuantity,
-    int? deliveryNetVal,
+    double? deliveryNetVal,
     int? returnQuantity,
-    int? returnNetVal,
+    double? returnNetVal,
     int? id,
   }) =>
       Delivery(

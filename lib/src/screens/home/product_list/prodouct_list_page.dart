@@ -1,9 +1,15 @@
+import 'dart:convert';
+
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
+import 'package:rdl_radiant/src/screens/home/product_list/models/delivery_data.dart';
+import 'package:http/http.dart' as http;
 
 class ProdouctListPage extends StatefulWidget {
   final InvoiceList invoice;
@@ -742,8 +748,69 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.45,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        final position = await Geolocator.getCurrentPosition();
+
+                        List<Delivery> listOfDelivery = [];
+                        for (int i = 0; i < productList.length; i++) {
+                          final e = productList[i];
+                          listOfDelivery.add(
+                            Delivery(
+                              matnr: e.matnr,
+                              batch: e.batch,
+                              quantity: (productList[i].quantity ?? 0).toInt(),
+                              tp: e.tp,
+                              vat: e.vat,
+                              netVal: e.netVal,
+                              deliveryQuantity: int.parse(
+                                  receiveTextEditingControllerList[i].text),
+                              deliveryNetVal: (e.netVal ?? 0) *
+                                  int.parse(receiveTextEditingControllerList[i]
+                                      .text
+                                      .trim()),
+                              returnQuantity: int.parse(
+                                  returnTextEditingControllerList[i]
+                                      .text
+                                      .trim()),
+                              returnNetVal: (e.netVal ?? 0) *
+                                  int.parse(returnTextEditingControllerList[i]
+                                      .text
+                                      .trim()),
+                              id: e.id,
+                            ),
+                          );
+                        }
+
+                        final deliveryData = DeliveryData(
+                          billingDocNo: widget.invoice.billingDocNo,
+                          billingDate: DateFormat('yyyy-MM-dd')
+                              .format(widget.invoice.billingDate!),
+                          routeCode: widget.invoice.routeCode,
+                          partner: widget.invoice.partner,
+                          gatePassNo: widget.invoice.gatePassNo,
+                          daCode: widget.invoice.daCode.toString(),
+                          vehicleNo: widget.invoice.vehicleNo,
+                          deliveryLatitude: position.latitude.toString(),
+                          deliveryLongitude: position.longitude.toString(),
+                          transportType: widget.invoice.transportType,
+                          deliveryStatus: 'Done',
+                          lastStatus: "delivery",
+                          type: "delivery",
+                          cashCollection: 0.00,
+                          cashCollectionLatitude: null,
+                          cashCollectionLongitude: null,
+                          cashCollectionStatus: null,
+                          deliverys: listOfDelivery,
+                        );
+                        print(deliveryData.toJson());
                         final uri = Uri.parse(base + saveDeliveryList);
+                        final response = await http.post(
+                          uri,
+                          headers: {"Content-Type": "application/json"},
+                          body: deliveryData.toJson(),
+                        );
+                        print(response.body);
+                        print(response.statusCode);
                       },
                       child: const Text("Delivered"),
                     ),
