@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:rdl_radiant/src/screens/maps/google_maps_api_key.dart';
 
 class MyMapView extends StatefulWidget {
   final double lat;
@@ -33,13 +36,24 @@ class _MyMapViewState extends State<MyMapView> {
           myLatLng = LatLng(event.latitude, event.longitude);
         });
 
-        print(event.latitude);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           cameraPositionUpdater(LatLng(event.latitude, event.longitude));
         });
       },
     );
+
+    Geolocator.getCurrentPosition().then(
+      (value) {
+        getPoliLinePoints(LatLng(value.latitude, value.longitude)).then(
+          (value) {
+            generatePolylinesFormsPoints(value);
+          },
+        );
+      },
+    );
   }
+
+  Map<PolylineId, Polyline> polynlies = {};
 
   Map<String, Marker> markers = {};
   final Completer<GoogleMapController> googleMapController =
@@ -79,6 +93,7 @@ class _MyMapViewState extends State<MyMapView> {
                   infoWindow: const InfoWindow(title: "My Location"),
                 );
               },
+              polylines: Set<Polyline>.of(polynlies.values),
             ),
     );
   }
@@ -107,5 +122,44 @@ class _MyMapViewState extends State<MyMapView> {
       markers.remove(id);
       setState(() {});
     }
+  }
+
+  Future<List<LatLng>> getPoliLinePoints(LatLng latlan) async {
+    List<LatLng> polyLinePointsList = [];
+    PolylinePoints polylinePoints = PolylinePoints();
+    PolylineResult polylineResult =
+        await polylinePoints.getRouteBetweenCoordinates(
+      googleApiKey: googleMapsApiKey,
+      request: PolylineRequest(
+        origin: PointLatLng(latlan.latitude, latlan.longitude),
+        destination: PointLatLng(widget.lat, widget.lng),
+        mode: TravelMode.driving,
+        wayPoints: [PolylineWayPoint(location: "Sabo, Yaba Lagos Nigeria")],
+      ),
+    );
+    if (polylineResult.points.isNotEmpty) {
+      for (int i = 0; i < polylineResult.points.length; i++) {
+        polyLinePointsList.add(LatLng(polylineResult.points[i].latitude,
+            polylineResult.points[i].longitude));
+      }
+    } else {
+      if (kDebugMode) {
+        print(polylineResult.errorMessage);
+      }
+    }
+    return polyLinePointsList;
+  }
+
+  void generatePolylinesFormsPoints(List<LatLng> points) {
+    PolylineId id = const PolylineId("destination");
+    Polyline polyline = Polyline(
+      polylineId: id,
+      color: Colors.deepOrange,
+      points: points,
+      width: 7,
+    );
+    setState(() {
+      polynlies[id] = polyline;
+    });
   }
 }
