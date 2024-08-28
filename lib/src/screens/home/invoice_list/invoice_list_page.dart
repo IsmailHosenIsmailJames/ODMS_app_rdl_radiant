@@ -37,9 +37,12 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
         title: const Text("Delivery Details"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           Get.to(
-            () => const MyMapView(lat: 25.1193, lng: 55.3773),
+            () => const MyMapView(
+              lat: 23.7363,
+              lng: 90.3925,
+            ),
           );
         },
         child: Container(

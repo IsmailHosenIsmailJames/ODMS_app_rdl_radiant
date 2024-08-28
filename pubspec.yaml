@@ -60,6 +60,7 @@ flutter:
     - assets/cash_collection.png
     - assets/delivery_back.png
     - assets/animations/bubnly.riv
+    - assets/icon_for_medical_shop.png
 
 
 flutter_native_splash:
