@@ -2,6 +2,7 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
+import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
 
 class ProdouctListPage extends StatefulWidget {
@@ -54,6 +55,70 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
         title: const Text(
           "Product List",
         ),
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                child: const Row(
+                  children: [
+                    Icon(
+                      Icons.done_all,
+                      color: Colors.green,
+                    ),
+                    Gap(10),
+                    Text("All Received"),
+                  ],
+                ),
+                onTap: () {
+                  for (var index = 0; index < productList.length; index++) {
+                    ProductList current = productList[index];
+                    double perProduct =
+                        ((current.netVal ?? 0) + (current.vat ?? 0)) /
+                            (current.quantity ?? 0);
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      receiveTextEditingControllerList[index].text =
+                          (current.quantity ?? 0).toInt().toString();
+                      returnTextEditingControllerList[index].text = '0';
+                    });
+                    receiveAmountList[index] =
+                        (current.quantity ?? 0) * perProduct;
+                    returnAmountList[index] = 0;
+                  }
+                  setState(() {});
+                },
+              ),
+              PopupMenuItem(
+                child: const Row(
+                  children: [
+                    Icon(
+                      Icons.close,
+                      color: Colors.deepOrange,
+                    ),
+                    Gap(10),
+                    Text("All Return"),
+                  ],
+                ),
+                onTap: () {
+                  for (var index = 0; index < productList.length; index++) {
+                    ProductList current = productList[index];
+                    double perProduct =
+                        ((current.netVal ?? 0) + (current.vat ?? 0)) /
+                            (current.quantity ?? 0);
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      returnTextEditingControllerList[index].text =
+                          (current.quantity ?? 0).toInt().toString();
+                      receiveTextEditingControllerList[index].text = '0';
+                    });
+                    returnAmountList[index] =
+                        (current.quantity ?? 0) * perProduct;
+                    receiveAmountList[index] = 0;
+                  }
+                  setState(() {});
+                },
+              ),
+            ],
+          )
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(10),
@@ -677,7 +742,9 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.45,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        final uri = Uri.parse(base + saveDeliveryList);
+                      },
                       child: const Text("Delivered"),
                     ),
                   ),

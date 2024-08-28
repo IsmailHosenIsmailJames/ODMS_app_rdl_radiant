@@ -5,3 +5,4 @@ String startWorkPath = '/api/v1/attendance/start_work';
 String dashBoardGetDataPath = '/api/v1/reports/dashboard';
 String endWorkPath = '/api/v1/attendance/end_work';
 String getDelivaryList = '/api/v1/delivery/v2/list';
+String saveDeliveryList = '/api/v1/delivery/save';
