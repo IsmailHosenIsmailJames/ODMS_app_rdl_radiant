@@ -44,7 +44,7 @@ class _MyMapViewState extends State<MyMapView> {
 
     Geolocator.getCurrentPosition().then(
       (value) {
-        getPoliLinePoints(const LatLng(23.8531, 90.4003)).then(
+        getPoliLinePoints(LatLng(value.latitude, value.longitude)).then(
           (value) {
             generatePolylinesFormsPoints(value);
           },
@@ -135,7 +135,6 @@ class _MyMapViewState extends State<MyMapView> {
           origin: PointLatLng(latlan.latitude, latlan.longitude),
           destination: PointLatLng(widget.lat, widget.lng),
           mode: TravelMode.driving,
-          wayPoints: [PolylineWayPoint(location: "Sabo, Yaba Lagos Nigeria")],
         ),
       );
       if (polylineResult.points.isNotEmpty) {
