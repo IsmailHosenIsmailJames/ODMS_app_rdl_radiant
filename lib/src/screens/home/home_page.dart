@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:rdl_radiant/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
 import 'package:rdl_radiant/src/core/background/socket_manager/socket_manager.dart';
+import 'package:rdl_radiant/src/screens/home/delivary_ramaining/controller/delivery_remaning_controller.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/delivery_remaining_page.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
 import 'package:rdl_radiant/src/screens/home/drawer/drawer.dart';
@@ -208,11 +209,20 @@ class _HomePageState extends State<HomePage> {
                                   print(response.body);
                                 }
 
-                                Get.to(
-                                  () => DeliveryRemainingPage(
-                                    deliveryRemaing:
-                                        DeliveryRemaing.fromJson(response.body),
+                                final controller = Get.put(
+                                  DeliveryRemaningController(
+                                    DeliveryRemaing.fromJson(response.body),
                                   ),
+                                );
+                                controller.deliveryRemaing.value =
+                                    DeliveryRemaing.fromJson(response.body);
+                                controller.constDeliveryRemaing.value =
+                                    DeliveryRemaing.fromJson(response.body);
+                                controller.deliveryRemaing.value.result ??= [];
+                                controller.constDeliveryRemaing.value.result ??=
+                                    [];
+                                Get.to(
+                                  () => const DeliveryRemainingPage(),
                                 );
                               } else {
                                 if (kDebugMode) {

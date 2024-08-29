@@ -10,28 +10,25 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
 import 'package:rdl_radiant/src/screens/home/invoice_list/invoice_list_page.dart';
 
 import '../../../apis/apis.dart';
+import 'controller/delivery_remaning_controller.dart';
 
 class DeliveryRemainingPage extends StatefulWidget {
-  final DeliveryRemaing deliveryRemaing;
-  const DeliveryRemainingPage({super.key, required this.deliveryRemaing});
+  const DeliveryRemainingPage({super.key});
 
   @override
   State<DeliveryRemainingPage> createState() => _DeliveryRemainingPageState();
 }
 
 class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
-  List<Result> listOfReamingDelivery = [];
-  late DeliveryRemaing deliveryRemaing;
-  late List<Result> constListOfReamingDelivery = [];
   DateTime dateTime = DateTime.now();
+  final DeliveryRemaningController deliveryRemaningController = Get.find();
+
   @override
   void initState() {
-    deliveryRemaing = widget.deliveryRemaing;
-    listOfReamingDelivery = deliveryRemaing.result ?? [];
-    constListOfReamingDelivery = listOfReamingDelivery;
     super.initState();
   }
 
@@ -71,7 +68,8 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
               child: CupertinoSearchTextField(
                 onChanged: (value) {
                   List<Result> filter = [];
-                  for (var element in constListOfReamingDelivery) {
+                  for (Result element in deliveryRemaningController
+                      .constDeliveryRemaing.value.result!) {
                     if (element
                         .toJson()
                         .toLowerCase()
@@ -79,15 +77,16 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                       filter.add(element);
                     }
                   }
-                  setState(() {
-                    listOfReamingDelivery = filter;
-                  });
+                  deliveryRemaningController.deliveryRemaing.value.result =
+                      filter;
+                  setState(() {});
                 },
               ),
             ),
           ),
           Expanded(
-            child: listOfReamingDelivery.isEmpty
+            child: deliveryRemaningController
+                    .deliveryRemaing.value.result!.isEmpty
                 ? Center(
                     child: Text(
                       "There is no delivery available on this date : ${dateTime.toIso8601String().split('T')[0]}",
@@ -97,45 +96,48 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                       ),
                     ),
                   )
-                : ListView.builder(
-                    padding: const EdgeInsets.only(top: 10),
-                    itemCount: listOfReamingDelivery.length,
-                    itemBuilder: (context, index) {
-                      String name =
-                          listOfReamingDelivery[index].customerName ?? "";
-                      String address =
-                          listOfReamingDelivery[index].customerAddress ?? "";
-                      double quantitty = 0;
-                      double amount = 0;
-                      List<InvoiceList> invoiceList =
-                          listOfReamingDelivery[index].invoiceList ?? [];
-                      for (InvoiceList invoice in invoiceList) {
-                        List<ProductList> droductList =
-                            invoice.productList ?? [];
-                        for (ProductList product in droductList) {
-                          quantitty += product.quantity ?? 0;
-                          amount += product.netVal ?? 0;
-                          amount += product.vat ?? 0;
-                        }
-                      }
-                      String floating2Amount = amount.toStringAsFixed(2);
+                : Obx(
+                    () {
+                      List<Result> results = deliveryRemaningController
+                          .deliveryRemaing.value.result!;
+                      return ListView.builder(
+                        padding: const EdgeInsets.only(top: 10),
+                        itemCount: results.length,
+                        itemBuilder: (context, index) {
+                          String name = results[index].customerName ?? "";
+                          String address = results[index].customerAddress ?? "";
+                          double quantitty = 0;
+                          double amount = 0;
+                          List<InvoiceList> invoiceList =
+                              results[index].invoiceList ?? [];
+                          for (InvoiceList invoice in invoiceList) {
+                            List<ProductList> droductList =
+                                invoice.productList ?? [];
+                            for (ProductList product in droductList) {
+                              quantitty += product.quantity ?? 0;
+                              amount += product.netVal ?? 0;
+                              amount += product.vat ?? 0;
+                            }
+                          }
+                          String floating2Amount = amount.toStringAsFixed(2);
 
-                      return card(
-                        index: index,
-                        name: name,
-                        address: address,
-                        invoiceLen: invoiceList.length.toString(),
-                        quantitty: quantitty.toInt().toString(),
-                        amount: floating2Amount,
-                        date: (listOfReamingDelivery[index].billingDate ??
-                                DateTime.now())
-                            .toIso8601String()
-                            .split('T')[0],
-                        result: listOfReamingDelivery[index],
+                          return card(
+                            index: index,
+                            name: name,
+                            address: address,
+                            invoiceLen: invoiceList.length.toString(),
+                            quantitty: quantitty.toInt().toString(),
+                            amount: floating2Amount,
+                            date: (results[index].billingDate ?? DateTime.now())
+                                .toIso8601String()
+                                .split('T')[0],
+                            result: results[index],
+                          );
+                        },
                       );
                     },
                   ),
-          )
+          ),
         ],
       ),
     );
@@ -189,11 +191,15 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
           print(response.body);
         }
 
-        setState(() {
-          deliveryRemaing = DeliveryRemaing.fromJson(response.body);
-          listOfReamingDelivery = deliveryRemaing.result ?? [];
-          constListOfReamingDelivery = deliveryRemaing.result ?? [];
-          dateTime = pickedDateTime!;
+        deliveryRemaningController.deliveryRemaing.value =
+            DeliveryRemaing.fromJson(response.body);
+        deliveryRemaningController.constDeliveryRemaing.value =
+            DeliveryRemaing.fromJson(response.body);
+
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          setState(() {
+            dateTime = pickedDateTime!;
+          });
         });
       } else {
         if (kDebugMode) {
@@ -219,6 +225,11 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
+        deliveryRemaningController.deliveryRemaing.value =
+            deliveryRemaningController.constDeliveryRemaing.value;
+        final invoiceListController = Get.put(InvoiceListController());
+        invoiceListController.invoiceList.value =
+            result.invoiceList ?? <InvoiceList>[];
         Get.to(() => InvoiceListPage(
               dateTime: dateTime,
               result: result,

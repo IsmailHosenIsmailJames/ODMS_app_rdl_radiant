@@ -44,7 +44,7 @@ class _MyMapViewState extends State<MyMapView> {
 
     Geolocator.getCurrentPosition().then(
       (value) {
-        getPoliLinePoints(LatLng(value.latitude, value.longitude)).then(
+        getPoliLinePoints(const LatLng(23.8531, 90.4003)).then(
           (value) {
             generatePolylinesFormsPoints(value);
           },
@@ -127,24 +127,30 @@ class _MyMapViewState extends State<MyMapView> {
   Future<List<LatLng>> getPoliLinePoints(LatLng latlan) async {
     List<LatLng> polyLinePointsList = [];
     PolylinePoints polylinePoints = PolylinePoints();
-    PolylineResult polylineResult =
-        await polylinePoints.getRouteBetweenCoordinates(
-      googleApiKey: googleMapsApiKey,
-      request: PolylineRequest(
-        origin: PointLatLng(latlan.latitude, latlan.longitude),
-        destination: PointLatLng(widget.lat, widget.lng),
-        mode: TravelMode.driving,
-        wayPoints: [PolylineWayPoint(location: "Sabo, Yaba Lagos Nigeria")],
-      ),
-    );
-    if (polylineResult.points.isNotEmpty) {
-      for (int i = 0; i < polylineResult.points.length; i++) {
-        polyLinePointsList.add(LatLng(polylineResult.points[i].latitude,
-            polylineResult.points[i].longitude));
+    try {
+      PolylineResult polylineResult =
+          await polylinePoints.getRouteBetweenCoordinates(
+        googleApiKey: googleMapsApiKey,
+        request: PolylineRequest(
+          origin: PointLatLng(latlan.latitude, latlan.longitude),
+          destination: PointLatLng(widget.lat, widget.lng),
+          mode: TravelMode.driving,
+          wayPoints: [PolylineWayPoint(location: "Sabo, Yaba Lagos Nigeria")],
+        ),
+      );
+      if (polylineResult.points.isNotEmpty) {
+        for (int i = 0; i < polylineResult.points.length; i++) {
+          polyLinePointsList.add(LatLng(polylineResult.points[i].latitude,
+              polylineResult.points[i].longitude));
+        }
+      } else {
+        if (kDebugMode) {
+          print(polylineResult.errorMessage);
+        }
       }
-    } else {
+    } catch (e) {
       if (kDebugMode) {
-        print(polylineResult.errorMessage);
+        print(e);
       }
     }
     return polyLinePointsList;
