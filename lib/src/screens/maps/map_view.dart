@@ -64,6 +64,12 @@ class _MyMapViewState extends State<MyMapView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Maps"),
+        actions: const [
+          Text(
+            "Lat Lon is not available.\nShowing demo data.",
+            style: TextStyle(color: Colors.redAccent),
+          ),
+        ],
       ),
       body: myLatLng == null
           ? const Center(

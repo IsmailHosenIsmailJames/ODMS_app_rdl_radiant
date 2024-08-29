@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
@@ -805,10 +806,16 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                   netVal: e.netVal,
                                   deliveryQuantity: int.parse(receiveText),
                                   deliveryNetVal:
-                                      (e.netVal ?? 0) * int.parse(receiveText),
+                                      (((e.netVal ?? 0) + (e.vat ?? 0)) /
+                                              (productList[i].quantity ?? 0)
+                                                  .toInt()) *
+                                          int.parse(receiveText),
                                   returnQuantity: int.parse(returnText),
                                   returnNetVal:
-                                      (e.netVal ?? 0) * int.parse(returnText),
+                                      (((e.netVal ?? 0) + (e.vat ?? 0)) /
+                                              (productList[i].quantity ?? 0)
+                                                  .toInt()) *
+                                          int.parse(returnText),
                                   id: e.id,
                                 ),
                               );
@@ -835,15 +842,21 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                               cashCollectionStatus: null,
                               deliverys: listOfDelivery,
                             );
-                            print(deliveryData.toJson());
+                            if (kDebugMode) {
+                              print(deliveryData.toJson());
+                            }
                             final uri = Uri.parse(base + saveDeliveryList);
                             final response = await http.post(
                               uri,
                               headers: {"Content-Type": "application/json"},
                               body: deliveryData.toJson(),
                             );
-                            print(response.body);
-                            print(response.statusCode);
+                            if (kDebugMode) {
+                              print(response.body);
+                            }
+                            if (kDebugMode) {
+                              print(response.statusCode);
+                            }
 
                             if (response.statusCode == 200) {
                               final decoded = Map<String, dynamic>.from(

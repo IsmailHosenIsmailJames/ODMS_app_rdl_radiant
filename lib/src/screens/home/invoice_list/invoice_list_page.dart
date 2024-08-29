@@ -318,9 +318,32 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                           flex: 4,
                           child: Container(
                             padding: const EdgeInsets.all(5),
-                            child: Text(
-                              widget.result.gatePassNo ?? "",
-                              style: topContainerTextStyle,
+                            child: Row(
+                              children: [
+                                Text(
+                                  widget.result.gatePassNo ?? "",
+                                  style: topContainerTextStyle,
+                                ),
+                                SizedBox(
+                                  height: 23,
+                                  width: 90,
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () {
+                                      FlutterClipboard.copy(
+                                        widget.result.gatePassNo ?? "",
+                                      ).then((value) {
+                                        Fluttertoast.showToast(
+                                            msg: "Number Copied");
+                                      });
+                                    },
+                                    icon: const Icon(
+                                      Icons.copy,
+                                      size: 17,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
