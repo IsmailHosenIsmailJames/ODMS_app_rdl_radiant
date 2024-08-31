@@ -20,6 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../theme/textfield_theme.dart';
 import '../../permissions/cheak_and_request_permissions.dart';
+import '../../permissions/cheak_location_service.dart';
 import '../register/register_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -276,6 +277,11 @@ Future<void> analyzeResponseLogin(
 
         final serviceEnabled = await Geolocator.isLocationServiceEnabled();
         if (!serviceEnabled) {
+          Get.offAll(
+            () => CheakLocationService(
+              responseMapData: jsonMapData,
+            ),
+          );
           return;
         }
 
