@@ -169,7 +169,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
     if (pickedDateTime != null) {
       final box = Hive.box('info');
       final url = Uri.parse(
-        "$base$getDelivaryList/${box.get('sap_id')}?type=Remaining&date=${DateFormat('yyyy-MM-dd').format(pickedDateTime!)}",
+        "$base$getDelivaryList/${box.get('sap_id')}?type=${isDataForDeliveryDone ? "Done" : "Remaining"}&date=${DateFormat('yyyy-MM-dd').format(pickedDateTime!)}",
       );
 
       showCupertinoModalPopup(
