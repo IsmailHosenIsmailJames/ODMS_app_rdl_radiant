@@ -26,17 +26,22 @@ class DeliveryRemainingPage extends StatefulWidget {
 class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
   DateTime dateTime = DateTime.now();
   final DeliveryRemaningController deliveryRemaningController = Get.find();
+  bool isDataForDeliveryDone = false;
 
   @override
   void initState() {
     super.initState();
+    isDataForDeliveryDone =
+        deliveryRemaningController.isDataForDeliveryDone.value;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Delivery Remaining"),
+        title: isDataForDeliveryDone
+            ? const Text("Delivery Done")
+            : const Text("Delivery Remaining"),
         actions: [
           IconButton(
             onPressed: () async {

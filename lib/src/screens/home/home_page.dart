@@ -238,6 +238,61 @@ class _HomePageState extends State<HomePage> {
                             Image.asset('assets/delivery_done.png'),
                             'Delivary Done',
                             1,
+                            onPressed: () async {
+                              final box = Hive.box('info');
+                              final url = Uri.parse(
+                                "$base$getDelivaryList/${box.get('sap_id')}?type=Done&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+                              );
+
+                              showCupertinoModalPopup(
+                                context: context,
+                                builder: (context) => Scaffold(
+                                  backgroundColor:
+                                      Colors.white.withOpacity(0.1),
+                                  body: const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Color.fromARGB(255, 74, 174, 255),
+                                    ),
+                                  ),
+                                ),
+                              );
+
+                              final response = await http.get(url);
+
+                              if (Navigator.canPop(context)) {
+                                Navigator.pop(context);
+                              }
+
+                              if (response.statusCode == 200) {
+                                if (kDebugMode) {
+                                  print("Got Delivery Remaning List");
+                                  print(response.body);
+                                }
+
+                                final controller = Get.put(
+                                  DeliveryRemaningController(
+                                    DeliveryRemaing.fromJson(response.body),
+                                  ),
+                                );
+                                controller.deliveryRemaing.value =
+                                    DeliveryRemaing.fromJson(response.body);
+                                controller.constDeliveryRemaing.value =
+                                    DeliveryRemaing.fromJson(response.body);
+                                controller.deliveryRemaing.value.result ??= [];
+                                controller.constDeliveryRemaing.value.result ??=
+                                    [];
+                                controller.isDataForDeliveryDone.value = true;
+                                Get.to(
+                                  () => const DeliveryRemainingPage(),
+                                );
+                              } else {
+                                if (kDebugMode) {
+                                  print(
+                                    "Delivery Remaining response error : ${response.statusCode}",
+                                  );
+                                }
+                              }
+                            },
                           ),
                           getCardView(
                             data['cash_remaining'].toString(),
