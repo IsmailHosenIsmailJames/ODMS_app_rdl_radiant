@@ -221,6 +221,7 @@ class _HomePageState extends State<HomePage> {
                                 controller.deliveryRemaing.value.result ??= [];
                                 controller.constDeliveryRemaing.value.result ??=
                                     [];
+                                controller.isDataForDeliveryDone.value = false;
                                 Get.to(
                                   () => const DeliveryRemainingPage(),
                                 );

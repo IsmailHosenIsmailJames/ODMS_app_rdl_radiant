@@ -529,7 +529,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                       ),
                                     ),
                                     Text(
-                                      "Delivered Quantity: ${(productList[index].returnQuantity ?? 0).toInt().toString()}",
+                                      "Delivered Returned: ${(productList[index].returnQuantity ?? 0).toInt().toString()}",
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
