@@ -1,5 +1,4 @@
 import 'package:bottom_picker/bottom_picker.dart';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -27,30 +26,35 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
   DateTime dateTime = DateTime.now();
   final DeliveryRemaningController deliveryRemaningController = Get.find();
   bool isDataForDeliveryDone = false;
+  String pageType = "";
 
   @override
   void initState() {
     super.initState();
     isDataForDeliveryDone =
         deliveryRemaningController.isDataForDeliveryDone.value;
+    pageType = deliveryRemaningController.pageType.value;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: isDataForDeliveryDone
-            ? const Text("Delivery Done")
-            : const Text("Delivery Remaining"),
+        title: pageType != ""
+            ? Text(pageType)
+            : isDataForDeliveryDone
+                ? const Text("Delivery Done")
+                : const Text("Delivery Remaining"),
         actions: [
-          IconButton(
-            onPressed: () async {
-              await pickDateTimeAndFilter(context);
-            },
-            icon: const Icon(
-              FluentIcons.calendar_24_regular,
+          if (pageType != "")
+            IconButton(
+              onPressed: () async {
+                await pickDateTimeAndFilter(context);
+              },
+              icon: const Icon(
+                Icons.filter_alt_sharp,
+              ),
             ),
-          ),
           const Gap(10),
         ],
       ),
@@ -148,28 +152,79 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
     );
   }
 
-  Future<void> pickDateTimeAndFilter(BuildContext context) async {
+  Future<void> pickDateTimeAndFilter(
+    BuildContext context,
+  ) async {
     DateTime? pickedDateTime;
+    String? filterBy;
     await showModalBottomSheet(
       context: context,
       builder: (context) => BottomPicker.date(
         height: 500,
-        pickerTitle: const Text(
-          "Pick a Date",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        pickerTitle: pageType != ""
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Pick a Date",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const Gap(30),
+                  DropdownMenu(
+                    inputDecorationTheme: InputDecorationTheme(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    label: const Text("Filter by"),
+                    onSelected: (value) {
+                      filterBy = value ?? "";
+                    },
+                    dropdownMenuEntries: const [
+                      DropdownMenuEntry(
+                        value: "All",
+                        label: "All",
+                      ),
+                      DropdownMenuEntry(
+                        value: "GatePass",
+                        label: "GatePass",
+                      ),
+                      DropdownMenuEntry(
+                        value: "Return",
+                        label: "Return",
+                      ),
+                      DropdownMenuEntry(
+                        value: "Due",
+                        label: "Due",
+                      ),
+                      DropdownMenuEntry(
+                        value: "Remaining",
+                        label: "Remaining",
+                      ),
+                    ],
+                  ),
+                ],
+              )
+            : const Text(
+                "Pick a Date",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
         onSubmit: (p0) {
           pickedDateTime = p0 as DateTime;
         },
       ),
     );
+
     if (pickedDateTime != null) {
       final box = Hive.box('info');
       final url = Uri.parse(
-        "$base$getDelivaryList/${box.get('sap_id')}?type=${isDataForDeliveryDone ? "Done" : "Remaining"}&date=${DateFormat('yyyy-MM-dd').format(pickedDateTime!)}",
+        "$base$cashCollectionList/${box.get('sap_id')}?type=${filterBy ?? (isDataForDeliveryDone ? "Done" : "Remaining")}&date=${DateFormat('yyyy-MM-dd').format(pickedDateTime!)}",
       );
 
       showCupertinoModalPopup(

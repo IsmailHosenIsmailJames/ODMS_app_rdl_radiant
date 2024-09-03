@@ -1,0 +1,17 @@
+{
+    "billing_doc_no": "string_value",
+    "last_status": "string_value",
+    "type": "string_value",
+    "cash_collection": 0.0,
+    "cash_collection_latitude": "string_value_or_null",
+    "cash_collection_longitude": "string_value_or_null",
+    "cash_collection_status": "string_value_or_null",
+    "deliverys": [
+        {
+            "return_quantity": 0,
+            "return_net_val": 0.0,
+            "vat": 0.0,
+            "id": null
+        }
+    ]
+}

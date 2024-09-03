@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
 import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
 import 'package:rdl_radiant/src/screens/home/product_list/prodouct_list_page.dart';
+import 'package:rdl_radiant/src/screens/home/product_list/cash_collection/product_list_cash_collection.dart';
 import 'package:rdl_radiant/src/screens/maps/map_view.dart';
 import 'package:simple_icons/simple_icons.dart';
 import 'package:http/http.dart' as http;
@@ -32,6 +33,8 @@ class InvoiceListPage extends StatefulWidget {
 
 class _InvoiceListPageState extends State<InvoiceListPage> {
   final invoiceListController = Get.put(InvoiceListController());
+  final DeliveryRemaningController deliveryRemaningController = Get.find();
+
   @override
   void initState() {
     super.initState();
@@ -408,15 +411,28 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                   return GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () async {
-                      await Get.to(
-                        () => ProdouctListPage(
-                          invoice: invoiceList[index],
-                          invioceNo:
-                              (invoiceList[index].billingDocNo ?? 0).toString(),
-                          totalAmount: widget.totalAmount,
-                          index: index,
-                        ),
-                      );
+                      deliveryRemaningController.pageType.value;
+                      deliveryRemaningController.pageType.value != ""
+                          ? await Get.to(
+                              () => ProductListCashCollection(
+                                invoice: invoiceList[index],
+                                invioceNo:
+                                    (invoiceList[index].billingDocNo ?? 0)
+                                        .toString(),
+                                totalAmount: amount.toStringAsFixed(2),
+                                index: index,
+                              ),
+                            )
+                          : await Get.to(
+                              () => ProdouctListPage(
+                                invoice: invoiceList[index],
+                                invioceNo:
+                                    (invoiceList[index].billingDocNo ?? 0)
+                                        .toString(),
+                                totalAmount: amount.toStringAsFixed(2),
+                                index: index,
+                              ),
+                            );
                       if (invoiceList.isEmpty) {
                         final box = Hive.box('info');
                         final url = Uri.parse(

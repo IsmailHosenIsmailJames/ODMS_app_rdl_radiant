@@ -3,6 +3,7 @@ import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_r
 
 class DeliveryRemaningController extends GetxController {
   RxBool isDataForDeliveryDone = false.obs;
+  RxString pageType = "".obs;
   late DeliveryRemaing x;
   late Rx<DeliveryRemaing> deliveryRemaing;
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'dart:math';
+import 'dart:developer' as dev;
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -222,6 +223,7 @@ class _HomePageState extends State<HomePage> {
                                 controller.constDeliveryRemaing.value.result ??=
                                     [];
                                 controller.isDataForDeliveryDone.value = false;
+                                controller.pageType.value = '';
                                 Get.to(
                                   () => const DeliveryRemainingPage(),
                                 );
@@ -283,6 +285,7 @@ class _HomePageState extends State<HomePage> {
                                 controller.constDeliveryRemaing.value.result ??=
                                     [];
                                 controller.isDataForDeliveryDone.value = true;
+                                controller.pageType.value = '';
                                 Get.to(
                                   () => const DeliveryRemainingPage(),
                                 );
@@ -300,6 +303,61 @@ class _HomePageState extends State<HomePage> {
                             Image.asset('assets/cash_collection.png'),
                             'Cash Collection Remaining',
                             0,
+                            onPressed: () async {
+                              final box = Hive.box('info');
+                              final url = Uri.parse(
+                                "$base$cashCollectionList/${box.get('sap_id')}?type=Remaining&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+                              );
+
+                              showCupertinoModalPopup(
+                                context: context,
+                                builder: (context) => Scaffold(
+                                  backgroundColor:
+                                      Colors.white.withOpacity(0.1),
+                                  body: const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Color.fromARGB(255, 74, 174, 255),
+                                    ),
+                                  ),
+                                ),
+                              );
+
+                              final response = await http.get(url);
+
+                              if (Navigator.canPop(context)) {
+                                Navigator.pop(context);
+                              }
+
+                              if (response.statusCode == 200) {
+                                dev.log(response.body);
+
+                                final controller = Get.put(
+                                  DeliveryRemaningController(
+                                    DeliveryRemaing.fromJson(response.body),
+                                  ),
+                                );
+                                controller.deliveryRemaing.value =
+                                    DeliveryRemaing.fromJson(response.body);
+                                controller.constDeliveryRemaing.value =
+                                    DeliveryRemaing.fromJson(response.body);
+                                controller.deliveryRemaing.value.result ??= [];
+                                controller.constDeliveryRemaing.value.result ??=
+                                    [];
+                                controller.isDataForDeliveryDone.value = false;
+                                controller.pageType.value =
+                                    'Cash Collection Remaining';
+
+                                Get.to(
+                                  () => const DeliveryRemainingPage(),
+                                );
+                              } else {
+                                if (kDebugMode) {
+                                  print(
+                                    "Delivery Remaining response error : ${response.statusCode}",
+                                  );
+                                }
+                              }
+                            },
                           ),
                           getCardView(
                             data['cash_done'].toString(),
