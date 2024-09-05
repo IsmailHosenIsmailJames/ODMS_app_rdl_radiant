@@ -548,8 +548,10 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                         autovalidateMode:
                                             AutovalidateMode.onUserInteraction,
                                         validator: (value) {
+                                          value ??= "";
+                                          if (value.isEmpty) value = "0";
                                           int? recQuentaty =
-                                              int.tryParse(value ?? "");
+                                              int.tryParse(value);
                                           if (recQuentaty != null) {
                                             int? retQuentaty = int.tryParse(
                                                 returnTextEditingControllerList[
@@ -561,13 +563,6 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                             if (totalQuentaty !=
                                                 (productList[index].quantity ??
                                                     0)) {
-                                              Fluttertoast.cancel().then(
-                                                (value) {
-                                                  Fluttertoast.showToast(
-                                                      msg:
-                                                          "Ensure that the receive & return quantity does not exceed with specified quantity in invoice");
-                                                },
-                                              );
                                               return "Not valid";
                                             }
 
@@ -577,6 +572,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                           }
                                         },
                                         onChanged: (value) {
+                                          if (value.isEmpty) value = "0";
                                           int? recQuentaty =
                                               int.tryParse(value);
                                           if (recQuentaty != null) {
@@ -635,8 +631,10 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                         autovalidateMode:
                                             AutovalidateMode.onUserInteraction,
                                         validator: (value) {
+                                          value ??= "";
+                                          if (value.isEmpty) value = "0";
                                           int? retQuentaty =
-                                              int.tryParse(value ?? "0");
+                                              int.tryParse(value);
                                           if (retQuentaty != null) {
                                             int? recQuentaty = int.tryParse(
                                                 receiveTextEditingControllerList[
@@ -648,14 +646,6 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                             if (totalQuentaty !=
                                                 (productList[index].quantity ??
                                                     0)) {
-                                              Fluttertoast.cancel().then(
-                                                (value) {
-                                                  Fluttertoast.showToast(
-                                                      msg:
-                                                          "Ensure that the receive & return quantity does not exceed with specified quantity in invoice");
-                                                },
-                                              );
-
                                               return "Not valid";
                                             }
 
@@ -665,6 +655,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                           }
                                         },
                                         onChanged: (value) {
+                                          if (value.isEmpty) value = "0";
                                           int? retQuentaty =
                                               int.tryParse(value);
                                           if (retQuentaty != null) {

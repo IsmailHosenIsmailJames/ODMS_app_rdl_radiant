@@ -9,7 +9,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/controller/delivery_remaning_controller.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
@@ -43,7 +42,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
   TextEditingController receivedAmmountController = TextEditingController();
   List<double> receiveAmountList = [];
   List<double> returnAmountList = [];
-  double dueAmmount = 0;
+  double dueAmount = 0;
   final formKey = GlobalKey<FormState>();
 
   final DeliveryRemaningController deliveryRemaningController = Get.find();
@@ -62,7 +61,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
     isDataForDeliveryDone =
         deliveryRemaningController.isDataForDeliveryDone.value;
 
-    dueAmmount = double.parse(widget.totalAmount);
+    dueAmount = double.parse(widget.totalAmount);
 
     super.initState();
   }
@@ -448,7 +447,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                   child: Container(
                                     padding: const EdgeInsets.all(5),
                                     child: Text(
-                                      (dueAmmount - totalRetrunAmmount)
+                                      (dueAmount - totalRetrunAmmount)
                                           .toStringAsFixed(2),
                                       style: topContainerTextStyle,
                                     ),
@@ -474,7 +473,9 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                 TextFormField(
                   controller: receivedAmmountController,
                   validator: (value) {
-                    final x = double.tryParse(value ?? "");
+                    value ??= "";
+                    if (value.isEmpty) value = "0";
+                    final x = double.tryParse(value);
                     if (x != null) {
                       final totalAmount =
                           double.parse(widget.totalAmount) - totalRetrunAmmount;
@@ -486,26 +487,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                       return "Not a valid number";
                     }
                   },
-                  onChanged: (value) {
-                    final x = double.tryParse(value);
-                    if (x != null) {
-                      final totalAmount =
-                          double.parse(widget.totalAmount) - totalRetrunAmmount;
-                      if (x <= totalAmount) {
-                        setState(() {
-                          dueAmmount = double.parse(widget.totalAmount) -
-                              x -
-                              totalRetrunAmmount;
-                        });
-                        return;
-                      }
-                    } else {
-                      setState(() {
-                        dueAmmount = dueAmmount =
-                            double.parse(widget.totalAmount) -
-                                totalRetrunAmmount;
-                      });
-                    }
+                  onChanged: (_) {
+                    calculate();
                   },
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
@@ -645,14 +628,6 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                     if (retQuentaty != null) {
                                       if (retQuentaty >
                                           (productList[index].quantity ?? 0)) {
-                                        Fluttertoast.cancel().then(
-                                          (value) {
-                                            Fluttertoast.showToast(
-                                                msg:
-                                                    "Ensure that the receive & return quantity does not exceed with specified quantity in invoice");
-                                          },
-                                        );
-
                                         return "Not valid";
                                       }
 
@@ -662,6 +637,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                     }
                                   },
                                   onChanged: (value) {
+                                    if (value.isEmpty) value = "0";
                                     int? retQuentaty = int.tryParse(value);
                                     if (retQuentaty != null) {
                                       int? recQuentaty = int.tryParse(
@@ -688,6 +664,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                           receiveAmountList[index] =
                                               perProduct * (recQuentaty ?? 0);
                                         });
+                                        calculate();
                                       });
                                     } else {
                                       WidgetsBinding.instance
@@ -722,25 +699,6 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                     ),
                                     Text(
                                       "Ret. Amount :  ${returnAmountList[index].toStringAsFixed(2)}",
-                                      style: style.copyWith(
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              if (isDataForDeliveryDone)
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Rec. Amount :  ${(productList[index].deliveryNetVal ?? 0).toStringAsFixed(2)}",
-                                      style: style.copyWith(
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-                                      "Ret. Amount :  ${(productList[index].returnNetVal ?? 0).toStringAsFixed(2)}",
                                       style: style.copyWith(
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -787,14 +745,6 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               );
                               final position =
                                   await Geolocator.getCurrentPosition();
-                              //       deliveryDetailsM.billing_doc_no,
-                              // last_status = "cash_collection",
-                              // type = "cash_collection",
-                              // cash_collection = cashCollection,
-                              // cash_collection_latitude = latitude.toString(),
-                              // cash_collection_longitude = longitude.toString(),
-                              // cash_collection_status = "Done",
-                              // deliverys = cashCollectionList
 
                               List<DeliveryCash> listOfDeliveryCash = [];
                               for (int i = 0; i < productList.length; i++) {
@@ -881,4 +831,25 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
     fontSize: 16,
     fontWeight: FontWeight.bold,
   );
+
+  void calculate() {
+    String receivedText = receivedAmmountController.text;
+    if (receivedText.isEmpty) receivedText = "0";
+    double? receivedAmount = double.tryParse(receivedText);
+    if (receivedAmount != null) {
+      double totalAmountPrevious = double.parse(widget.totalAmount);
+      double returnAmountNow = 0;
+      for (double returnAmount in returnAmountList) {
+        returnAmountNow += returnAmount;
+      }
+
+      dueAmount = totalAmountPrevious - returnAmountNow - receivedAmount;
+      if (dueAmount < 0) {
+        dueAmount = totalAmountPrevious - returnAmountNow;
+      }
+      setState(() {
+        dueAmount;
+      });
+    }
+  }
 }
