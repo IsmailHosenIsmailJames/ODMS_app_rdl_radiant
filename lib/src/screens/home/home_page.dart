@@ -431,6 +431,61 @@ class _HomePageState extends State<HomePage> {
                             ),
                             'Returned',
                             0,
+                            onPressed: () async {
+                              final box = Hive.box('info');
+                              final url = Uri.parse(
+                                "$base$cashCollectionList/${box.get('sap_id')}?type=Return&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+                              );
+
+                              showCupertinoModalPopup(
+                                context: context,
+                                builder: (context) => Scaffold(
+                                  backgroundColor:
+                                      Colors.white.withOpacity(0.1),
+                                  body: const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Color.fromARGB(255, 74, 174, 255),
+                                    ),
+                                  ),
+                                ),
+                              );
+
+                              final response = await http.get(url);
+                              log(response.body);
+
+                              if (Navigator.canPop(context)) {
+                                Navigator.pop(context);
+                              }
+
+                              if (response.statusCode == 200) {
+                                dev.log(response.body);
+
+                                final controller = Get.put(
+                                  DeliveryRemaningController(
+                                    DeliveryRemaing.fromJson(response.body),
+                                  ),
+                                );
+                                controller.deliveryRemaing.value =
+                                    DeliveryRemaing.fromJson(response.body);
+                                controller.constDeliveryRemaing.value =
+                                    DeliveryRemaing.fromJson(response.body);
+                                controller.deliveryRemaing.value.result ??= [];
+                                controller.constDeliveryRemaing.value.result ??=
+                                    [];
+                                controller.isDataForDeliveryDone.value = false;
+                                controller.pageType.value = 'Return';
+
+                                Get.to(
+                                  () => const DeliveryRemainingPage(),
+                                );
+                              } else {
+                                if (kDebugMode) {
+                                  print(
+                                    "Delivery Remaining response error : ${response.statusCode}",
+                                  );
+                                }
+                              }
+                            },
                           ),
                         ],
                       );

@@ -46,7 +46,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
     return Scaffold(
       appBar: AppBar(
         title: deliveryRemaningController.pageType.value != ""
-            ? const Text("Cash Collection Details")
+            ? Text("${deliveryRemaningController.pageType.value} Details")
             : const Text("Delivery Details"),
       ),
       floatingActionButton: FloatingActionButton(

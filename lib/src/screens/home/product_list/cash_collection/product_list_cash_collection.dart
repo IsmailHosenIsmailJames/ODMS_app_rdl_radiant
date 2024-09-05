@@ -461,44 +461,57 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                     ],
                   ),
                 ),
-                const Gap(15),
-                const Text(
-                  "Received amount",
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const Gap(5),
-                TextFormField(
-                  controller: receivedAmmountController,
-                  validator: (value) {
-                    value ??= "";
-                    if (value.isEmpty) value = "0";
-                    final x = double.tryParse(value);
-                    if (x != null) {
-                      final totalAmount =
-                          double.parse(widget.totalAmount) - totalRetrunAmmount;
-                      if (x > totalAmount) {
-                        return "received amount can't beyond total amount";
-                      }
-                      return null;
-                    } else {
-                      return "Not a valid number";
-                    }
-                  },
-                  onChanged: (_) {
-                    calculate();
-                  },
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  decoration: InputDecoration(
-                    hintText: "Receive ammount",
-                    labelText: "Receive ammount",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
+                if (!(deliveryRemaningController.pageType.value == "Return" ||
+                    deliveryRemaningController.pageType.value ==
+                        "Cash Collection Done"))
+                  const Gap(15),
+                if (!(deliveryRemaningController.pageType.value == "Return" ||
+                    deliveryRemaningController.pageType.value ==
+                        "Cash Collection Done"))
+                  const Text(
+                    "Received amount",
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                ),
+                if (!(deliveryRemaningController.pageType.value == "Return" ||
+                    deliveryRemaningController.pageType.value ==
+                        "Cash Collection Done"))
+                  const Gap(5),
+                if (!(deliveryRemaningController.pageType.value == "Return" ||
+                    deliveryRemaningController.pageType.value ==
+                        "Cash Collection Done"))
+                  TextFormField(
+                    controller: receivedAmmountController,
+                    validator: (value) {
+                      print(deliveryRemaningController.pageType.value);
+                      value ??= "";
+                      if (value.isEmpty) value = "0";
+                      final x = double.tryParse(value);
+                      if (x != null) {
+                        final totalAmount = double.parse(widget.totalAmount) -
+                            totalRetrunAmmount;
+                        if (x > totalAmount) {
+                          return "received amount can't beyond total amount";
+                        }
+                        return null;
+                      } else {
+                        return "Not a valid number";
+                      }
+                    },
+                    onChanged: (_) {
+                      calculate();
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    decoration: InputDecoration(
+                      hintText: "Receive ammount",
+                      labelText: "Receive ammount",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
                 const Gap(15),
               ] +
               List.generate(
@@ -561,7 +574,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                   ),
                                   const Gap(5),
                                   Text(
-                                    (productList[index].quantity ?? 0)
+                                    (productList[index].deliveryQuantity ?? 0)
                                         .toString(),
                                     style: TextStyle(
                                       fontSize: 16,
@@ -617,7 +630,10 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                   ],
                                 ),
                               if (isDataForDeliveryDone) const Divider(),
-                              if (!isDataForDeliveryDone)
+                              if (!(deliveryRemaningController.pageType.value ==
+                                      "Return" ||
+                                  deliveryRemaningController.pageType.value ==
+                                      "Cash Collection Done"))
                                 TextFormField(
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
@@ -686,25 +702,99 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                   ),
                                 ),
                               const Gap(5),
-                              if (!isDataForDeliveryDone)
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Rec. Amount :  ${receiveAmountList[index].toStringAsFixed(2)}",
-                                      style: style.copyWith(
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-                                      "Ret. Amount :  ${returnAmountList[index].toStringAsFixed(2)}",
-                                      style: style.copyWith(
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
+                              if (deliveryRemaningController.pageType.value ==
+                                  "Return")
+                                Text(
+                                  "Return Qty. : ${(productList[index].quantity ?? 0).toInt()}",
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
                                 ),
+                              // if (deliveryRemaningController.pageType.value ==
+                              //     "Cash Collection Done")
+                              //   Row(
+                              //     mainAxisAlignment:
+                              //         MainAxisAlignment.spaceBetween,
+                              //     children: [
+                              //       Text(
+                              //         "Received Qty. : ${(productList[index].deliveryQuantity ?? 0).toInt()}",
+                              //         style: TextStyle(
+                              //           fontSize: 16,
+                              //           fontWeight: FontWeight.bold,
+                              //           color: Colors.green.shade900,
+                              //         ),
+                              //       ),
+                              //       Text(
+                              //         "Received Amount. : ${(productList[index].deliveryNetVal ?? 0) * (productList[index].deliveryQuantity ?? 0)}",
+                              //         style: TextStyle(
+                              //           fontSize: 16,
+                              //           fontWeight: FontWeight.bold,
+                              //           color: Colors.green.shade900,
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              //   if (deliveryRemaningController.pageType.value ==
+                              //       "Cash Collection Done")
+                              //     const Divider(),
+                              //   if (deliveryRemaningController.pageType.value ==
+                              //       "Cash Collection Done")
+                              //     Row(
+                              //       mainAxisAlignment:
+                              //           MainAxisAlignment.spaceBetween,
+                              //       children: [
+                              //         Text(
+                              //           "Return Qty. : ${(productList[index].returnQuantity ?? 0).toInt()}",
+                              //           style: TextStyle(
+                              //             fontSize: 16,
+                              //             fontWeight: FontWeight.bold,
+                              //             color: Colors.red.shade800,
+                              //           ),
+                              //         ),
+                              //         Text(
+                              //           "Return Amount. : ${(productList[index].returnNetVal ?? 0) * (productList[index].returnQuantity ?? 0)}",
+                              //           style: TextStyle(
+                              //             fontSize: 16,
+                              //             fontWeight: FontWeight.bold,
+                              //             color: Colors.red.shade800,
+                              //           ),
+                              //         ),
+                              //       ],
+                              //     ),
+                              //   if (deliveryRemaningController.pageType.value ==
+                              //       "Cash Collection Done")
+                              //     Row(
+                              //       mainAxisAlignment:
+                              //           MainAxisAlignment.spaceBetween,
+                              //       children: [
+                              //         if (!(deliveryRemaningController
+                              //                     .pageType.value ==
+                              //                 "Return" ||
+                              //             deliveryRemaningController
+                              //                     .pageType.value ==
+                              //                 "Cash Collection Done"))
+                              //           Text(
+                              //             "Rec. Amount :  ${receiveAmountList[index].toStringAsFixed(2)}",
+                              //             style: style.copyWith(
+                              //               fontWeight: FontWeight.w500,
+                              //             ),
+                              //           ),
+                              //         if (!(deliveryRemaningController
+                              //                     .pageType.value ==
+                              //                 "Return" ||
+                              //             deliveryRemaningController
+                              //                     .pageType.value ==
+                              //                 "Cash Collection Done"))
+                              //           Text(
+                              //             "Ret. Amount :  ${returnAmountList[index].toStringAsFixed(2)}",
+                              //             style: style.copyWith(
+                              //               fontWeight: FontWeight.w500,
+                              //             ),
+                              //           ),
+                              //       ],
+                              //     ),
                             ],
                           ),
                         ),
