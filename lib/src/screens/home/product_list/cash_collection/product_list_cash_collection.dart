@@ -464,7 +464,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                 ),
                 const Gap(15),
                 const Text(
-                  "Received ammount",
+                  "Received amount",
                   style: TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
@@ -479,7 +479,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                       final totalAmount =
                           double.parse(widget.totalAmount) - totalRetrunAmmount;
                       if (x > totalAmount) {
-                        return "received amount can't beyond total ammount";
+                        return "received amount can't beyond total amount";
                       }
                       return null;
                     } else {
@@ -831,19 +831,19 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               );
 
                               if (kDebugMode) {
+                                print("Sending to api: ");
                                 log(toSendCashDataModel.toJson());
                               }
-                              final box = Hive.box('info');
-
                               final uri = Uri.parse(
-                                  "$base$cashCollectionSave/${box.get('sap_id')}");
+                                  "$base$cashCollectionSave/${widget.invoice.id}");
                               final response = await http.put(
                                 uri,
                                 headers: {"Content-Type": "application/json"},
                                 body: toSendCashDataModel.toJson(),
                               );
                               if (kDebugMode) {
-                                print(response.body);
+                                print("received form api: ");
+                                log(response.body);
                               }
                               if (kDebugMode) {
                                 log(response.statusCode.toString());

@@ -44,7 +44,9 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Delivery Details"),
+        title: deliveryRemaningController.pageType.value != ""
+            ? const Text("Cash Collection Details")
+            : const Text("Delivery Details"),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
