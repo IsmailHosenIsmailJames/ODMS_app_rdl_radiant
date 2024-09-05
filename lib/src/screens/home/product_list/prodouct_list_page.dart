@@ -881,7 +881,9 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                 routeCode: widget.invoice.routeCode,
                                 partner: widget.invoice.partner,
                                 gatePassNo: widget.invoice.gatePassNo,
-                                daCode: widget.invoice.daCode.toString(),
+                                daCode: (widget.invoice.daCode ?? 0)
+                                    .toInt()
+                                    .toString(),
                                 vehicleNo: widget.invoice.vehicleNo,
                                 deliveryLatitude: position.latitude.toString(),
                                 deliveryLongitude:
