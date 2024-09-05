@@ -40,7 +40,6 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
   List<TextEditingController> receiveTextEditingControllerList = [];
   List<TextEditingController> returnTextEditingControllerList = [];
   TextEditingController receivedAmmountController = TextEditingController();
-  List<double> receiveAmountList = [];
   List<double> returnAmountList = [];
   double dueAmount = 0;
   final formKey = GlobalKey<FormState>();
@@ -54,7 +53,6 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
     productList = widget.invoice.productList ?? [];
     for (int i = 0; i < productList.length; i++) {
       receiveTextEditingControllerList.add(TextEditingController());
-      receiveAmountList.add(0);
       returnTextEditingControllerList.add(TextEditingController());
       returnAmountList.add(0);
     }
@@ -108,7 +106,6 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                           });
                           returnAmountList[index] =
                               (current.quantity ?? 0) * perProduct;
-                          receiveAmountList[index] = 0;
                         }
                         setState(() {});
                       },
@@ -507,6 +504,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                   double perProduct = ((productList[index].netVal ?? 0) +
                           (productList[index].vat ?? 0)) /
                       (productList[index].quantity ?? 0);
+
                   return Container(
                     margin: const EdgeInsets.only(top: 5, bottom: 5),
                     decoration: BoxDecoration(
@@ -645,34 +643,18 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                                   index]
                                               .text);
                                       recQuentaty ??= 0;
-                                      int totalQuentaty =
-                                          retQuentaty + recQuentaty;
-                                      if (totalQuentaty !=
-                                          (productList[index].quantity ?? 0)) {
-                                        WidgetsBinding.instance
-                                            .addPostFrameCallback((_) {
-                                          setState(() {
-                                            receiveAmountList[index] = 0;
-                                          });
-                                        });
-                                      }
+
                                       WidgetsBinding.instance
                                           .addPostFrameCallback((_) {
                                         setState(() {
                                           returnAmountList[index] =
                                               perProduct * retQuentaty;
-                                          receiveAmountList[index] =
-                                              perProduct * (recQuentaty ?? 0);
                                         });
                                         calculate();
                                       });
                                     } else {
                                       WidgetsBinding.instance
-                                          .addPostFrameCallback((_) {
-                                        setState(() {
-                                          receiveAmountList[index] = 0;
-                                        });
-                                      });
+                                          .addPostFrameCallback((_) {});
                                     }
                                   },
                                   controller:
@@ -688,15 +670,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               const Gap(5),
                               if (!isDataForDeliveryDone)
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      "Rec. Amount :  ${receiveAmountList[index].toStringAsFixed(2)}",
-                                      style: style.copyWith(
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
                                     Text(
                                       "Ret. Amount :  ${returnAmountList[index].toStringAsFixed(2)}",
                                       style: style.copyWith(

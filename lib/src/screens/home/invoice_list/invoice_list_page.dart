@@ -42,6 +42,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: deliveryRemaningController.pageType.value != ""
@@ -405,11 +406,20 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                 invoiceList.length,
                 (index) {
                   double amount = 0;
+                  int returnQty = 0;
+                  double returnAmount = 0;
+                  int deliveryQty = 0;
+                  double deliveryAmmount = 0;
                   for (final ProductList productList
                       in invoiceList[index].productList ?? []) {
-                    amount += productList.vat ?? 0;
-                    amount += productList.netVal ?? 0;
+                    amount +=
+                        (productList.netVal ?? 0) + (productList.vat ?? 0);
+                    returnQty += (productList.returnQuantity ?? 0).toInt();
+                    returnAmount += (productList.returnNetVal ?? 0);
+                    deliveryQty += (productList.deliveryQuantity ?? 0).toInt();
+                    deliveryAmmount += (productList.deliveryNetVal ?? 0);
                   }
+
                   return GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () async {
@@ -501,49 +511,202 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                               ],
                             ),
                           ),
-                          Padding(
+                          Container(
                             padding: const EdgeInsets.all(8),
-                            child: Row(
+                            child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Column(
-                                  children: [
-                                    Text(
-                                      "Type",
-                                      style: style,
+                                Container(
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
                                     ),
-                                    Text(
-                                      "Invoice",
-                                      style: style,
-                                    ),
-                                  ],
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: width / 3.39,
+                                        child: Text(
+                                          "Type",
+                                          style: style,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: width / 3.39,
+                                        child: Text(
+                                          "Quantity",
+                                          style: style,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: width / 3.39,
+                                        child: Text(
+                                          "Amount",
+                                          style: style,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Column(
-                                  children: [
-                                    Text(
-                                      "Quantity",
-                                      style: style,
-                                    ),
-                                    Text(
-                                      (invoiceList[index].productList ?? [])
-                                          .length
-                                          .toString(),
-                                      style: style,
-                                    ),
-                                  ],
+                                Container(
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.purple.withOpacity(0.3),
+                                    borderRadius: ((deliveryRemaningController
+                                                        .isDataForDeliveryDone
+                                                        .value ==
+                                                    false &&
+                                                deliveryRemaningController
+                                                        .pageType.value !=
+                                                    "")) ||
+                                            deliveryRemaningController
+                                                .isDataForDeliveryDone.value
+                                        ? null
+                                        : const BorderRadius.only(
+                                            bottomLeft: Radius.circular(10),
+                                            bottomRight: Radius.circular(10),
+                                          ),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: width / 3.39,
+                                        child: Text(
+                                          "Invoice",
+                                          style: style.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: width / 3.39,
+                                        child: Text(
+                                          (invoiceList[index].productList ?? [])
+                                              .length
+                                              .toString(),
+                                          style: style.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: width / 3.39,
+                                        child: Text(
+                                          amount.toStringAsFixed(2),
+                                          style: style.copyWith(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Column(
-                                  children: [
-                                    Text(
-                                      "Amount",
-                                      style: style,
+                                if ((deliveryRemaningController
+                                                .isDataForDeliveryDone.value ==
+                                            false &&
+                                        deliveryRemaningController
+                                                .pageType.value !=
+                                            "") ||
+                                    deliveryRemaningController
+                                        .isDataForDeliveryDone.value)
+                                  Container(
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      color: Colors.green.withOpacity(0.35),
+                                      borderRadius: deliveryRemaningController
+                                              .isDataForDeliveryDone.value
+                                          ? const BorderRadius.only(
+                                              bottomLeft: Radius.circular(10),
+                                              bottomRight: Radius.circular(10))
+                                          : null,
                                     ),
-                                    Text(
-                                      amount.toStringAsFixed(2),
-                                      style: style,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: width / 3.39,
+                                          child: Text(
+                                            "Delivered",
+                                            style: style.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: width / 3.39,
+                                          child: Text(
+                                            deliveryQty.toString(),
+                                            style: style.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: width / 3.39,
+                                          child: Text(
+                                            deliveryAmmount.toStringAsFixed(2),
+                                            style: style.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                )
+                                  ),
+                                if ((deliveryRemaningController
+                                            .isDataForDeliveryDone.value ==
+                                        false &&
+                                    deliveryRemaningController.pageType.value !=
+                                        ""))
+                                  Container(
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      color: Colors.red.withOpacity(0.35),
+                                      borderRadius: const BorderRadius.only(
+                                        bottomLeft: Radius.circular(10),
+                                        bottomRight: Radius.circular(10),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          width: width / 3.39,
+                                          child: Text(
+                                            "Returned",
+                                            style: style.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: width / 3.39,
+                                          child: Text(
+                                            returnQty.toString(),
+                                            style: style.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: width / 3.39,
+                                          child: Text(
+                                            returnAmount.toStringAsFixed(2),
+                                            style: style.copyWith(
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                               ],
                             ),
                           ),
