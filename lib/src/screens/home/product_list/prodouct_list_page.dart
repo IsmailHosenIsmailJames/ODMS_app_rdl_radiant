@@ -636,7 +636,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                             AutovalidateMode.onUserInteraction,
                                         validator: (value) {
                                           int? retQuentaty =
-                                              int.tryParse(value ?? "");
+                                              int.tryParse(value ?? "0");
                                           if (retQuentaty != null) {
                                             int? recQuentaty = int.tryParse(
                                                 receiveTextEditingControllerList[

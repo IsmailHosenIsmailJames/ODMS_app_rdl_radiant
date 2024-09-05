@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,12 +9,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:hive/hive.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/controller/delivery_remaning_controller.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
 import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
-import 'package:rdl_radiant/src/screens/home/product_list/models/delivery_data.dart';
+import 'package:rdl_radiant/src/screens/home/product_list/cash_collection/to_send_cash_data_model.dart';
 import 'package:http/http.dart' as http;
 
 class ProductListCashCollection extends StatefulWidget {
@@ -82,37 +83,6 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
             : [
                 PopupMenuButton(
                   itemBuilder: (context) => [
-                    PopupMenuItem(
-                      child: const Row(
-                        children: [
-                          Icon(
-                            Icons.done_all,
-                            color: Colors.green,
-                          ),
-                          Gap(10),
-                          Text("All Received"),
-                        ],
-                      ),
-                      onTap: () {
-                        for (var index = 0;
-                            index < productList.length;
-                            index++) {
-                          ProductList current = productList[index];
-                          double perProduct =
-                              ((current.netVal ?? 0) + (current.vat ?? 0)) /
-                                  (current.quantity ?? 0);
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            receiveTextEditingControllerList[index].text =
-                                (current.quantity ?? 0).toInt().toString();
-                            returnTextEditingControllerList[index].text = '0';
-                          });
-                          receiveAmountList[index] =
-                              (current.quantity ?? 0) * perProduct;
-                          returnAmountList[index] = 0;
-                        }
-                        setState(() {});
-                      },
-                    ),
                     PopupMenuItem(
                       child: const Row(
                         children: [
@@ -669,17 +639,11 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   validator: (value) {
+                                    if ((value ?? "") == "") return null;
                                     int? retQuentaty =
                                         int.tryParse(value ?? "");
                                     if (retQuentaty != null) {
-                                      int? recQuentaty = int.tryParse(
-                                          receiveTextEditingControllerList[
-                                                  index]
-                                              .text);
-                                      recQuentaty ??= 0;
-                                      int totalQuentaty =
-                                          retQuentaty + recQuentaty;
-                                      if (totalQuentaty !=
+                                      if (retQuentaty >
                                           (productList[index].quantity ?? 0)) {
                                         Fluttertoast.cancel().then(
                                           (value) {
@@ -823,80 +787,66 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               );
                               final position =
                                   await Geolocator.getCurrentPosition();
+                              //       deliveryDetailsM.billing_doc_no,
+                              // last_status = "cash_collection",
+                              // type = "cash_collection",
+                              // cash_collection = cashCollection,
+                              // cash_collection_latitude = latitude.toString(),
+                              // cash_collection_longitude = longitude.toString(),
+                              // cash_collection_status = "Done",
+                              // deliverys = cashCollectionList
 
-                              List<Delivery> listOfDelivery = [];
+                              List<DeliveryCash> listOfDeliveryCash = [];
                               for (int i = 0; i < productList.length; i++) {
                                 final e = productList[i];
                                 String returnText =
                                     returnTextEditingControllerList[i]
                                         .text
                                         .trim();
-                                String receiveText =
-                                    receiveTextEditingControllerList[i].text;
                                 if (returnText.isEmpty) returnText = "0";
-                                if (receiveText.isEmpty) receiveText = "0";
-                                listOfDelivery.add(
-                                  Delivery(
-                                    matnr: e.matnr,
-                                    batch: e.batch,
-                                    quantity:
-                                        (productList[i].quantity ?? 0).toInt(),
-                                    tp: e.tp,
-                                    vat: e.vat,
-                                    netVal: e.netVal,
-                                    deliveryQuantity: int.parse(receiveText),
-                                    deliveryNetVal:
-                                        (((e.netVal ?? 0) + (e.vat ?? 0)) /
-                                                (productList[i].quantity ?? 0)
-                                                    .toInt()) *
-                                            int.parse(receiveText),
-                                    returnQuantity: int.parse(returnText),
-                                    returnNetVal:
-                                        (((e.netVal ?? 0) + (e.vat ?? 0)) /
-                                                (productList[i].quantity ?? 0)
-                                                    .toInt()) *
-                                            int.parse(returnText),
-                                    id: e.id,
-                                  ),
-                                );
+                                listOfDeliveryCash.add(DeliveryCash(
+                                  id: int.parse("${productList[i].id}"),
+                                  returnNetVal:
+                                      (((e.netVal ?? 0) + (e.vat ?? 0)) /
+                                              (productList[i].quantity ?? 0)
+                                                  .toInt()) *
+                                          int.parse(returnText),
+                                  returnQuantity: int.parse(returnText),
+                                  vat: e.vat,
+                                ));
                               }
 
-                              final deliveryData = DeliveryData(
+                              final toSendCashDataModel = ToSendCashDataModel(
                                 billingDocNo: widget.invoice.billingDocNo,
-                                billingDate: DateFormat('yyyy-MM-dd')
-                                    .format(widget.invoice.billingDate!),
-                                routeCode: widget.invoice.routeCode,
-                                partner: widget.invoice.partner,
-                                gatePassNo: widget.invoice.gatePassNo,
-                                daCode: widget.invoice.daCode.toString(),
-                                vehicleNo: widget.invoice.vehicleNo,
-                                deliveryLatitude: position.latitude.toString(),
-                                deliveryLongitude:
+                                lastStatus: "cash_collection",
+                                type: "cash_collection",
+                                cashCollection: double.tryParse(
+                                    receivedAmmountController.text),
+                                cashCollectionLatitude:
+                                    position.latitude.toString(),
+                                cashCollectionLongitude:
                                     position.longitude.toString(),
-                                transportType: widget.invoice.transportType,
-                                deliveryStatus: 'Done',
-                                lastStatus: "delivery",
-                                type: "delivery",
-                                cashCollection: 0.00,
-                                cashCollectionLatitude: null,
-                                cashCollectionLongitude: null,
-                                cashCollectionStatus: null,
-                                deliverys: listOfDelivery,
+                                cashCollectionStatus: "Done",
+                                deliverys: listOfDeliveryCash,
                               );
+
                               if (kDebugMode) {
-                                print(deliveryData.toJson());
+                                log(toSendCashDataModel.toJson());
                               }
-                              final uri = Uri.parse(base + saveDeliveryList);
-                              final response = await http.post(
+                              final box = Hive.box('info');
+
+                              final uri = Uri.parse(
+                                  "$base$cashCollectionSave/${box.get('sap_id')}");
+                              final response = await http.put(
                                 uri,
                                 headers: {"Content-Type": "application/json"},
-                                body: deliveryData.toJson(),
+                                body: toSendCashDataModel.toJson(),
                               );
                               if (kDebugMode) {
                                 print(response.body);
                               }
                               if (kDebugMode) {
-                                print(response.statusCode);
+                                log(response.statusCode.toString());
                               }
 
                               if (response.statusCode == 200) {

@@ -1,23 +1,23 @@
 import 'dart:convert';
 
 class ToSendCashDataModel {
-  String billingDocNo;
-  String lastStatus;
-  String type;
-  int cashCollection;
-  String cashCollectionLatitude;
-  String cashCollectionLongitude;
-  String cashCollectionStatus;
+  String? billingDocNo;
+  String? lastStatus;
+  String? type;
+  double? cashCollection;
+  String? cashCollectionLatitude;
+  String? cashCollectionLongitude;
+  String? cashCollectionStatus;
   List<DeliveryCash> deliverys;
 
   ToSendCashDataModel({
-    required this.billingDocNo,
-    required this.lastStatus,
-    required this.type,
-    required this.cashCollection,
-    required this.cashCollectionLatitude,
-    required this.cashCollectionLongitude,
-    required this.cashCollectionStatus,
+    this.billingDocNo,
+    this.lastStatus,
+    this.type,
+    this.cashCollection,
+    this.cashCollectionLatitude,
+    this.cashCollectionLongitude,
+    this.cashCollectionStatus,
     required this.deliverys,
   });
 
@@ -25,7 +25,7 @@ class ToSendCashDataModel {
     String? billingDocNo,
     String? lastStatus,
     String? type,
-    int? cashCollection,
+    double? cashCollection,
     String? cashCollectionLatitude,
     String? cashCollectionLongitude,
     String? cashCollectionStatus,
@@ -75,22 +75,22 @@ class ToSendCashDataModel {
 }
 
 class DeliveryCash {
-  int returnQuantity;
-  int returnNetVal;
-  int vat;
-  int id;
+  int? returnQuantity;
+  double? returnNetVal;
+  double? vat;
+  int? id;
 
   DeliveryCash({
-    required this.returnQuantity,
-    required this.returnNetVal,
-    required this.vat,
-    required this.id,
+    this.returnQuantity,
+    this.returnNetVal,
+    this.vat,
+    this.id,
   });
 
   DeliveryCash copyWith({
     int? returnQuantity,
-    int? returnNetVal,
-    int? vat,
+    double? returnNetVal,
+    double? vat,
     int? id,
   }) =>
       DeliveryCash(

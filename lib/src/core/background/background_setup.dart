@@ -30,13 +30,12 @@ Future<void> initService() async {
       showNotification: true,
       playSound: false,
     ),
-    foregroundTaskOptions: const ForegroundTaskOptions(
-      interval: 10000,
-      isOnceEvent: false,
+    foregroundTaskOptions: ForegroundTaskOptions(
       autoRunOnBoot: true,
       autoRunOnMyPackageReplaced: true,
       allowWakeLock: true,
       allowWifiLock: true,
+      eventAction: ForegroundTaskEventAction.nothing(),
     ),
   );
 }
