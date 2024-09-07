@@ -37,7 +37,7 @@ class ProductListCashCollection extends StatefulWidget {
 
 class _ProductListCashCollectionState extends State<ProductListCashCollection> {
   final invoiceListController = Get.put(InvoiceListController());
-  late List<ProductList> productList;
+  List<ProductList> productList = [];
   List<TextEditingController> receiveTextEditingControllerList = [];
   List<TextEditingController> returnTextEditingControllerList = [];
   TextEditingController receivedAmmountController = TextEditingController();
@@ -51,7 +51,12 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
   String pageType = '';
   @override
   void initState() {
-    productList = widget.invoice.productList ?? [];
+    for (ProductList product in (widget.invoice.productList ?? [])) {
+      if ((product.deliveryQuantity ?? 0) != 0 && pageType != pagesState[2]) {
+        productList.add(product);
+      }
+    }
+
     for (int i = 0; i < productList.length; i++) {
       receiveTextEditingControllerList.add(TextEditingController());
       receiveAmountList.add(0);
@@ -428,6 +433,43 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                   child: Container(
                                     padding: const EdgeInsets.all(5),
                                     child: const Text(
+                                      "To pay",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const Text(
+                                  ":  ",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                Expanded(
+                                  flex: 4,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(5),
+                                    child: Text(
+                                      (double.parse(widget.totalAmount) -
+                                              totalRetrunAmmount)
+                                          .toStringAsFixed(2),
+                                      style: topContainerTextStyle,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Divider(
+                              color: Colors.white,
+                              height: 1,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 2,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(5),
+                                    child: const Text(
                                       "Due Amount",
                                       style: TextStyle(
                                         fontSize: 14,
@@ -445,8 +487,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                   child: Container(
                                     padding: const EdgeInsets.all(5),
                                     child: Text(
-                                      (dueAmount - totalRetrunAmmount)
-                                          .toStringAsFixed(2),
+                                      (dueAmount).toStringAsFixed(2),
                                       style: topContainerTextStyle,
                                     ),
                                   ),
@@ -483,9 +524,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                   TextFormField(
                     controller: receivedAmmountController,
                     validator: (value) {
-                      print(deliveryRemaningController.pageType.value);
                       value ??= "";
-                      if (value.isEmpty) value = "0";
                       final x = double.tryParse(value);
                       if (x != null) {
                         final totalAmount = double.parse(widget.totalAmount) -
@@ -587,8 +626,10 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                   ),
                                   const Gap(5),
                                   Text(
-                                    ((productList[index].vat ?? 0) +
-                                            (productList[index].netVal ?? 0))
+                                    (perProduct *
+                                            (productList[index]
+                                                    .deliveryQuantity ??
+                                                0))
                                         .toStringAsFixed(2),
                                     style: TextStyle(
                                       fontSize: 16,
@@ -605,29 +646,6 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                           padding: const EdgeInsets.all(8),
                           child: Column(
                             children: [
-                              if (pageType == pagesState[1]) const Gap(10),
-                              if (pageType == pagesState[1])
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      "Delivered Quantity: ${(productList[index].deliveryQuantity ?? 0).toInt().toString()}",
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-                                      "Delivered Returned: ${(productList[index].returnQuantity ?? 0).toInt().toString()}",
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              if (pageType == pagesState[1]) const Divider(),
                               if (!(deliveryRemaningController.pageType.value ==
                                       "Return" ||
                                   deliveryRemaningController.pageType.value ==
@@ -641,7 +659,9 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                         int.tryParse(value ?? "");
                                     if (retQuentaty != null) {
                                       if (retQuentaty >
-                                          (productList[index].quantity ?? 0)) {
+                                          (productList[index]
+                                                  .deliveryQuantity ??
+                                              0)) {
                                         return "Not valid";
                                       }
 
@@ -659,8 +679,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                                   index]
                                               .text);
                                       recQuentaty ??= 0;
-                                      int totalQuentaty =
-                                          retQuentaty + recQuentaty;
+                                      int totalQuentaty = recQuentaty;
                                       if (totalQuentaty !=
                                           (productList[index].quantity ?? 0)) {
                                         WidgetsBinding.instance
@@ -845,10 +864,11 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                 listOfDeliveryCash.add(DeliveryCash(
                                   id: int.parse("${productList[i].id}"),
                                   returnNetVal:
-                                      (((e.netVal ?? 0) + (e.vat ?? 0)) /
-                                              (productList[i].quantity ?? 0)
-                                                  .toInt()) *
-                                          int.parse(returnText),
+                                      ((((e.netVal ?? 0) + (e.vat ?? 0)) /
+                                                  (productList[i].quantity ?? 0)
+                                                      .toInt()) *
+                                              int.parse(returnText))
+                                          .toStringAsFixed(2),
                                   returnQuantity: int.parse(returnText),
                                   vat: e.vat,
                                 ));
@@ -869,7 +889,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               );
 
                               if (kDebugMode) {
-                                print("Sending to api: ");
+                                log("Sending to api: ");
                                 log(toSendCashDataModel.toJson());
                               }
                               final uri = Uri.parse(
@@ -880,7 +900,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                 body: toSendCashDataModel.toJson(),
                               );
                               if (kDebugMode) {
-                                print("received form api: ");
+                                log("received form api: ");
                                 log(response.body);
                               }
                               if (kDebugMode) {
@@ -899,6 +919,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                   }
                                   Get.back();
                                 }
+                              } else {
+                                print(response.statusCode);
                               }
                             }
                           },

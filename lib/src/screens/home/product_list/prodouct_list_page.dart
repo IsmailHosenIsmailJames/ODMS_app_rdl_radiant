@@ -73,8 +73,9 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Product List",
+        title: Text(
+          "$pageType Product List",
+          style: const TextStyle(fontSize: 20),
         ),
         actions: pageType == pagesState[1]
             ? null

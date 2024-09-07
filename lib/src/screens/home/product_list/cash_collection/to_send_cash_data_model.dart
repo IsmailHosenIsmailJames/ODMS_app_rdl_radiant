@@ -76,7 +76,7 @@ class ToSendCashDataModel {
 
 class DeliveryCash {
   int? returnQuantity;
-  double? returnNetVal;
+  String? returnNetVal;
   double? vat;
   int? id;
 
@@ -89,7 +89,7 @@ class DeliveryCash {
 
   DeliveryCash copyWith({
     int? returnQuantity,
-    double? returnNetVal,
+    String? returnNetVal,
     double? vat,
     int? id,
   }) =>

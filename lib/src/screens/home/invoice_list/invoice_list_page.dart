@@ -8,6 +8,7 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
 import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
+import 'package:rdl_radiant/src/screens/home/page_sate_defination.dart';
 import 'package:rdl_radiant/src/screens/home/product_list/prodouct_list_page.dart';
 import 'package:rdl_radiant/src/screens/home/product_list/cash_collection/product_list_cash_collection.dart';
 import 'package:rdl_radiant/src/screens/maps/map_view.dart';
@@ -425,15 +426,17 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                   return GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () async {
-                      deliveryRemaningController.pageType.value;
-                      deliveryRemaningController.pageType.value != ""
+                      (pageType == pagesState[2] ||
+                              pageType == pagesState[3] ||
+                              pageType == pagesState[4])
                           ? await Get.to(
                               () => ProductListCashCollection(
                                 invoice: invoiceList[index],
                                 invioceNo:
                                     (invoiceList[index].billingDocNo ?? 0)
                                         .toString(),
-                                totalAmount: amount.toStringAsFixed(2),
+                                totalAmount:
+                                    (amount - returnAmount).toStringAsFixed(2),
                                 index: index,
                               ),
                             )
@@ -443,14 +446,16 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                 invioceNo:
                                     (invoiceList[index].billingDocNo ?? 0)
                                         .toString(),
-                                totalAmount: amount.toStringAsFixed(2),
+                                totalAmount:
+                                    (amount - returnAmount).toStringAsFixed(2),
                                 index: index,
                               ),
                             );
                       if (invoiceList.isEmpty) {
                         final box = Hive.box('info');
+
                         final url = Uri.parse(
-                          "$base$getDelivaryList/${box.get('sap_id')}?type=Remaining&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+                          "$base${(pageType == pagesState[0] || pageType == pagesState[1]) ? getDelivaryList : cashCollectionList}/${box.get('sap_id')}?type=${(pageType == pagesState[1] ? "Done" : "Remaining")}&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
                         );
 
                         final response = await http.get(url);
@@ -558,8 +563,8 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                   padding: const EdgeInsets.all(5),
                                   decoration: BoxDecoration(
                                     color: Colors.purple.withOpacity(0.3),
-                                    borderRadius: (returnQty < 0 &&
-                                            deliveryQty < 0)
+                                    borderRadius: !(returnQty == 0 ||
+                                            deliveryQty == 0)
                                         ? null
                                         : const BorderRadius.only(
                                             bottomLeft: Radius.circular(10),
