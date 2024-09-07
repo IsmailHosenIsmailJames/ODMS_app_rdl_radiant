@@ -290,10 +290,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluentui_system_icons
-      sha256: "1c79ed0897a0f61dcb442349dc1bb0cba37b5a62b94e60e1fd1b441a28d6f5ba"
+      sha256: "08b538663c8f5c6843012cf864c3c3109b725d17ddb299d7d0e1ce8abe927d27"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.255"
+    version: "1.1.257"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -311,10 +311,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_foreground_task
-      sha256: "1d98bec489873ee612b4ae3295ad8ed268f0a97a768f7f1aff79b222303863e8"
+      sha256: "2824d502cede5b9151a3d7f061b4532c074404a3f7dac8dacbd3d3ad8136bb74"
       url: "https://pub.dev"
     source: hosted
-    version: "8.8.0"
+    version: "8.8.1"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
