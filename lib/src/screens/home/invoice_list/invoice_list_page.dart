@@ -8,7 +8,6 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
 import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
-import 'package:rdl_radiant/src/screens/home/page_sate_defination.dart';
 import 'package:rdl_radiant/src/screens/home/product_list/prodouct_list_page.dart';
 import 'package:rdl_radiant/src/screens/home/product_list/cash_collection/product_list_cash_collection.dart';
 import 'package:rdl_radiant/src/screens/maps/map_view.dart';
@@ -559,7 +558,8 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                   padding: const EdgeInsets.all(5),
                                   decoration: BoxDecoration(
                                     color: Colors.purple.withOpacity(0.3),
-                                    borderRadius: (pagesState[1] != pageType)
+                                    borderRadius: (returnQty < 0 &&
+                                            deliveryQty < 0)
                                         ? null
                                         : const BorderRadius.only(
                                             bottomLeft: Radius.circular(10),
@@ -601,12 +601,12 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                     ],
                                   ),
                                 ),
-                                if (pageType != pagesState[1])
+                                if (deliveryQty > 0)
                                   Container(
                                     padding: const EdgeInsets.all(5),
                                     decoration: BoxDecoration(
                                       color: Colors.green.withOpacity(0.35),
-                                      borderRadius: pageType == pagesState[1]
+                                      borderRadius: returnQty < 0
                                           ? const BorderRadius.only(
                                               bottomLeft: Radius.circular(10),
                                               bottomRight: Radius.circular(10))
@@ -646,7 +646,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                       ],
                                     ),
                                   ),
-                                if (pageType != pagesState[1])
+                                if (returnQty > 0)
                                   Container(
                                     padding: const EdgeInsets.all(5),
                                     decoration: BoxDecoration(
