@@ -8,6 +8,7 @@ import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
 import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
+import 'package:rdl_radiant/src/screens/home/page_sate_defination.dart';
 import 'package:rdl_radiant/src/screens/home/product_list/prodouct_list_page.dart';
 import 'package:rdl_radiant/src/screens/home/product_list/cash_collection/product_list_cash_collection.dart';
 import 'package:rdl_radiant/src/screens/maps/map_view.dart';
@@ -34,9 +35,11 @@ class InvoiceListPage extends StatefulWidget {
 class _InvoiceListPageState extends State<InvoiceListPage> {
   final invoiceListController = Get.put(InvoiceListController());
   final DeliveryRemaningController deliveryRemaningController = Get.find();
+  String pageType = '';
 
   @override
   void initState() {
+    pageType = deliveryRemaningController.pageType.value;
     super.initState();
   }
 
@@ -556,15 +559,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                   padding: const EdgeInsets.all(5),
                                   decoration: BoxDecoration(
                                     color: Colors.purple.withOpacity(0.3),
-                                    borderRadius: ((deliveryRemaningController
-                                                        .isDataForDeliveryDone
-                                                        .value ==
-                                                    false &&
-                                                deliveryRemaningController
-                                                        .pageType.value !=
-                                                    "")) ||
-                                            deliveryRemaningController
-                                                .isDataForDeliveryDone.value
+                                    borderRadius: (pagesState[1] != pageType)
                                         ? null
                                         : const BorderRadius.only(
                                             bottomLeft: Radius.circular(10),
@@ -606,20 +601,12 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                     ],
                                   ),
                                 ),
-                                if ((deliveryRemaningController
-                                                .isDataForDeliveryDone.value ==
-                                            false &&
-                                        deliveryRemaningController
-                                                .pageType.value !=
-                                            "") ||
-                                    deliveryRemaningController
-                                        .isDataForDeliveryDone.value)
+                                if (pageType != pagesState[1])
                                   Container(
                                     padding: const EdgeInsets.all(5),
                                     decoration: BoxDecoration(
                                       color: Colors.green.withOpacity(0.35),
-                                      borderRadius: deliveryRemaningController
-                                              .isDataForDeliveryDone.value
+                                      borderRadius: pageType == pagesState[1]
                                           ? const BorderRadius.only(
                                               bottomLeft: Radius.circular(10),
                                               bottomRight: Radius.circular(10))
@@ -659,11 +646,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                       ],
                                     ),
                                   ),
-                                if ((deliveryRemaningController
-                                            .isDataForDeliveryDone.value ==
-                                        false &&
-                                    deliveryRemaningController.pageType.value !=
-                                        ""))
+                                if (pageType != pagesState[1])
                                   Container(
                                     padding: const EdgeInsets.all(5),
                                     decoration: BoxDecoration(

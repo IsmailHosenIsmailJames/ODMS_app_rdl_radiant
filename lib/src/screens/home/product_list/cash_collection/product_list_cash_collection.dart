@@ -13,6 +13,7 @@ import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/controller/delivery_remaning_controller.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
 import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
+import 'package:rdl_radiant/src/screens/home/page_sate_defination.dart';
 import 'package:rdl_radiant/src/screens/home/product_list/cash_collection/to_send_cash_data_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -47,8 +48,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
 
   final DeliveryRemaningController deliveryRemaningController = Get.find();
 
-  bool isDataForDeliveryDone = false;
-
+  String pageType = '';
   @override
   void initState() {
     productList = widget.invoice.productList ?? [];
@@ -58,11 +58,9 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
       returnTextEditingControllerList.add(TextEditingController());
       returnAmountList.add(0);
     }
-    isDataForDeliveryDone =
-        deliveryRemaningController.isDataForDeliveryDone.value;
 
     dueAmount = double.parse(widget.totalAmount);
-
+    pageType = deliveryRemaningController.pageType.value;
     super.initState();
   }
 
@@ -77,7 +75,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
         title: const Text(
           "Product List",
         ),
-        actions: isDataForDeliveryDone
+        actions: pageType == pagesState[1]
             ? null
             : [
                 PopupMenuButton(
@@ -607,8 +605,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                           padding: const EdgeInsets.all(8),
                           child: Column(
                             children: [
-                              if (isDataForDeliveryDone) const Gap(10),
-                              if (isDataForDeliveryDone)
+                              if (pageType == pagesState[1]) const Gap(10),
+                              if (pageType == pagesState[1])
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -629,7 +627,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                     )
                                   ],
                                 ),
-                              if (isDataForDeliveryDone) const Divider(),
+                              if (pageType == pagesState[1]) const Divider(),
                               if (!(deliveryRemaningController.pageType.value ==
                                       "Return" ||
                                   deliveryRemaningController.pageType.value ==
@@ -804,8 +802,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                 },
               ) +
               <Widget>[
-                if (!isDataForDeliveryDone) const Gap(30),
-                if (!isDataForDeliveryDone)
+                if (!(pageType == pagesState[1])) const Gap(30),
+                if (!((pageType == pagesState[1])))
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

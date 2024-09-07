@@ -13,6 +13,7 @@ import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_lis
 import 'package:rdl_radiant/src/screens/home/invoice_list/invoice_list_page.dart';
 
 import '../../../apis/apis.dart';
+import '../page_sate_defination.dart';
 import 'controller/delivery_remaning_controller.dart';
 
 class DeliveryRemainingPage extends StatefulWidget {
@@ -25,14 +26,11 @@ class DeliveryRemainingPage extends StatefulWidget {
 class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
   DateTime dateTime = DateTime.now();
   final DeliveryRemaningController deliveryRemaningController = Get.find();
-  bool isDataForDeliveryDone = false;
-  String pageType = "";
+  String pageType = '';
 
   @override
   void initState() {
     super.initState();
-    isDataForDeliveryDone =
-        deliveryRemaningController.isDataForDeliveryDone.value;
     pageType = deliveryRemaningController.pageType.value;
   }
 
@@ -40,13 +38,11 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: pageType != ""
-            ? Text(pageType)
-            : isDataForDeliveryDone
-                ? const Text("Delivery Done")
-                : const Text("Delivery Remaining"),
+        title: Text(pageType),
         actions: [
-          if (pageType != "")
+          if (pageType == pagesState[0] ||
+              pageType == pagesState[1] ||
+              pageType == pagesState[2])
             IconButton(
               onPressed: () async {
                 await pickDateTimeAndFilter(context);
@@ -161,7 +157,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
       context: context,
       builder: (context) => BottomPicker.date(
         height: 500,
-        pickerTitle: pageType != ""
+        pickerTitle: pageType == pagesState[2]
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -224,7 +220,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
     if (pickedDateTime != null) {
       final box = Hive.box('info');
       final url = Uri.parse(
-        "$base$cashCollectionList/${box.get('sap_id')}?type=${filterBy ?? (isDataForDeliveryDone ? "Done" : "Remaining")}&date=${DateFormat('yyyy-MM-dd').format(pickedDateTime!)}",
+        "$base${(pageType == pagesState[0] || pageType == pagesState[1]) ? getDelivaryList : cashCollectionList}/${box.get('sap_id')}?type=${filterBy ?? ((pageType == pagesState[1]) ? "Done" : "Remaining")}&date=${DateFormat('yyyy-MM-dd').format(pickedDateTime!)}",
       );
 
       showCupertinoModalPopup(

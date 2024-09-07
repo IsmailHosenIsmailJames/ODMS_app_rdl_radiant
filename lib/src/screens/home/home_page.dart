@@ -222,8 +222,8 @@ class _HomePageState extends State<HomePage> {
                                 controller.deliveryRemaing.value.result ??= [];
                                 controller.constDeliveryRemaing.value.result ??=
                                     [];
-                                controller.isDataForDeliveryDone.value = false;
-                                controller.pageType.value = '';
+                                controller.pageType.value =
+                                    'Delivery Remaining';
                                 Get.to(
                                   () => const DeliveryRemainingPage(),
                                 );
@@ -284,8 +284,7 @@ class _HomePageState extends State<HomePage> {
                                 controller.deliveryRemaing.value.result ??= [];
                                 controller.constDeliveryRemaing.value.result ??=
                                     [];
-                                controller.isDataForDeliveryDone.value = true;
-                                controller.pageType.value = '';
+                                controller.pageType.value = 'Delivery Done';
                                 Get.to(
                                   () => const DeliveryRemainingPage(),
                                 );
@@ -343,7 +342,6 @@ class _HomePageState extends State<HomePage> {
                                 controller.deliveryRemaing.value.result ??= [];
                                 controller.constDeliveryRemaing.value.result ??=
                                     [];
-                                controller.isDataForDeliveryDone.value = false;
                                 controller.pageType.value =
                                     'Cash Collection Remaining';
 
@@ -408,7 +406,6 @@ class _HomePageState extends State<HomePage> {
                                 controller.deliveryRemaing.value.result ??= [];
                                 controller.constDeliveryRemaing.value.result ??=
                                     [];
-                                controller.isDataForDeliveryDone.value = false;
                                 controller.pageType.value =
                                     'Cash Collection Done';
 
@@ -472,8 +469,7 @@ class _HomePageState extends State<HomePage> {
                                 controller.deliveryRemaing.value.result ??= [];
                                 controller.constDeliveryRemaing.value.result ??=
                                     [];
-                                controller.isDataForDeliveryDone.value = false;
-                                controller.pageType.value = 'Return';
+                                controller.pageType.value = 'Returned';
 
                                 Get.to(
                                   () => const DeliveryRemainingPage(),
