@@ -8,6 +8,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:rdl_radiant/src/screens/permissions/internet_connection_off_notify.dart';
+import 'package:rdl_radiant/src/widgets/loading/loading_text_controller.dart';
 
 import 'src/core/login/login_function.dart';
 import 'src/screens/auth/login/login_page.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
       home: const InitPage(),
       onInit: () async {
         FlutterNativeSplash.remove();
+        Get.put(LoadingTextController());
         final connectivityResult = await Connectivity().checkConnectivity();
         if (connectivityResult.contains(ConnectivityResult.mobile) ||
             connectivityResult.contains(ConnectivityResult.ethernet) ||
