@@ -82,7 +82,7 @@ class _MyMapViewState extends State<MyMapView> {
                   widget.lng,
                 ),
                 tilt: 59.440717697143555,
-                zoom: 12,
+                zoom: 10,
               ),
               markers: markers.values.toSet(),
               onMapCreated: (controller) {
@@ -106,7 +106,7 @@ class _MyMapViewState extends State<MyMapView> {
 
   cameraPositionUpdater(LatLng latlon) async {
     final GoogleMapController controller = await googleMapController.future;
-    CameraPosition cameraPosition = CameraPosition(target: latlon, zoom: 13);
+    CameraPosition cameraPosition = CameraPosition(target: latlon, zoom: 10);
     controller.animateCamera(
       CameraUpdate.newCameraPosition(cameraPosition),
     );
@@ -115,10 +115,7 @@ class _MyMapViewState extends State<MyMapView> {
   addMarkers(String id, LatLng position,
       {InfoWindow infoWindow = InfoWindow.noText}) async {
     markers[id] = Marker(
-      markerId: MarkerId(id),
-      position: position,
-      infoWindow: infoWindow,
-    );
+        markerId: MarkerId(id), position: position, infoWindow: infoWindow);
 
     setState(() {});
   }
