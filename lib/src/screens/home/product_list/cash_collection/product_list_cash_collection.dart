@@ -17,6 +17,9 @@ import 'package:rdl_radiant/src/screens/home/page_sate_defination.dart';
 import 'package:rdl_radiant/src/screens/home/product_list/cash_collection/to_send_cash_data_model.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../../widgets/loading/loading_popup_widget.dart';
+import '../../../../widgets/loading/loading_text_controller.dart';
+
 class ProductListCashCollection extends StatefulWidget {
   final InvoiceList invoice;
   final String invioceNo;
@@ -37,6 +40,7 @@ class ProductListCashCollection extends StatefulWidget {
 
 class _ProductListCashCollectionState extends State<ProductListCashCollection> {
   final invoiceListController = Get.put(InvoiceListController());
+  final LoadingTextController loadingTextController = Get.find();
   List<ProductList> productList = [];
   List<TextEditingController> receiveTextEditingControllerList = [];
   List<TextEditingController> returnTextEditingControllerList = [];
@@ -838,89 +842,105 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                         child: ElevatedButton(
                           onPressed: () async {
                             if (formKey.currentState!.validate()) {
-                              showCupertinoModalPopup(
-                                context: context,
-                                builder: (context) => Scaffold(
-                                  backgroundColor:
-                                      Colors.white.withOpacity(0.1),
-                                  body: const Center(
-                                    child: CircularProgressIndicator(
-                                      color: Color.fromARGB(255, 74, 174, 255),
-                                    ),
-                                  ),
-                                ),
-                              );
-                              final position =
-                                  await Geolocator.getCurrentPosition();
+                              loadingTextController.currentState.value = 0;
+                              loadingTextController.loadingText.value =
+                                  'Accessing Your Location\nPlease wait...';
 
-                              List<DeliveryCash> listOfDeliveryCash = [];
-                              for (int i = 0; i < productList.length; i++) {
-                                final e = productList[i];
-                                String returnText =
-                                    returnTextEditingControllerList[i]
-                                        .text
-                                        .trim();
-                                if (returnText.isEmpty) returnText = "0";
-                                listOfDeliveryCash.add(DeliveryCash(
-                                  id: int.parse("${productList[i].id}"),
-                                  returnNetVal:
-                                      ((((e.netVal ?? 0) + (e.vat ?? 0)) /
-                                                  (productList[i].quantity ?? 0)
-                                                      .toInt()) *
-                                              int.parse(returnText))
-                                          .toStringAsFixed(2),
-                                  returnQuantity: int.parse(returnText),
-                                  vat: e.vat,
-                                ));
-                              }
-
-                              final toSendCashDataModel = ToSendCashDataModel(
-                                billingDocNo: widget.invoice.billingDocNo,
-                                lastStatus: "cash_collection",
-                                type: "cash_collection",
-                                cashCollection: double.tryParse(
-                                    receivedAmmountController.text),
-                                cashCollectionLatitude:
-                                    position.latitude.toString(),
-                                cashCollectionLongitude:
-                                    position.longitude.toString(),
-                                cashCollectionStatus: "Done",
-                                deliverys: listOfDeliveryCash,
-                              );
-
-                              if (kDebugMode) {
-                                log("Sending to api: ");
-                                log(toSendCashDataModel.toJson());
-                              }
-                              final uri = Uri.parse(
-                                  "$base$cashCollectionSave/${widget.invoice.id}");
-                              final response = await http.put(
-                                uri,
-                                headers: {"Content-Type": "application/json"},
-                                body: toSendCashDataModel.toJson(),
-                              );
-                              if (kDebugMode) {
-                                log("received form api: ");
-                                log(response.body);
-                              }
-                              if (kDebugMode) {
-                                log(response.statusCode.toString());
-                              }
-
-                              if (response.statusCode == 200) {
-                                final decoded = Map<String, dynamic>.from(
-                                    jsonDecode(response.body));
-                                if (decoded['success'] == true) {
-                                  invoiceListController.invoiceList.removeAt(
-                                    widget.index,
-                                  );
-                                  if (Navigator.canPop(context)) {
-                                    Navigator.pop(context);
-                                  }
-                                  Get.back();
+                              showCoustomPopUpLoadingDialog(context,
+                                  isCuputino: true);
+                              try {
+                                final position =
+                                    await Geolocator.getCurrentPosition(
+                                  locationSettings: AndroidSettings(
+                                      timeLimit: const Duration(seconds: 30)),
+                                );
+                                List<DeliveryCash> listOfDeliveryCash = [];
+                                for (int i = 0; i < productList.length; i++) {
+                                  final e = productList[i];
+                                  String returnText =
+                                      returnTextEditingControllerList[i]
+                                          .text
+                                          .trim();
+                                  if (returnText.isEmpty) returnText = "0";
+                                  listOfDeliveryCash.add(DeliveryCash(
+                                    id: int.parse("${productList[i].id}"),
+                                    returnNetVal: ((((e.netVal ?? 0) +
+                                                    (e.vat ?? 0)) /
+                                                (productList[i].quantity ?? 0)
+                                                    .toInt()) *
+                                            int.parse(returnText))
+                                        .toStringAsFixed(2),
+                                    returnQuantity: int.parse(returnText),
+                                    vat: e.vat,
+                                  ));
                                 }
-                              } else {
-                                print(response.statusCode);
+
+                                final toSendCashDataModel = ToSendCashDataModel(
+                                  billingDocNo: widget.invoice.billingDocNo,
+                                  lastStatus: "cash_collection",
+                                  type: "cash_collection",
+                                  cashCollection: double.tryParse(
+                                      receivedAmmountController.text),
+                                  cashCollectionLatitude:
+                                      position.latitude.toString(),
+                                  cashCollectionLongitude:
+                                      position.longitude.toString(),
+                                  cashCollectionStatus: "Done",
+                                  deliverys: listOfDeliveryCash,
+                                );
+
+                                if (kDebugMode) {
+                                  log("Sending to api: ");
+                                  log(toSendCashDataModel.toJson());
+                                }
+                                loadingTextController.loadingText.value =
+                                    'Your Location Accessed\nSending data to server\nPlease wait...';
+
+                                final uri = Uri.parse(
+                                    "$base$cashCollectionSave/${widget.invoice.id}");
+                                final response = await http.put(
+                                  uri,
+                                  headers: {"Content-Type": "application/json"},
+                                  body: toSendCashDataModel.toJson(),
+                                );
+                                if (kDebugMode) {
+                                  log("received form api: ");
+                                  log(response.body);
+                                }
+                                if (kDebugMode) {
+                                  log(response.statusCode.toString());
+                                }
+
+                                if (response.statusCode == 200) {
+                                  final decoded = Map<String, dynamic>.from(
+                                      jsonDecode(response.body));
+                                  if (decoded['success'] == true) {
+                                    loadingTextController.currentState.value =
+                                        0;
+                                    loadingTextController.loadingText.value =
+                                        'Successful';
+                                    invoiceListController.invoiceList.removeAt(
+                                      widget.index,
+                                    );
+                                    if (Navigator.canPop(context)) {
+                                      Navigator.pop(context);
+                                    }
+                                    Get.back();
+                                  } else {
+                                    loadingTextController.currentState.value =
+                                        -1;
+                                    loadingTextController.loadingText.value =
+                                        decoded['message'];
+                                  }
+                                } else {
+                                  loadingTextController.currentState.value = -1;
+                                  loadingTextController.loadingText.value =
+                                      'Something went worng with ${response.statusCode}';
+                                }
+                              } catch (e) {
+                                loadingTextController.currentState.value = -1;
+                                loadingTextController.loadingText.value =
+                                    'Unable to access your location';
                               }
                             }
                           },
