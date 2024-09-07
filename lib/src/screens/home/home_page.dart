@@ -15,6 +15,8 @@ import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:rdl_radiant/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
 import 'package:rdl_radiant/src/core/background/socket_manager/socket_manager.dart';
+import 'package:rdl_radiant/src/screens/home/dash_board_controller/dash_board_model.dart';
+import 'package:rdl_radiant/src/screens/home/dash_board_controller/dashboard_controller_getx.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/controller/delivery_remaning_controller.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/delivery_remaining_page.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
@@ -31,7 +33,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final socketConnectionStateGetx = Get.put(SocketConnectionState());
-
+  final dashboardController = Get.put(DashboardControllerGetx());
   Map<String, dynamic> jsonUserdata = {};
 
   @override
@@ -54,6 +56,7 @@ class _HomePageState extends State<HomePage> {
       });
     });
 
+    getDashBoardData();
     super.initState();
   }
 
@@ -154,28 +157,17 @@ class _HomePageState extends State<HomePage> {
             ),
             const Gap(10),
             Expanded(
-              child: FutureBuilder(
-                future: http.get(
-                  Uri.parse(
-                    '$base$dashBoardGetDataPath/${jsonUserdata['sap_id']}',
-                  ),
-                ),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data != null) {
-                    if (snapshot.data!.statusCode == 200) {
-                      if (kDebugMode) {
-                        print(snapshot.data!.body);
-                      }
-                      var data = Map<String, dynamic>.from(
-                        jsonDecode(snapshot.data!.body) as Map,
-                      );
-                      // ignore: avoid_dynamic_calls
-                      data = data['result'][0] as Map<String, dynamic>;
+              child: GetX<DashboardControllerGetx>(
+                builder: (controller) {
+                  if (controller.dashboardData.value.success != null) {
+                    if (controller.dashboardData.value.result != null) {
+                      DashBoardResult data =
+                          controller.dashboardData.value.result![0];
                       return ListView(
                         padding: const EdgeInsets.all(10),
                         children: [
                           getCardView(
-                            data['delivery_remaining'].toString(),
+                            data.deliveryRemaining.toString(),
                             Image.asset('assets/delivery-truck.png'),
                             'Delivary Remaining',
                             0,
@@ -224,9 +216,10 @@ class _HomePageState extends State<HomePage> {
                                     [];
                                 controller.pageType.value =
                                     'Delivery Remaining';
-                                Get.to(
+                                await Get.to(
                                   () => const DeliveryRemainingPage(),
                                 );
+                                getDashBoardData();
                               } else {
                                 if (kDebugMode) {
                                   print(
@@ -237,7 +230,7 @@ class _HomePageState extends State<HomePage> {
                             },
                           ),
                           getCardView(
-                            data['delivery_done'].toString(),
+                            data.deliveryDone.toString(),
                             Image.asset('assets/delivery_done.png'),
                             'Delivary Done',
                             1,
@@ -285,9 +278,10 @@ class _HomePageState extends State<HomePage> {
                                 controller.constDeliveryRemaing.value.result ??=
                                     [];
                                 controller.pageType.value = 'Delivery Done';
-                                Get.to(
+                                await Get.to(
                                   () => const DeliveryRemainingPage(),
                                 );
+                                getDashBoardData();
                               } else {
                                 if (kDebugMode) {
                                   print(
@@ -298,7 +292,7 @@ class _HomePageState extends State<HomePage> {
                             },
                           ),
                           getCardView(
-                            data['cash_remaining'].toString(),
+                            data.cashRemaining.toString(),
                             Image.asset('assets/cash_collection.png'),
                             'Cash Collection Remaining',
                             0,
@@ -345,9 +339,10 @@ class _HomePageState extends State<HomePage> {
                                 controller.pageType.value =
                                     'Cash Collection Remaining';
 
-                                Get.to(
+                                await Get.to(
                                   () => const DeliveryRemainingPage(),
                                 );
+                                getDashBoardData();
                               } else {
                                 if (kDebugMode) {
                                   print(
@@ -358,7 +353,7 @@ class _HomePageState extends State<HomePage> {
                             },
                           ),
                           getCardView(
-                            data['cash_done'].toString(),
+                            data.cashDone.toString(),
                             const Icon(
                               FluentIcons.money_hand_20_filled,
                               size: 40,
@@ -409,9 +404,10 @@ class _HomePageState extends State<HomePage> {
                                 controller.pageType.value =
                                     'Cash Collection Done';
 
-                                Get.to(
+                                await Get.to(
                                   () => const DeliveryRemainingPage(),
                                 );
+                                getDashBoardData();
                               } else {
                                 if (kDebugMode) {
                                   print(
@@ -422,7 +418,7 @@ class _HomePageState extends State<HomePage> {
                             },
                           ),
                           getCardView(
-                            data['total_return_quantity'].toInt().toString(),
+                            data.totalReturnQuantity.toInt().toString(),
                             Image.asset(
                               'assets/delivery_back.png',
                             ),
@@ -471,9 +467,10 @@ class _HomePageState extends State<HomePage> {
                                     [];
                                 controller.pageType.value = 'Returned';
 
-                                Get.to(
+                                await Get.to(
                                   () => const DeliveryRemainingPage(),
                                 );
+                                getDashBoardData();
                               } else {
                                 if (kDebugMode) {
                                   print(
@@ -486,7 +483,9 @@ class _HomePageState extends State<HomePage> {
                         ],
                       );
                     } else {
-                      return Text(snapshot.data!.body);
+                      return const Center(
+                        child: Text("Something went worng"),
+                      );
                     }
                   } else {
                     return ListView(
@@ -537,6 +536,27 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  Future<void> getDashBoardData() async {
+    if (dashboardController.dashboardData.value.success != null) {
+      dashboardController.dashboardData.value = DashBoardModel();
+    }
+    final box = Hive.box('info');
+    final sapID = box.get("sap_id");
+    final response =
+        await http.get(Uri.parse('$base$dashBoardGetDataPath/$sapID'));
+    if (response.statusCode == 200) {
+      var data = Map<String, dynamic>.from(
+        jsonDecode(response.body) as Map,
+      );
+      if (data['success'] == true) {
+        dashboardController.dashboardData.value = DashBoardModel.fromMap(data);
+      } else {
+        dashboardController.dashboardData.value =
+            DashBoardModel(success: false);
+      }
+    }
   }
 
   Widget getCardView(
