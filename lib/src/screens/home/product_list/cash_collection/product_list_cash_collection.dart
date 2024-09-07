@@ -526,6 +526,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                     deliveryRemaningController.pageType.value ==
                         "Cash Collection Done"))
                   TextFormField(
+                    keyboardType: TextInputType.number,
                     controller: receivedAmmountController,
                     validator: (value) {
                       value ??= "";
@@ -655,6 +656,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                   deliveryRemaningController.pageType.value ==
                                       "Cash Collection Done"))
                                 TextFormField(
+                                  keyboardType: TextInputType.number,
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   validator: (value) {

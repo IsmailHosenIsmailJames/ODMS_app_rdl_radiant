@@ -551,6 +551,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                   children: [
                                     Expanded(
                                       child: TextFormField(
+                                        keyboardType: TextInputType.number,
                                         autovalidateMode:
                                             AutovalidateMode.onUserInteraction,
                                         validator: (value) {
@@ -634,6 +635,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                     const Gap(20),
                                     Expanded(
                                       child: TextFormField(
+                                        keyboardType: TextInputType.number,
                                         autovalidateMode:
                                             AutovalidateMode.onUserInteraction,
                                         validator: (value) {
