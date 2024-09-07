@@ -21,6 +21,8 @@ import 'package:rdl_radiant/src/screens/home/delivary_ramaining/controller/deliv
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/delivery_remaining_page.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
 import 'package:rdl_radiant/src/screens/home/drawer/drawer.dart';
+import 'package:rdl_radiant/src/widgets/loading/loading_popup_widget.dart';
+import 'package:rdl_radiant/src/widgets/loading/loading_text_controller.dart';
 
 import '../../core/background/background_setup.dart';
 
@@ -34,6 +36,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final socketConnectionStateGetx = Get.put(SocketConnectionState());
   final dashboardController = Get.put(DashboardControllerGetx());
+  final LoadingTextController loadingTextController = Get.find();
   Map<String, dynamic> jsonUserdata = {};
 
   @override
@@ -177,26 +180,19 @@ class _HomePageState extends State<HomePage> {
                                 "$base$getDelivaryList/${box.get('sap_id')}?type=Remaining&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
                               );
 
-                              showCupertinoModalPopup(
-                                context: context,
-                                builder: (context) => Scaffold(
-                                  backgroundColor:
-                                      Colors.white.withOpacity(0.1),
-                                  body: const Center(
-                                    child: CircularProgressIndicator(
-                                      color: Color.fromARGB(255, 74, 174, 255),
-                                    ),
-                                  ),
-                                ),
-                              );
+                              loadingTextController.currentState.value = 0;
+                              loadingTextController.loadingText.value =
+                                  'Loading Data\nPlease wait...';
+                              showCoustomPopUpLoadingDialog(context,
+                                  isCuputino: true);
 
                               final response = await http.get(url);
 
-                              if (Navigator.canPop(context)) {
-                                Navigator.pop(context);
-                              }
-
                               if (response.statusCode == 200) {
+                                loadingTextController.currentState.value = 1;
+                                loadingTextController.loadingText.value =
+                                    'Successful';
+
                                 if (kDebugMode) {
                                   print("Got Delivery Remaning List");
                                   print(response.body);
@@ -216,16 +212,19 @@ class _HomePageState extends State<HomePage> {
                                     [];
                                 controller.pageType.value =
                                     'Delivery Remaining';
+                                await Future.delayed(
+                                    const Duration(milliseconds: 100));
+                                if (Navigator.canPop(context)) {
+                                  Navigator.pop(context);
+                                }
                                 await Get.to(
                                   () => const DeliveryRemainingPage(),
                                 );
                                 getDashBoardData();
                               } else {
-                                if (kDebugMode) {
-                                  print(
-                                    "Delivery Remaining response error : ${response.statusCode}",
-                                  );
-                                }
+                                loadingTextController.currentState.value = -1;
+                                loadingTextController.loadingText.value =
+                                    'Something went worng';
                               }
                             },
                           ),
@@ -240,26 +239,18 @@ class _HomePageState extends State<HomePage> {
                                 "$base$getDelivaryList/${box.get('sap_id')}?type=Done&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
                               );
 
-                              showCupertinoModalPopup(
-                                context: context,
-                                builder: (context) => Scaffold(
-                                  backgroundColor:
-                                      Colors.white.withOpacity(0.1),
-                                  body: const Center(
-                                    child: CircularProgressIndicator(
-                                      color: Color.fromARGB(255, 74, 174, 255),
-                                    ),
-                                  ),
-                                ),
-                              );
+                              loadingTextController.currentState.value = 0;
+                              loadingTextController.loadingText.value =
+                                  'Loading Data\nPlease wait...';
+                              showCoustomPopUpLoadingDialog(context,
+                                  isCuputino: true);
 
                               final response = await http.get(url);
 
-                              if (Navigator.canPop(context)) {
-                                Navigator.pop(context);
-                              }
-
                               if (response.statusCode == 200) {
+                                loadingTextController.currentState.value = 1;
+                                loadingTextController.loadingText.value =
+                                    'Successful';
                                 if (kDebugMode) {
                                   print("Got Delivery Remaning List");
                                   print(response.body);
@@ -278,16 +269,19 @@ class _HomePageState extends State<HomePage> {
                                 controller.constDeliveryRemaing.value.result ??=
                                     [];
                                 controller.pageType.value = 'Delivery Done';
+                                await Future.delayed(
+                                    const Duration(milliseconds: 100));
+                                if (Navigator.canPop(context)) {
+                                  Navigator.pop(context);
+                                }
                                 await Get.to(
                                   () => const DeliveryRemainingPage(),
                                 );
                                 getDashBoardData();
                               } else {
-                                if (kDebugMode) {
-                                  print(
-                                    "Delivery Remaining response error : ${response.statusCode}",
-                                  );
-                                }
+                                loadingTextController.currentState.value = -1;
+                                loadingTextController.loadingText.value =
+                                    'Something went worng';
                               }
                             },
                           ),
@@ -302,18 +296,11 @@ class _HomePageState extends State<HomePage> {
                                 "$base$cashCollectionList/${box.get('sap_id')}?type=Remaining&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
                               );
 
-                              showCupertinoModalPopup(
-                                context: context,
-                                builder: (context) => Scaffold(
-                                  backgroundColor:
-                                      Colors.white.withOpacity(0.1),
-                                  body: const Center(
-                                    child: CircularProgressIndicator(
-                                      color: Color.fromARGB(255, 74, 174, 255),
-                                    ),
-                                  ),
-                                ),
-                              );
+                              loadingTextController.currentState.value = 0;
+                              loadingTextController.loadingText.value =
+                                  'Loading Data\nPlease wait...';
+                              showCoustomPopUpLoadingDialog(context,
+                                  isCuputino: true);
 
                               final response = await http.get(url);
 
@@ -322,6 +309,9 @@ class _HomePageState extends State<HomePage> {
                               }
 
                               if (response.statusCode == 200) {
+                                loadingTextController.currentState.value = 1;
+                                loadingTextController.loadingText.value =
+                                    'Successful';
                                 dev.log(response.body);
 
                                 final controller = Get.put(
@@ -338,17 +328,19 @@ class _HomePageState extends State<HomePage> {
                                     [];
                                 controller.pageType.value =
                                     'Cash Collection Remaining';
-
+                                await Future.delayed(
+                                    const Duration(milliseconds: 100));
+                                if (Navigator.canPop(context)) {
+                                  Navigator.pop(context);
+                                }
                                 await Get.to(
                                   () => const DeliveryRemainingPage(),
                                 );
                                 getDashBoardData();
                               } else {
-                                if (kDebugMode) {
-                                  print(
-                                    "Delivery Remaining response error : ${response.statusCode}",
-                                  );
-                                }
+                                loadingTextController.currentState.value = -1;
+                                loadingTextController.loadingText.value =
+                                    'Something went worng';
                               }
                             },
                           ),
@@ -366,27 +358,20 @@ class _HomePageState extends State<HomePage> {
                                 "$base$cashCollectionList/${box.get('sap_id')}?type=Done&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
                               );
 
-                              showCupertinoModalPopup(
-                                context: context,
-                                builder: (context) => Scaffold(
-                                  backgroundColor:
-                                      Colors.white.withOpacity(0.1),
-                                  body: const Center(
-                                    child: CircularProgressIndicator(
-                                      color: Color.fromARGB(255, 74, 174, 255),
-                                    ),
-                                  ),
-                                ),
-                              );
+                              loadingTextController.currentState.value = 0;
+                              loadingTextController.loadingText.value =
+                                  'Loading Data\nPlease wait...';
+                              showCoustomPopUpLoadingDialog(context,
+                                  isCuputino: true);
 
                               final response = await http.get(url);
                               log(response.body);
 
-                              if (Navigator.canPop(context)) {
-                                Navigator.pop(context);
-                              }
-
                               if (response.statusCode == 200) {
+                                loadingTextController.currentState.value = 1;
+                                loadingTextController.loadingText.value =
+                                    'Successful';
+
                                 dev.log(response.body);
 
                                 final controller = Get.put(
@@ -404,16 +389,20 @@ class _HomePageState extends State<HomePage> {
                                 controller.pageType.value =
                                     'Cash Collection Done';
 
+                                await Future.delayed(
+                                    const Duration(milliseconds: 100));
+                                if (Navigator.canPop(context)) {
+                                  Navigator.pop(context);
+                                }
+
                                 await Get.to(
                                   () => const DeliveryRemainingPage(),
                                 );
                                 getDashBoardData();
                               } else {
-                                if (kDebugMode) {
-                                  print(
-                                    "Delivery Remaining response error : ${response.statusCode}",
-                                  );
-                                }
+                                loadingTextController.currentState.value = -1;
+                                loadingTextController.loadingText.value =
+                                    'Something went worng';
                               }
                             },
                           ),
@@ -430,27 +419,19 @@ class _HomePageState extends State<HomePage> {
                                 "$base$cashCollectionList/${box.get('sap_id')}?type=Return&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
                               );
 
-                              showCupertinoModalPopup(
-                                context: context,
-                                builder: (context) => Scaffold(
-                                  backgroundColor:
-                                      Colors.white.withOpacity(0.1),
-                                  body: const Center(
-                                    child: CircularProgressIndicator(
-                                      color: Color.fromARGB(255, 74, 174, 255),
-                                    ),
-                                  ),
-                                ),
-                              );
+                              loadingTextController.currentState.value = 0;
+                              loadingTextController.loadingText.value =
+                                  'Loading Data\nPlease wait...';
+                              showCoustomPopUpLoadingDialog(context,
+                                  isCuputino: true);
 
                               final response = await http.get(url);
                               log(response.body);
 
-                              if (Navigator.canPop(context)) {
-                                Navigator.pop(context);
-                              }
-
                               if (response.statusCode == 200) {
+                                loadingTextController.currentState.value = 1;
+                                loadingTextController.loadingText.value =
+                                    'Successful';
                                 dev.log(response.body);
 
                                 final controller = Get.put(
@@ -466,17 +447,19 @@ class _HomePageState extends State<HomePage> {
                                 controller.constDeliveryRemaing.value.result ??=
                                     [];
                                 controller.pageType.value = 'Returned';
-
+                                await Future.delayed(
+                                    const Duration(milliseconds: 100));
+                                if (Navigator.canPop(context)) {
+                                  Navigator.pop(context);
+                                }
                                 await Get.to(
                                   () => const DeliveryRemainingPage(),
                                 );
                                 getDashBoardData();
                               } else {
-                                if (kDebugMode) {
-                                  print(
-                                    "Delivery Remaining response error : ${response.statusCode}",
-                                  );
-                                }
+                                loadingTextController.currentState.value = -1;
+                                loadingTextController.loadingText.value =
+                                    'Something went worng';
                               }
                             },
                           ),
