@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/controller/delivery_remaning_controller.dart';
@@ -829,135 +831,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                         width: MediaQuery.of(context).size.width * 0.45,
                         child: ElevatedButton(
                           onPressed: () async {
-                            if (formKey.currentState!.validate()) {
-                              loadingTextController.currentState.value = 0;
-                              loadingTextController.loadingText.value =
-                                  'Accessing Your Location\nPlease wait...';
-
-                              showCoustomPopUpLoadingDialog(context,
-                                  isCuputino: true);
-
-                              try {
-                                final position =
-                                    await Geolocator.getCurrentPosition(
-                                  locationSettings: AndroidSettings(
-                                      timeLimit: const Duration(seconds: 30)),
-                                );
-
-                                List<Delivery> listOfDelivery = [];
-                                for (int i = 0; i < productList.length; i++) {
-                                  final e = productList[i];
-                                  String returnText =
-                                      returnTextEditingControllerList[i]
-                                          .text
-                                          .trim();
-                                  String receiveText =
-                                      receiveTextEditingControllerList[i].text;
-                                  if (returnText.isEmpty) returnText = "0";
-                                  if (receiveText.isEmpty) receiveText = "0";
-                                  listOfDelivery.add(
-                                    Delivery(
-                                      matnr: e.matnr,
-                                      batch: e.batch,
-                                      quantity: (productList[i].quantity ?? 0)
-                                          .toInt(),
-                                      tp: e.tp,
-                                      vat: e.vat,
-                                      netVal: e.netVal,
-                                      deliveryQuantity: int.parse(receiveText),
-                                      deliveryNetVal:
-                                          (((e.netVal ?? 0) + (e.vat ?? 0)) /
-                                                  (productList[i].quantity ?? 0)
-                                                      .toInt()) *
-                                              int.parse(receiveText),
-                                      returnQuantity: int.parse(returnText),
-                                      returnNetVal:
-                                          (((e.netVal ?? 0) + (e.vat ?? 0)) /
-                                                  (productList[i].quantity ?? 0)
-                                                      .toInt()) *
-                                              int.parse(returnText),
-                                      id: e.id,
-                                    ),
-                                  );
-                                }
-
-                                final deliveryData = DeliveryData(
-                                  billingDocNo: widget.invoice.billingDocNo,
-                                  billingDate: DateFormat('yyyy-MM-dd')
-                                      .format(widget.invoice.billingDate!),
-                                  routeCode: widget.invoice.routeCode,
-                                  partner: widget.invoice.partner,
-                                  gatePassNo: widget.invoice.gatePassNo,
-                                  daCode: (widget.invoice.daCode ?? 0)
-                                      .toInt()
-                                      .toString(),
-                                  vehicleNo: widget.invoice.vehicleNo,
-                                  deliveryLatitude:
-                                      position.latitude.toString(),
-                                  deliveryLongitude:
-                                      position.longitude.toString(),
-                                  transportType: widget.invoice.transportType,
-                                  deliveryStatus: 'Done',
-                                  lastStatus: "delivery",
-                                  type: "delivery",
-                                  cashCollection: 0.00,
-                                  cashCollectionLatitude: null,
-                                  cashCollectionLongitude: null,
-                                  cashCollectionStatus: null,
-                                  deliverys: listOfDelivery,
-                                );
-                                if (kDebugMode) {
-                                  print(deliveryData.toJson());
-                                }
-                                loadingTextController.loadingText.value =
-                                    'Your Location Accessed\nSending data to server\nPlease wait...';
-                                final uri = Uri.parse(base + saveDeliveryList);
-                                final response = await http.post(
-                                  uri,
-                                  headers: {"Content-Type": "application/json"},
-                                  body: deliveryData.toJson(),
-                                );
-                                if (kDebugMode) {
-                                  print(response.body);
-                                }
-                                if (kDebugMode) {
-                                  print(response.statusCode);
-                                }
-
-                                if (response.statusCode == 200) {
-                                  final decoded = Map<String, dynamic>.from(
-                                      jsonDecode(response.body));
-                                  if (decoded['success'] == true) {
-                                    loadingTextController.currentState.value =
-                                        0;
-                                    loadingTextController.loadingText.value =
-                                        'Successful';
-                                    invoiceListController.invoiceList.removeAt(
-                                      widget.index,
-                                    );
-                                    await Future.delayed(
-                                        const Duration(milliseconds: 100));
-                                    if (Navigator.canPop(context)) {
-                                      Navigator.pop(context);
-                                    }
-                                    Get.back();
-                                  } else {
-                                    loadingTextController.currentState.value =
-                                        -1;
-                                    loadingTextController.loadingText.value =
-                                        decoded['message'];
-                                  }
-                                } else {
-                                  loadingTextController.currentState.value = -1;
-                                  loadingTextController.loadingText.value =
-                                      'Something went worng with ${response.statusCode}';
-                                }
-                              } catch (e) {
-                                loadingTextController.currentState.value = -1;
-                                loadingTextController.loadingText.value =
-                                    'Unable to access your location';
-                              }
-                            }
+                            await onDeliveredButtonPressed(context);
                           },
                           child: const Text("Delivered"),
                         ),
@@ -968,6 +842,146 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
         ),
       ),
     );
+  }
+
+  Future<void> onDeliveredButtonPressed(BuildContext context) async {
+    if (formKey.currentState!.validate()) {
+      loadingTextController.currentState.value = 0;
+      loadingTextController.loadingText.value =
+          'Accessing Your Location\nPlease wait...';
+
+      showCoustomPopUpLoadingDialog(context, isCuputino: true);
+
+      try {
+        final position = await Geolocator.getCurrentPosition(
+          locationSettings:
+              AndroidSettings(timeLimit: const Duration(seconds: 30)),
+        );
+
+        List<Delivery> listOfDelivery = [];
+        for (int i = 0; i < productList.length; i++) {
+          final e = productList[i];
+          String returnText = returnTextEditingControllerList[i].text.trim();
+          String receiveText = receiveTextEditingControllerList[i].text;
+          if (returnText.isEmpty) returnText = "0";
+          if (receiveText.isEmpty) receiveText = "0";
+          listOfDelivery.add(
+            Delivery(
+              matnr: e.matnr,
+              batch: e.batch,
+              quantity: (productList[i].quantity ?? 0).toInt(),
+              tp: e.tp,
+              vat: e.vat,
+              netVal: e.netVal,
+              deliveryQuantity: int.parse(receiveText),
+              deliveryNetVal: (((e.netVal ?? 0) + (e.vat ?? 0)) /
+                      (productList[i].quantity ?? 0).toInt()) *
+                  int.parse(receiveText),
+              returnQuantity: int.parse(returnText),
+              returnNetVal: (((e.netVal ?? 0) + (e.vat ?? 0)) /
+                      (productList[i].quantity ?? 0).toInt()) *
+                  int.parse(returnText),
+              id: e.id,
+            ),
+          );
+        }
+
+        final deliveryData = DeliveryData(
+          billingDocNo: widget.invoice.billingDocNo,
+          billingDate:
+              DateFormat('yyyy-MM-dd').format(widget.invoice.billingDate!),
+          routeCode: widget.invoice.routeCode,
+          partner: widget.invoice.partner,
+          gatePassNo: widget.invoice.gatePassNo,
+          daCode: (widget.invoice.daCode ?? 0).toInt().toString(),
+          vehicleNo: widget.invoice.vehicleNo,
+          deliveryLatitude: position.latitude.toString(),
+          deliveryLongitude: position.longitude.toString(),
+          transportType: widget.invoice.transportType,
+          deliveryStatus: 'Done',
+          lastStatus: "delivery",
+          type: "delivery",
+          cashCollection: 0.00,
+          cashCollectionLatitude: null,
+          cashCollectionLongitude: null,
+          cashCollectionStatus: null,
+          deliverys: listOfDelivery,
+        );
+        if (kDebugMode) {
+          print(deliveryData.toJson());
+        }
+        loadingTextController.loadingText.value =
+            'Your Location Accessed\nSending data to server\nPlease wait...';
+        final uri = Uri.parse(base + saveDeliveryList);
+        final response = await http.post(
+          uri,
+          headers: {"Content-Type": "application/json"},
+          body: deliveryData.toJson(),
+        );
+        if (kDebugMode) {
+          print(response.body);
+        }
+        if (kDebugMode) {
+          print(response.statusCode);
+        }
+
+        if (response.statusCode == 200) {
+          final decoded = Map<String, dynamic>.from(jsonDecode(response.body));
+          if (decoded['success'] == true) {
+            try {
+              final box = Hive.box('info');
+              final url = Uri.parse(
+                "$base${(pageType == pagesState[0] || pageType == pagesState[1]) ? getDelivaryList : cashCollectionList}/${box.get('sap_id')}?type=${(pageType == pagesState[1] ? "Done" : "Remaining")}&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+              );
+
+              final response = await http.get(url);
+
+              if (response.statusCode == 200) {
+                if (kDebugMode) {
+                  print("Got Delivery Remaning List");
+                  print(response.body);
+                }
+
+                final controller = Get.put(
+                  DeliveryRemaningController(
+                    DeliveryRemaing.fromJson(response.body),
+                  ),
+                );
+                controller.deliveryRemaing.value =
+                    DeliveryRemaing.fromJson(response.body);
+                controller.constDeliveryRemaing.value =
+                    DeliveryRemaing.fromJson(response.body);
+                controller.deliveryRemaing.value.result ??= [];
+                controller.constDeliveryRemaing.value.result ??= [];
+              }
+            } catch (e) {
+              log(e.toString());
+            }
+            loadingTextController.currentState.value = 0;
+            loadingTextController.loadingText.value = 'Successful';
+            invoiceListController.invoiceList.removeAt(
+              widget.index,
+            );
+            await Future.delayed(const Duration(milliseconds: 100));
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
+            Get.back();
+          } else {
+            loadingTextController.currentState.value = -1;
+            loadingTextController.loadingText.value = decoded['message'];
+          }
+        } else {
+          loadingTextController.currentState.value = -1;
+          loadingTextController.loadingText.value =
+              'Something went worng with ${response.statusCode}';
+        }
+      } catch (e) {
+        loadingTextController.currentState.value = -1;
+        loadingTextController.loadingText.value =
+            'Unable to access your location';
+      }
+    }
   }
 
   TextStyle style = const TextStyle(fontSize: 17, fontWeight: FontWeight.bold);

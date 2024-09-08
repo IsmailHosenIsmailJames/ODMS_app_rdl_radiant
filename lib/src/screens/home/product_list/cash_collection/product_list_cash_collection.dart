@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:clipboard/clipboard.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/controller/delivery_remaning_controller.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
@@ -843,108 +844,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                         width: MediaQuery.of(context).size.width * 0.45,
                         child: ElevatedButton(
                           onPressed: () async {
-                            if (formKey.currentState!.validate()) {
-                              loadingTextController.currentState.value = 0;
-                              loadingTextController.loadingText.value =
-                                  'Accessing Your Location\nPlease wait...';
-
-                              showCoustomPopUpLoadingDialog(context,
-                                  isCuputino: true);
-                              try {
-                                final position =
-                                    await Geolocator.getCurrentPosition(
-                                  locationSettings: AndroidSettings(
-                                      timeLimit: const Duration(seconds: 30)),
-                                );
-                                List<DeliveryCash> listOfDeliveryCash = [];
-                                for (int i = 0; i < productList.length; i++) {
-                                  final e = productList[i];
-                                  String returnText =
-                                      returnTextEditingControllerList[i]
-                                          .text
-                                          .trim();
-                                  if (returnText.isEmpty) returnText = "0";
-                                  listOfDeliveryCash.add(DeliveryCash(
-                                    id: int.parse("${productList[i].id}"),
-                                    returnNetVal: ((((e.netVal ?? 0) +
-                                                    (e.vat ?? 0)) /
-                                                (productList[i].quantity ?? 0)
-                                                    .toInt()) *
-                                            int.parse(returnText))
-                                        .toStringAsFixed(2),
-                                    returnQuantity: int.parse(returnText),
-                                    vat: e.vat,
-                                  ));
-                                }
-
-                                final toSendCashDataModel = ToSendCashDataModel(
-                                  billingDocNo: widget.invoice.billingDocNo,
-                                  lastStatus: "cash_collection",
-                                  type: "cash_collection",
-                                  cashCollection: double.tryParse(
-                                      receivedAmmountController.text),
-                                  cashCollectionLatitude:
-                                      position.latitude.toString(),
-                                  cashCollectionLongitude:
-                                      position.longitude.toString(),
-                                  cashCollectionStatus: "Done",
-                                  deliverys: listOfDeliveryCash,
-                                );
-
-                                if (kDebugMode) {
-                                  log("Sending to api: ");
-                                  log(toSendCashDataModel.toJson());
-                                }
-                                loadingTextController.loadingText.value =
-                                    'Your Location Accessed\nSending data to server\nPlease wait...';
-
-                                final uri = Uri.parse(
-                                    "$base$cashCollectionSave/${widget.invoice.id}");
-                                final response = await http.put(
-                                  uri,
-                                  headers: {"Content-Type": "application/json"},
-                                  body: toSendCashDataModel.toJson(),
-                                );
-                                if (kDebugMode) {
-                                  log("received form api: ");
-                                  log(response.body);
-                                }
-                                if (kDebugMode) {
-                                  log(response.statusCode.toString());
-                                }
-
-                                if (response.statusCode == 200) {
-                                  final decoded = Map<String, dynamic>.from(
-                                      jsonDecode(response.body));
-                                  if (decoded['success'] == true) {
-                                    loadingTextController.currentState.value =
-                                        0;
-                                    loadingTextController.loadingText.value =
-                                        'Successful';
-                                    invoiceListController.invoiceList.removeAt(
-                                      widget.index,
-                                    );
-                                    if (Navigator.canPop(context)) {
-                                      Navigator.pop(context);
-                                    }
-                                    Get.back();
-                                  } else {
-                                    loadingTextController.currentState.value =
-                                        -1;
-                                    loadingTextController.loadingText.value =
-                                        decoded['message'];
-                                  }
-                                } else {
-                                  loadingTextController.currentState.value = -1;
-                                  loadingTextController.loadingText.value =
-                                      'Something went worng with ${response.statusCode}';
-                                }
-                              } catch (e) {
-                                loadingTextController.currentState.value = -1;
-                                loadingTextController.loadingText.value =
-                                    'Unable to access your location';
-                              }
-                            }
+                            await onCashCollectedButtonPressed(context);
                           },
                           child: const Text("Cash Collected"),
                         ),
@@ -955,6 +855,124 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
         ),
       ),
     );
+  }
+
+  Future<void> onCashCollectedButtonPressed(BuildContext context) async {
+    if (formKey.currentState!.validate()) {
+      loadingTextController.currentState.value = 0;
+      loadingTextController.loadingText.value =
+          'Accessing Your Location\nPlease wait...';
+
+      showCoustomPopUpLoadingDialog(context, isCuputino: true);
+      try {
+        final position = await Geolocator.getCurrentPosition(
+          locationSettings:
+              AndroidSettings(timeLimit: const Duration(seconds: 30)),
+        );
+        List<DeliveryCash> listOfDeliveryCash = [];
+        for (int i = 0; i < productList.length; i++) {
+          final e = productList[i];
+          String returnText = returnTextEditingControllerList[i].text.trim();
+          if (returnText.isEmpty) returnText = "0";
+          listOfDeliveryCash.add(DeliveryCash(
+            id: int.parse("${productList[i].id}"),
+            returnNetVal: ((((e.netVal ?? 0) + (e.vat ?? 0)) /
+                        (productList[i].quantity ?? 0).toInt()) *
+                    int.parse(returnText))
+                .toStringAsFixed(2),
+            returnQuantity: int.parse(returnText),
+            vat: e.vat,
+          ));
+        }
+
+        final toSendCashDataModel = ToSendCashDataModel(
+          billingDocNo: widget.invoice.billingDocNo,
+          lastStatus: "cash_collection",
+          type: "cash_collection",
+          cashCollection: double.tryParse(receivedAmmountController.text),
+          cashCollectionLatitude: position.latitude.toString(),
+          cashCollectionLongitude: position.longitude.toString(),
+          cashCollectionStatus: "Done",
+          deliverys: listOfDeliveryCash,
+        );
+
+        if (kDebugMode) {
+          log("Sending to api: ");
+          log(toSendCashDataModel.toJson());
+        }
+        loadingTextController.loadingText.value =
+            'Your Location Accessed\nSending data to server\nPlease wait...';
+
+        final uri = Uri.parse("$base$cashCollectionSave/${widget.invoice.id}");
+        final response = await http.put(
+          uri,
+          headers: {"Content-Type": "application/json"},
+          body: toSendCashDataModel.toJson(),
+        );
+        if (kDebugMode) {
+          log("received form api: ");
+          log(response.body);
+        }
+        if (kDebugMode) {
+          log(response.statusCode.toString());
+        }
+
+        if (response.statusCode == 200) {
+          final decoded = Map<String, dynamic>.from(jsonDecode(response.body));
+          if (decoded['success'] == true) {
+            try {
+              final box = Hive.box('info');
+              final url = Uri.parse(
+                "$base${(pageType == pagesState[0] || pageType == pagesState[1]) ? getDelivaryList : cashCollectionList}/${box.get('sap_id')}?type=${(pageType == pagesState[1] ? "Done" : "Remaining")}&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+              );
+
+              final response = await http.get(url);
+
+              if (response.statusCode == 200) {
+                if (kDebugMode) {
+                  print("Got Delivery Remaning List");
+                  print(response.body);
+                }
+
+                final controller = Get.put(
+                  DeliveryRemaningController(
+                    DeliveryRemaing.fromJson(response.body),
+                  ),
+                );
+                controller.deliveryRemaing.value =
+                    DeliveryRemaing.fromJson(response.body);
+                controller.constDeliveryRemaing.value =
+                    DeliveryRemaing.fromJson(response.body);
+                controller.deliveryRemaing.value.result ??= [];
+                controller.constDeliveryRemaing.value.result ??= [];
+              }
+            } catch (e) {
+              log(e.toString());
+            }
+            loadingTextController.currentState.value = 0;
+            loadingTextController.loadingText.value = 'Successful';
+            invoiceListController.invoiceList.removeAt(
+              widget.index,
+            );
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            }
+            Get.back();
+          } else {
+            loadingTextController.currentState.value = -1;
+            loadingTextController.loadingText.value = decoded['message'];
+          }
+        } else {
+          loadingTextController.currentState.value = -1;
+          loadingTextController.loadingText.value =
+              'Something went worng with ${response.statusCode}';
+        }
+      } catch (e) {
+        loadingTextController.currentState.value = -1;
+        loadingTextController.loadingText.value =
+            'Unable to access your location';
+      }
+    }
   }
 
   TextStyle style = const TextStyle(fontSize: 17, fontWeight: FontWeight.bold);

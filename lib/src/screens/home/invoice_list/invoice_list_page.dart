@@ -1,11 +1,8 @@
 import 'package:clipboard/clipboard.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
-import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
 import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
 import 'package:rdl_radiant/src/screens/home/page_sate_defination.dart';
@@ -13,9 +10,7 @@ import 'package:rdl_radiant/src/screens/home/product_list/prodouct_list_page.dar
 import 'package:rdl_radiant/src/screens/home/product_list/cash_collection/product_list_cash_collection.dart';
 import 'package:rdl_radiant/src/screens/maps/map_view.dart';
 import 'package:simple_icons/simple_icons.dart';
-import 'package:http/http.dart' as http;
 
-import '../../../apis/apis.dart';
 import '../delivary_ramaining/controller/delivery_remaning_controller.dart';
 
 class InvoiceListPage extends StatefulWidget {
@@ -451,34 +446,6 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                 index: index,
                               ),
                             );
-                      if (invoiceList.isEmpty) {
-                        final box = Hive.box('info');
-
-                        final url = Uri.parse(
-                          "$base${(pageType == pagesState[0] || pageType == pagesState[1]) ? getDelivaryList : cashCollectionList}/${box.get('sap_id')}?type=${(pageType == pagesState[1] ? "Done" : "Remaining")}&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
-                        );
-
-                        final response = await http.get(url);
-
-                        if (response.statusCode == 200) {
-                          if (kDebugMode) {
-                            print("Got Delivery Remaning List");
-                            print(response.body);
-                          }
-
-                          final controller = Get.put(
-                            DeliveryRemaningController(
-                              DeliveryRemaing.fromJson(response.body),
-                            ),
-                          );
-                          controller.deliveryRemaing.value =
-                              DeliveryRemaing.fromJson(response.body);
-                          controller.constDeliveryRemaing.value =
-                              DeliveryRemaing.fromJson(response.body);
-                          controller.deliveryRemaing.value.result ??= [];
-                          controller.constDeliveryRemaing.value.result ??= [];
-                        }
-                      }
                     },
                     child: Container(
                       margin: const EdgeInsets.only(top: 5, bottom: 5),

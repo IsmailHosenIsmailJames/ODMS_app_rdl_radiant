@@ -407,7 +407,7 @@ class _HomePageState extends State<HomePage> {
                             },
                           ),
                           getCardView(
-                            data.totalReturnQuantity.toInt().toString(),
+                            (data.totalReturnQuantity ?? 0).toInt().toString(),
                             Image.asset(
                               'assets/delivery_back.png',
                             ),
