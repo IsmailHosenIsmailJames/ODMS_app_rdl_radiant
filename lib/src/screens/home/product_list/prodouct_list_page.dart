@@ -17,6 +17,7 @@ import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_lis
 import 'package:rdl_radiant/src/screens/home/page_sate_defination.dart';
 import 'package:rdl_radiant/src/screens/home/product_list/models/delivery_data.dart';
 import 'package:http/http.dart' as http;
+import 'package:rdl_radiant/src/widgets/coomon_widgets_function.dart';
 
 import '../../../widgets/loading/loading_popup_widget.dart';
 import '../../../widgets/loading/loading_text_controller.dart';
@@ -66,6 +67,11 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
 
     super.initState();
   }
+
+  Widget divider = const Divider(
+    color: Colors.white,
+    height: 1,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -189,237 +195,53 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                         padding: const EdgeInsets.all(10),
                         child: Column(
                           children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    child: const Text(
-                                      "Coustomer Name",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Text(
-                                  ":  ",
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                Expanded(
-                                  flex: 4,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Text(
-                                      widget.invoice.customerName ?? "",
-                                      style: topContainerTextStyle,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            getRowWidgetForDetailsBox(
+                              "Coustomer Name",
+                              widget.invoice.customerName ?? "",
                             ),
-                            const Divider(
-                              color: Colors.white,
-                              height: 1,
+                            divider,
+                            getRowWidgetForDetailsBox(
+                              "Coustomer Address",
+                              widget.invoice.customerAddress ?? "",
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    child: const Text(
-                                      "Coustomer Address",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                            divider,
+                            getRowWidgetForDetailsBox(
+                              "Coustomer Mobile",
+                              widget.invoice.customerMobile ?? "",
+                              optionalWidgetsAtLast: SizedBox(
+                                height: 23,
+                                width: 90,
+                                child: IconButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () {
+                                    FlutterClipboard.copy(
+                                      widget.invoice.customerMobile ?? "",
+                                    ).then((value) {
+                                      Fluttertoast.showToast(
+                                          msg: "Number Copied");
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.copy,
+                                    size: 17,
                                   ),
                                 ),
-                                const Text(
-                                  ":  ",
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                Expanded(
-                                  flex: 4,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Text(
-                                      widget.invoice.customerAddress ?? "",
-                                      style: topContainerTextStyle,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                            const Divider(
-                              color: Colors.white,
-                              height: 1,
+                            divider,
+                            getRowWidgetForDetailsBox(
+                              "Gate Pass",
+                              widget.invoice.gatePassNo ?? "",
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    child: const Text(
-                                      "Coustomer Mobile",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Text(
-                                  ":  ",
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                Expanded(
-                                  flex: 4,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          widget.invoice.customerMobile ?? "",
-                                          style: topContainerTextStyle,
-                                        ),
-                                        SizedBox(
-                                          height: 23,
-                                          width: 90,
-                                          child: IconButton(
-                                            padding: EdgeInsets.zero,
-                                            onPressed: () {
-                                              FlutterClipboard.copy(
-                                                widget.invoice.customerMobile ??
-                                                    "",
-                                              ).then((value) {
-                                                Fluttertoast.showToast(
-                                                    msg: "Number Copied");
-                                              });
-                                            },
-                                            icon: const Icon(
-                                              Icons.copy,
-                                              size: 17,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            divider,
+                            getRowWidgetForDetailsBox(
+                              "Vehicle No",
+                              widget.invoice.vehicleNo ?? "",
                             ),
-                            const Divider(
-                              color: Colors.white,
-                              height: 1,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    child: const Text(
-                                      "Gate Pass",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Text(
-                                  ":  ",
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                Expanded(
-                                  flex: 4,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Text(
-                                      widget.invoice.gatePassNo ?? "",
-                                      style: topContainerTextStyle,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Divider(
-                              color: Colors.white,
-                              height: 1,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    child: const Text(
-                                      "Vehicle No",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Text(
-                                  ":  ",
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                Expanded(
-                                  flex: 4,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Text(
-                                      widget.invoice.vehicleNo ?? "",
-                                      style: topContainerTextStyle,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const Divider(
-                              color: Colors.white,
-                              height: 1,
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    child: const Text(
-                                      "Total Amount",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const Text(
-                                  ":  ",
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                Expanded(
-                                  flex: 4,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    child: Text(
-                                      widget.totalAmount,
-                                      style: topContainerTextStyle,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            divider,
+                            getRowWidgetForDetailsBox(
+                              "Total Amount",
+                              widget.totalAmount,
                             ),
                           ],
                         ),

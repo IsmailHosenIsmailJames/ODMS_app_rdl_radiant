@@ -11,6 +11,7 @@ import 'package:rdl_radiant/src/screens/home/product_list/cash_collection/produc
 import 'package:rdl_radiant/src/screens/maps/map_view.dart';
 import 'package:simple_icons/simple_icons.dart';
 
+import '../../../widgets/coomon_widgets_function.dart';
 import '../delivary_ramaining/controller/delivery_remaning_controller.dart';
 
 class InvoiceListPage extends StatefulWidget {
@@ -37,6 +38,11 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
     pageType = deliveryRemaningController.pageType.value;
     super.initState();
   }
+
+  Widget divider = const Divider(
+    color: Colors.white,
+    height: 1,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -100,293 +106,57 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: const Text(
-                              "Route Name",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Text(
-                          ":  ",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        Expanded(
-                          flex: 4,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: Text(
-                              widget.result.routeName ?? "",
-                              style: topContainerTextStyle,
-                            ),
-                          ),
-                        ),
-                      ],
+                    getRowWidgetForDetailsBox(
+                      "Route Name",
+                      widget.result.routeName ?? "",
                     ),
-                    const Divider(
-                      color: Colors.white,
-                      height: 1,
+                    divider,
+                    getRowWidgetForDetailsBox(
+                      "Da Name",
+                      widget.result.daName ?? "",
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: const Text(
-                              "Da Name",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Text(
-                          ":  ",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        Expanded(
-                          flex: 4,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: Text(
-                              widget.result.daName ?? "",
-                              style: topContainerTextStyle,
-                            ),
-                          ),
-                        ),
-                      ],
+                    divider,
+                    getRowWidgetForDetailsBox(
+                      "Coustomer Name",
+                      widget.result.customerName ?? "",
                     ),
-                    const Divider(
-                      color: Colors.white,
-                      height: 1,
+                    divider,
+                    getRowWidgetForDetailsBox(
+                      "Coustomer Address",
+                      widget.result.customerAddress ?? "",
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: const Text(
-                              "Coustomer Name",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                    divider,
+                    getRowWidgetForDetailsBox(
+                      "Coustomer Mobile",
+                      widget.result.customerMobile ?? "",
+                      optionalWidgetsAtLast: SizedBox(
+                        height: 23,
+                        width: 90,
+                        child: IconButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            FlutterClipboard.copy(
+                              widget.result.customerMobile ?? "",
+                            ).then((value) {
+                              Fluttertoast.showToast(msg: "Number Copied");
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.copy,
+                            size: 17,
                           ),
                         ),
-                        const Text(
-                          ":  ",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        Expanded(
-                          flex: 4,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: Text(
-                              widget.result.customerName ?? "",
-                              style: topContainerTextStyle,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                    const Divider(
-                      color: Colors.white,
-                      height: 1,
+                    divider,
+                    getRowWidgetForDetailsBox(
+                      "Gate Pass",
+                      widget.result.gatePassNo ?? "",
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: const Text(
-                              "Coustomer Address",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Text(
-                          ":  ",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        Expanded(
-                          flex: 4,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: Text(
-                              widget.result.customerAddress ?? "",
-                              style: topContainerTextStyle,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Divider(
-                      color: Colors.white,
-                      height: 1,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: const Text(
-                              "Coustomer Mobile",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Text(
-                          ":  ",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        Expanded(
-                          flex: 4,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.result.customerMobile ?? "",
-                                  style: topContainerTextStyle,
-                                ),
-                                SizedBox(
-                                  height: 23,
-                                  width: 90,
-                                  child: IconButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: () {
-                                      FlutterClipboard.copy(
-                                        widget.result.customerMobile ?? "",
-                                      ).then((value) {
-                                        Fluttertoast.showToast(
-                                            msg: "Number Copied");
-                                      });
-                                    },
-                                    icon: const Icon(
-                                      Icons.copy,
-                                      size: 17,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Divider(
-                      color: Colors.white,
-                      height: 1,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: const Text(
-                              "Gate Pass",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Text(
-                          ":  ",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        Expanded(
-                          flex: 4,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: Row(
-                              children: [
-                                Text(
-                                  widget.result.gatePassNo ?? "",
-                                  style: topContainerTextStyle,
-                                ),
-                                SizedBox(
-                                  height: 23,
-                                  width: 90,
-                                  child: IconButton(
-                                    padding: EdgeInsets.zero,
-                                    onPressed: () {
-                                      FlutterClipboard.copy(
-                                        widget.result.gatePassNo ?? "",
-                                      ).then((value) {
-                                        Fluttertoast.showToast(
-                                            msg: "Number Copied");
-                                      });
-                                    },
-                                    icon: const Icon(
-                                      Icons.copy,
-                                      size: 17,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Divider(
-                      color: Colors.white,
-                      height: 1,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: const Text(
-                              "Total Amount",
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Text(
-                          ":  ",
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        Expanded(
-                          flex: 4,
-                          child: Container(
-                            padding: const EdgeInsets.all(5),
-                            child: Text(
-                              widget.totalAmount,
-                              style: topContainerTextStyle,
-                            ),
-                          ),
-                        ),
-                      ],
+                    divider,
+                    getRowWidgetForDetailsBox(
+                      "Total Amount",
+                      widget.totalAmount,
                     ),
                   ],
                 ),
