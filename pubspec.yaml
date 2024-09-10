@@ -32,6 +32,7 @@ dependencies:
   geolocator: ^13.0.1
   get: ^5.0.0-release-candidate-9
   google_maps_flutter: ^2.9.0
+  google_places_flutter: ^2.0.9
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   http: ^1.2.2
