@@ -25,6 +25,9 @@ class _MyDrawerState extends State<MyDrawer> {
             SizedBox(
               child: TextButton(
                 onPressed: () {
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  }
                   Navigator.pop(context);
                   Get.to(
                     () => const AttendenceEvening(),
@@ -43,6 +46,9 @@ class _MyDrawerState extends State<MyDrawer> {
             SizedBox(
               child: TextButton(
                 onPressed: () async {
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  }
                   Get.to(
                     () => const SetCustomerLocation(),
                   );
