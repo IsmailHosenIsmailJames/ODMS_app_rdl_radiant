@@ -6,8 +6,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
+import 'package:rdl_radiant/src/screens/coustomer_location/customer_details.dart';
 import 'package:rdl_radiant/src/screens/coustomer_location/model/coustomer_list_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -234,7 +236,12 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
                           SizedBox(
                             width: MediaQuery.of(context).size.width,
                             child: ElevatedButton.icon(
-                              onPressed: () {},
+                              onPressed: () {
+                                Get.to(
+                                  () => CustomerDetailsPage(
+                                      paternerID: current.partner.toString()),
+                                );
+                              },
                               icon: const Icon(
                                 Icons.location_on,
                               ),

@@ -1,4 +1,4 @@
-String base = 'http://192.168.1.103:6042';
+String base = 'http://192.168.247.221:6042';
 String loginPath = '/api/v1/user_login';
 String registationPath = '/api/v1/user_registration';
 String startWorkPath = '/api/v1/attendance/start_work';
@@ -9,3 +9,4 @@ String saveDeliveryList = '/api/v1/delivery/save';
 String cashCollectionList = '/api/v1/cash_collection/v2/list';
 String cashCollectionSave = '/api/v1/cash_collection/save';
 String getCoustomerList = '/api/v1/customer_location/list';
+String getCoustomerDetailsByPartnerID = '/api/v1/customer_location/details';
