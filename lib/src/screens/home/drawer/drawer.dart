@@ -7,6 +7,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:rdl_radiant/src/screens/attendence/attendence_evening.dart';
 import 'package:rdl_radiant/src/screens/auth/login/login_page.dart';
 import 'package:rdl_radiant/src/screens/coustomer_location/set_customer_location.dart';
+import 'package:rdl_radiant/src/screens/journey/select_journey_end_location.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -59,6 +60,26 @@ class _MyDrawerState extends State<MyDrawer> {
                     Icon(Icons.location_on),
                     Gap(20),
                     Text('Set Coustomer Location'),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              child: TextButton(
+                onPressed: () async {
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  }
+                  Get.to(
+                    () => const SelectJourneyEndLocation(),
+                  );
+                },
+                child: const Row(
+                  children: [
+                    Gap(20),
+                    Icon(Icons.drive_eta),
+                    Gap(20),
+                    Text('Start Journey'),
                   ],
                 ),
               ),

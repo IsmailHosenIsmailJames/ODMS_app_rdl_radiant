@@ -63,6 +63,7 @@ flutter:
     - assets/delivery_back.png
     - assets/animations/bubnly.riv
     - assets/icon_for_medical_shop.png
+    - assets/Map-100x100.bmp
 
 
 flutter_native_splash:

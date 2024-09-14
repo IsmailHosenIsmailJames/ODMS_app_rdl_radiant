@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/place_type.dart';
@@ -28,33 +29,33 @@ class _MyMapViewState extends State<MyMapView> {
   @override
   void initState() {
     super.initState();
-    // Geolocator.getPositionStream(
-    //   locationSettings: const LocationSettings(
-    //     accuracy: LocationAccuracy.bestForNavigation,
-    //     distanceFilter: 50,
-    //     timeLimit: Duration(seconds: 30),
-    //   ),
-    // ).listen(
-    //   (event) {
-    //     setState(() {
-    //       myLatLng = LatLng(event.latitude, event.longitude);
-    //     });
+    Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.bestForNavigation,
+        distanceFilter: 50,
+        timeLimit: Duration(seconds: 30),
+      ),
+    ).listen(
+      (event) {
+        setState(() {
+          myLatLng = LatLng(event.latitude, event.longitude);
+        });
 
-    //     WidgetsBinding.instance.addPostFrameCallback((_) {
-    //       cameraPositionUpdater(LatLng(event.latitude, event.longitude));
-    //     });
-    //   },
-    // );
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          cameraPositionUpdater(LatLng(event.latitude, event.longitude));
+        });
+      },
+    );
 
-    // Geolocator.getCurrentPosition().then(
-    //   (value) {
-    //     getPoliLinePoints(LatLng(value.latitude, value.longitude)).then(
-    //       (value) {
-    //         generatePolylinesFormsPoints(value);
-    //       },
-    //     );
-    //   },
-    // );
+    Geolocator.getCurrentPosition().then(
+      (value) {
+        getPoliLinePoints(LatLng(value.latitude, value.longitude)).then(
+          (value) {
+            generatePolylinesFormsPoints(value);
+          },
+        );
+      },
+    );
   }
 
   Map<PolylineId, Polyline> polynlies = {};
