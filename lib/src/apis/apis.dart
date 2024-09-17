@@ -1,4 +1,5 @@
 String base = 'http://192.168.1.104:6042';
+// String base = 'http://128.199.199.164:6042';
 String loginPath = '/api/v1/user_login';
 String registationPath = '/api/v1/user_registration';
 String startWorkPath = '/api/v1/attendance/start_work';
@@ -10,7 +11,7 @@ String cashCollectionList = '/api/v1/cash_collection/v2/list';
 String cashCollectionSave = '/api/v1/cash_collection/save';
 String getCoustomerList = '/api/v1/customer_location/list';
 String getCoustomerDetailsByPartnerID = '/api/v1/customer_location/details';
-String conveyanceStart = "api/v1/conveyance/start";
-String conveyanceList = "api/v1/conveyance/list";
-String conveyanceEnd = "api/v1/conveyance/end";
-String conveyanceTransportMode = "api/v1/conveyance/transport_modes";
+String conveyanceStart = "/api/v1/conveyance/start";
+String conveyanceList = "/api/v1/conveyance/list";
+String conveyanceEnd = "/api/v1/conveyance/end";
+String conveyanceTransportMode = "/api/v1/conveyance/transport_modes";
