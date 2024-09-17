@@ -1,6 +1,8 @@
 // The callback function should always be a top-level function.
 // ignore_for_file: avoid_dynamic_calls
 
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
@@ -30,6 +32,7 @@ class MyTaskHandler extends TaskHandler {
   // Called every [ForegroundTaskOptions.interval] milliseconds.
   @override
   Future<void> onRepeatEvent(DateTime timestamp) async {
+    log("count: $count");
     if (SocketManager().isConnected()) {
       await Geolocator.getCurrentPosition().then(
         (position) async {

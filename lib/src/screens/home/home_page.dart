@@ -174,175 +174,21 @@ class _HomePageState extends State<HomePage> {
                             Image.asset('assets/delivery-truck.png'),
                             'Delivary Remaining',
                             0,
-                            onPressed: () async {
-                              final box = Hive.box('info');
-                              final url = Uri.parse(
-                                "$base$getDelivaryList/${box.get('sap_id')}?type=Remaining&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
-                              );
-
-                              loadingTextController.currentState.value = 0;
-                              loadingTextController.loadingText.value =
-                                  'Loading Data\nPlease wait...';
-                              showCoustomPopUpLoadingDialog(context,
-                                  isCuputino: true);
-
-                              final response = await http.get(url);
-
-                              if (response.statusCode == 200) {
-                                loadingTextController.currentState.value = 1;
-                                loadingTextController.loadingText.value =
-                                    'Successful';
-
-                                if (kDebugMode) {
-                                  print("Got Delivery Remaning List");
-                                  print(response.body);
-                                }
-
-                                final controller = Get.put(
-                                  DeliveryRemaningController(
-                                    DeliveryRemaing.fromJson(response.body),
-                                  ),
-                                );
-                                controller.deliveryRemaing.value =
-                                    DeliveryRemaing.fromJson(response.body);
-                                controller.constDeliveryRemaing.value =
-                                    DeliveryRemaing.fromJson(response.body);
-                                controller.deliveryRemaing.value.result ??= [];
-                                controller.constDeliveryRemaing.value.result ??=
-                                    [];
-                                controller.pageType.value =
-                                    'Delivery Remaining';
-                                await Future.delayed(
-                                    const Duration(milliseconds: 100));
-                                if (Navigator.canPop(context)) {
-                                  Navigator.pop(context);
-                                }
-                                await Get.to(
-                                  () => const DeliveryRemainingPage(),
-                                );
-                                getDashBoardData();
-                              } else {
-                                loadingTextController.currentState.value = -1;
-                                loadingTextController.loadingText.value =
-                                    'Something went worng';
-                              }
-                            },
+                            onPressed: callDeliveryRemainingList,
                           ),
                           getCardView(
                             data.deliveryDone.toString(),
                             Image.asset('assets/delivery_done.png'),
                             'Delivary Done',
                             1,
-                            onPressed: () async {
-                              final box = Hive.box('info');
-                              final url = Uri.parse(
-                                "$base$getDelivaryList/${box.get('sap_id')}?type=Done&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
-                              );
-
-                              loadingTextController.currentState.value = 0;
-                              loadingTextController.loadingText.value =
-                                  'Loading Data\nPlease wait...';
-                              showCoustomPopUpLoadingDialog(context,
-                                  isCuputino: true);
-
-                              final response = await http.get(url);
-
-                              if (response.statusCode == 200) {
-                                loadingTextController.currentState.value = 1;
-                                loadingTextController.loadingText.value =
-                                    'Successful';
-                                if (kDebugMode) {
-                                  print("Got Delivery Remaning List");
-                                  print(response.body);
-                                }
-
-                                final controller = Get.put(
-                                  DeliveryRemaningController(
-                                    DeliveryRemaing.fromJson(response.body),
-                                  ),
-                                );
-                                controller.deliveryRemaing.value =
-                                    DeliveryRemaing.fromJson(response.body);
-                                controller.constDeliveryRemaing.value =
-                                    DeliveryRemaing.fromJson(response.body);
-                                controller.deliveryRemaing.value.result ??= [];
-                                controller.constDeliveryRemaing.value.result ??=
-                                    [];
-                                controller.pageType.value = 'Delivery Done';
-                                await Future.delayed(
-                                    const Duration(milliseconds: 100));
-                                if (Navigator.canPop(context)) {
-                                  Navigator.pop(context);
-                                }
-                                await Get.to(
-                                  () => const DeliveryRemainingPage(),
-                                );
-                                getDashBoardData();
-                              } else {
-                                loadingTextController.currentState.value = -1;
-                                loadingTextController.loadingText.value =
-                                    'Something went worng';
-                              }
-                            },
+                            onPressed: callDeliveryDoneList,
                           ),
                           getCardView(
                             data.cashRemaining.toString(),
                             Image.asset('assets/cash_collection.png'),
                             'Cash Collection Remaining',
                             0,
-                            onPressed: () async {
-                              final box = Hive.box('info');
-                              final url = Uri.parse(
-                                "$base$cashCollectionList/${box.get('sap_id')}?type=Remaining&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
-                              );
-
-                              loadingTextController.currentState.value = 0;
-                              loadingTextController.loadingText.value =
-                                  'Loading Data\nPlease wait...';
-                              showCoustomPopUpLoadingDialog(context,
-                                  isCuputino: true);
-
-                              final response = await http.get(url);
-
-                              if (Navigator.canPop(context)) {
-                                Navigator.pop(context);
-                              }
-
-                              if (response.statusCode == 200) {
-                                loadingTextController.currentState.value = 1;
-                                loadingTextController.loadingText.value =
-                                    'Successful';
-                                dev.log(response.body);
-
-                                final controller = Get.put(
-                                  DeliveryRemaningController(
-                                    DeliveryRemaing.fromJson(response.body),
-                                  ),
-                                );
-                                controller.deliveryRemaing.value =
-                                    DeliveryRemaing.fromJson(response.body);
-                                controller.constDeliveryRemaing.value =
-                                    DeliveryRemaing.fromJson(response.body);
-                                controller.deliveryRemaing.value.result ??= [];
-                                controller.constDeliveryRemaing.value.result ??=
-                                    [];
-                                controller.pageType.value =
-                                    'Cash Collection Remaining';
-                                await Future.delayed(
-                                    const Duration(milliseconds: 100));
-                                if (Navigator.canPop(context)) {
-                                  Navigator.pop(context);
-                                }
-                                await Get.to(
-                                  () => const DeliveryRemainingPage(),
-                                );
-                                getDashBoardData();
-                              } else {
-                                loadingTextController.currentState.value = -1;
-                                loadingTextController.loadingText.value =
-                                    'Something went worng';
-                              }
-                            },
+                            onPressed: callCashCollectionRemainingList,
                           ),
                           getCardView(
                             data.cashDone.toString(),
@@ -352,59 +198,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             'Cash Collection Done',
                             1,
-                            onPressed: () async {
-                              final box = Hive.box('info');
-                              final url = Uri.parse(
-                                "$base$cashCollectionList/${box.get('sap_id')}?type=Done&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
-                              );
-
-                              loadingTextController.currentState.value = 0;
-                              loadingTextController.loadingText.value =
-                                  'Loading Data\nPlease wait...';
-                              showCoustomPopUpLoadingDialog(context,
-                                  isCuputino: true);
-
-                              final response = await http.get(url);
-                              log(response.body);
-
-                              if (response.statusCode == 200) {
-                                loadingTextController.currentState.value = 1;
-                                loadingTextController.loadingText.value =
-                                    'Successful';
-
-                                dev.log(response.body);
-
-                                final controller = Get.put(
-                                  DeliveryRemaningController(
-                                    DeliveryRemaing.fromJson(response.body),
-                                  ),
-                                );
-                                controller.deliveryRemaing.value =
-                                    DeliveryRemaing.fromJson(response.body);
-                                controller.constDeliveryRemaing.value =
-                                    DeliveryRemaing.fromJson(response.body);
-                                controller.deliveryRemaing.value.result ??= [];
-                                controller.constDeliveryRemaing.value.result ??=
-                                    [];
-                                controller.pageType.value =
-                                    'Cash Collection Done';
-
-                                await Future.delayed(
-                                    const Duration(milliseconds: 100));
-                                if (Navigator.canPop(context)) {
-                                  Navigator.pop(context);
-                                }
-
-                                await Get.to(
-                                  () => const DeliveryRemainingPage(),
-                                );
-                                getDashBoardData();
-                              } else {
-                                loadingTextController.currentState.value = -1;
-                                loadingTextController.loadingText.value =
-                                    'Something went worng';
-                              }
-                            },
+                            onPressed: callCashCollectionDoneList,
                           ),
                           getCardView(
                             (data.totalReturnQuantity ?? 0).toInt().toString(),
@@ -413,55 +207,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                             'Returned',
                             0,
-                            onPressed: () async {
-                              final box = Hive.box('info');
-                              final url = Uri.parse(
-                                "$base$cashCollectionList/${box.get('sap_id')}?type=Return&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
-                              );
-
-                              loadingTextController.currentState.value = 0;
-                              loadingTextController.loadingText.value =
-                                  'Loading Data\nPlease wait...';
-                              showCoustomPopUpLoadingDialog(context,
-                                  isCuputino: true);
-
-                              final response = await http.get(url);
-                              log(response.body);
-
-                              if (response.statusCode == 200) {
-                                loadingTextController.currentState.value = 1;
-                                loadingTextController.loadingText.value =
-                                    'Successful';
-                                dev.log(response.body);
-
-                                final controller = Get.put(
-                                  DeliveryRemaningController(
-                                    DeliveryRemaing.fromJson(response.body),
-                                  ),
-                                );
-                                controller.deliveryRemaing.value =
-                                    DeliveryRemaing.fromJson(response.body);
-                                controller.constDeliveryRemaing.value =
-                                    DeliveryRemaing.fromJson(response.body);
-                                controller.deliveryRemaing.value.result ??= [];
-                                controller.constDeliveryRemaing.value.result ??=
-                                    [];
-                                controller.pageType.value = 'Returned';
-                                await Future.delayed(
-                                    const Duration(milliseconds: 100));
-                                if (Navigator.canPop(context)) {
-                                  Navigator.pop(context);
-                                }
-                                await Get.to(
-                                  () => const DeliveryRemainingPage(),
-                                );
-                                getDashBoardData();
-                              } else {
-                                loadingTextController.currentState.value = -1;
-                                loadingTextController.loadingText.value =
-                                    'Something went worng';
-                              }
-                            },
+                            onPressed: callReturnedList,
                           ),
                         ],
                       );
@@ -639,5 +385,236 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void callDeliveryRemainingList() async {
+    final box = Hive.box('info');
+    final url = Uri.parse(
+      "$base$getDelivaryList/${box.get('sap_id')}?type=Remaining&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+    );
+
+    loadingTextController.currentState.value = 0;
+    loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
+    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      loadingTextController.currentState.value = 1;
+      loadingTextController.loadingText.value = 'Successful';
+
+      if (kDebugMode) {
+        print("Got Delivery Remaning List");
+        print(response.body);
+      }
+
+      final controller = Get.put(
+        DeliveryRemaningController(
+          DeliveryRemaing.fromJson(response.body),
+        ),
+      );
+      controller.deliveryRemaing.value =
+          DeliveryRemaing.fromJson(response.body);
+      controller.constDeliveryRemaing.value =
+          DeliveryRemaing.fromJson(response.body);
+      controller.deliveryRemaing.value.result ??= [];
+      controller.constDeliveryRemaing.value.result ??= [];
+      controller.pageType.value = 'Delivery Remaining';
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      await Get.to(
+        () => const DeliveryRemainingPage(),
+      );
+      getDashBoardData();
+    } else {
+      loadingTextController.currentState.value = -1;
+      loadingTextController.loadingText.value = 'Something went worng';
+    }
+  }
+
+  void callDeliveryDoneList() async {
+    final box = Hive.box('info');
+    final url = Uri.parse(
+      "$base$getDelivaryList/${box.get('sap_id')}?type=Done&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+    );
+
+    loadingTextController.currentState.value = 0;
+    loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
+    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      loadingTextController.currentState.value = 1;
+      loadingTextController.loadingText.value = 'Successful';
+      if (kDebugMode) {
+        print("Got Delivery Remaning List");
+        print(response.body);
+      }
+
+      final controller = Get.put(
+        DeliveryRemaningController(
+          DeliveryRemaing.fromJson(response.body),
+        ),
+      );
+      controller.deliveryRemaing.value =
+          DeliveryRemaing.fromJson(response.body);
+      controller.constDeliveryRemaing.value =
+          DeliveryRemaing.fromJson(response.body);
+      controller.deliveryRemaing.value.result ??= [];
+      controller.constDeliveryRemaing.value.result ??= [];
+      controller.pageType.value = 'Delivery Done';
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      await Get.to(
+        () => const DeliveryRemainingPage(),
+      );
+      getDashBoardData();
+    } else {
+      loadingTextController.currentState.value = -1;
+      loadingTextController.loadingText.value = 'Something went worng';
+    }
+  }
+
+  void callCashCollectionRemainingList() async {
+    final box = Hive.box('info');
+    final url = Uri.parse(
+      "$base$cashCollectionList/${box.get('sap_id')}?type=Remaining&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+    );
+
+    loadingTextController.currentState.value = 0;
+    loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
+    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+
+    final response = await http.get(url);
+
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
+
+    if (response.statusCode == 200) {
+      loadingTextController.currentState.value = 1;
+      loadingTextController.loadingText.value = 'Successful';
+      dev.log(response.body);
+
+      final controller = Get.put(
+        DeliveryRemaningController(
+          DeliveryRemaing.fromJson(response.body),
+        ),
+      );
+      controller.deliveryRemaing.value =
+          DeliveryRemaing.fromJson(response.body);
+      controller.constDeliveryRemaing.value =
+          DeliveryRemaing.fromJson(response.body);
+      controller.deliveryRemaing.value.result ??= [];
+      controller.constDeliveryRemaing.value.result ??= [];
+      controller.pageType.value = 'Cash Collection Remaining';
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      await Get.to(
+        () => const DeliveryRemainingPage(),
+      );
+      getDashBoardData();
+    } else {
+      loadingTextController.currentState.value = -1;
+      loadingTextController.loadingText.value = 'Something went worng';
+    }
+  }
+
+  void callCashCollectionDoneList() async {
+    final box = Hive.box('info');
+    final url = Uri.parse(
+      "$base$cashCollectionList/${box.get('sap_id')}?type=Done&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+    );
+
+    loadingTextController.currentState.value = 0;
+    loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
+    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+
+    final response = await http.get(url);
+    log(response.body);
+
+    if (response.statusCode == 200) {
+      loadingTextController.currentState.value = 1;
+      loadingTextController.loadingText.value = 'Successful';
+
+      dev.log(response.body);
+
+      final controller = Get.put(
+        DeliveryRemaningController(
+          DeliveryRemaing.fromJson(response.body),
+        ),
+      );
+      controller.deliveryRemaing.value =
+          DeliveryRemaing.fromJson(response.body);
+      controller.constDeliveryRemaing.value =
+          DeliveryRemaing.fromJson(response.body);
+      controller.deliveryRemaing.value.result ??= [];
+      controller.constDeliveryRemaing.value.result ??= [];
+      controller.pageType.value = 'Cash Collection Done';
+
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+
+      await Get.to(
+        () => const DeliveryRemainingPage(),
+      );
+      getDashBoardData();
+    } else {
+      loadingTextController.currentState.value = -1;
+      loadingTextController.loadingText.value = 'Something went worng';
+    }
+  }
+
+  void callReturnedList() async {
+    final box = Hive.box('info');
+    final url = Uri.parse(
+      "$base$cashCollectionList/${box.get('sap_id')}?type=Return&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+    );
+
+    loadingTextController.currentState.value = 0;
+    loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
+    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+
+    final response = await http.get(url);
+    log(response.body);
+
+    if (response.statusCode == 200) {
+      loadingTextController.currentState.value = 1;
+      loadingTextController.loadingText.value = 'Successful';
+      dev.log(response.body);
+
+      final controller = Get.put(
+        DeliveryRemaningController(
+          DeliveryRemaing.fromJson(response.body),
+        ),
+      );
+      controller.deliveryRemaing.value =
+          DeliveryRemaing.fromJson(response.body);
+      controller.constDeliveryRemaing.value =
+          DeliveryRemaing.fromJson(response.body);
+      controller.deliveryRemaing.value.result ??= [];
+      controller.constDeliveryRemaing.value.result ??= [];
+      controller.pageType.value = 'Returned';
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      await Get.to(
+        () => const DeliveryRemainingPage(),
+      );
+      getDashBoardData();
+    } else {
+      loadingTextController.currentState.value = -1;
+      loadingTextController.loadingText.value = 'Something went worng';
+    }
   }
 }

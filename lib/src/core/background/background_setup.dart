@@ -35,7 +35,7 @@ Future<void> initService() async {
       autoRunOnMyPackageReplaced: true,
       allowWakeLock: true,
       allowWifiLock: true,
-      eventAction: ForegroundTaskEventAction.nothing(),
+      eventAction: ForegroundTaskEventAction.repeat(30000),
     ),
   );
 }

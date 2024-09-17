@@ -10,3 +10,7 @@ String cashCollectionList = '/api/v1/cash_collection/v2/list';
 String cashCollectionSave = '/api/v1/cash_collection/save';
 String getCoustomerList = '/api/v1/customer_location/list';
 String getCoustomerDetailsByPartnerID = '/api/v1/customer_location/details';
+String conveyanceStart = "api/v1/conveyance/start";
+String conveyanceList = "api/v1/conveyance/list";
+String conveyanceEnd = "api/v1/conveyance/end";
+String conveyanceTransportMode = "api/v1/conveyance/transport_modes";

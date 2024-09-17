@@ -13,6 +13,7 @@ import 'package:google_places_flutter/model/place_type.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:rdl_radiant/src/screens/maps/keys/google_maps_api_key.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SelectJourneyEndLocation extends StatefulWidget {
   const SelectJourneyEndLocation({
@@ -365,7 +366,10 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await launchUrl(Uri.parse(
+                              'google.navigation:q=${destination!.latitude}, ${destination!.latitude}&key=$googleMapsApiKey'));
+                        },
                         child: const Text("Start Journey"),
                       ),
                     ),
