@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
@@ -48,9 +50,164 @@ class _ConveyancePageState extends State<ConveyancePage> {
             );
           }
           return ListView.builder(
+            padding: const EdgeInsets.all(10),
             itemCount: controller.convenceData.length,
             itemBuilder: (context, index) {
-              return Text(controller.convenceData[index].toString());
+              DateTime? staringDate = DateTime.tryParse(controller
+                  .convenceData[index].startJourneyDateTime
+                  .toString());
+              DateTime? endDate = DateTime.tryParse(
+                  controller.convenceData[index].endJourneyDateTime.toString());
+
+              bool isLive = controller.convenceData[index].endJourneyLatitude ==
+                      null ||
+                  controller.convenceData[index].endJourneyLongitude == null;
+              return Container(
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.only(top: 5, bottom: 5),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.shade500,
+                      blurRadius: 10,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    FutureBuilder(
+                      future: placemarkFromCoordinates(
+                        double.parse(controller
+                            .convenceData[index].startJourneyLatitude!),
+                        double.parse(controller
+                            .convenceData[index].startJourneyLongitude!),
+                      ),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData == false) {
+                          return const SizedBox();
+                        }
+                        List<String> plackeMarkImportantData =
+                            analyzePlackeMark(snapshot.data!);
+
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  "Your staring location was: ",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                if (isLive)
+                                  const Text(
+                                    "Live",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                if (!isLive)
+                                  const Text(
+                                    "End",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            getAddressWidget(
+                              plackeMarkImportantData,
+                              LatLng(
+                                double.parse(controller
+                                    .convenceData[index].startJourneyLatitude!),
+                                double.parse(controller.convenceData[index]
+                                    .startJourneyLongitude!),
+                              ),
+                              showTitile: false,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    if (!isLive)
+                      FutureBuilder(
+                        future: placemarkFromCoordinates(
+                          double.parse(controller
+                              .convenceData[index].endJourneyLatitude!),
+                          double.parse(controller
+                              .convenceData[index].endJourneyLongitude!),
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData == false) {
+                            return const SizedBox();
+                          }
+                          List<String> plackeMarkImportantData =
+                              analyzePlackeMark(snapshot.data!);
+
+                          return Column(
+                            children: [
+                              if (!isLive) const Gap(10),
+                              if (!isLive)
+                                const Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Your end location was: ",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              getAddressWidget(
+                                plackeMarkImportantData,
+                                LatLng(
+                                  double.parse(controller
+                                      .convenceData[index].endJourneyLatitude!),
+                                  double.parse(controller.convenceData[index]
+                                      .endJourneyLongitude!),
+                                ),
+                                showTitile: false,
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    // if (staringDate != null)
+                    //   Row(
+                    //     children: [
+                    //       Text(
+                    //           "Starting Date: ${staringDate.day}/${staringDate.month}/${staringDate.year}"),
+                    //     ],
+                    //   ),
+                    // if (endDate != null)
+                    //   Row(
+                    //     children: [
+                    //       Text(
+                    //           "Starting Date: ${endDate.day}/${endDate.month}/${endDate.year}"),
+                    //     ],
+                    //   ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: Text("Next"),
+                      ),
+                    ),
+                  ],
+                ),
+              );
             },
           );
         },
@@ -76,64 +233,8 @@ class _ConveyancePageState extends State<ConveyancePage> {
               position.latitude,
               position.longitude,
             );
-            String street = '';
-            String name = '';
-            String administrativeArea = '';
-            String subAdministrativeArea = '';
-            String locality = '';
-            String country = '';
-            String subLocality = '';
-            for (Placemark placemark in placemarks) {
-              street +=
-                  '${placemark.street ?? ""}${(placemark.street ?? "").isEmpty ? "" : ", "}';
-
-              name +=
-                  '${placemark.name ?? ""}${(placemark.name ?? "").isEmpty ? "" : ", "}';
-              if (!administrativeArea
-                  .contains(placemark.administrativeArea ?? "")) {
-                administrativeArea +=
-                    '${placemark.administrativeArea ?? ""}${(placemark.administrativeArea ?? "").isEmpty ? "" : ", "}';
-              }
-              if (!subAdministrativeArea
-                  .contains(placemark.subAdministrativeArea ?? "")) {
-                subAdministrativeArea +=
-                    '${placemark.subAdministrativeArea ?? ""}${(placemark.subAdministrativeArea ?? "").isEmpty ? "" : ", "}';
-              }
-              if (!locality.contains(placemark.locality ?? "")) {
-                locality +=
-                    '${placemark.locality ?? ""}${(placemark.locality ?? "").isEmpty ? "" : ", "}';
-              }
-              if (!country.contains(placemark.country ?? "")) {
-                country +=
-                    '${placemark.country ?? ""}${(placemark.country ?? "").isEmpty ? "" : ", "}';
-              }
-              if (!subLocality.contains(placemark.subLocality ?? "")) {
-                subLocality +=
-                    '${placemark.subLocality ?? ""}${(placemark.subLocality ?? "").isEmpty ? "" : ", "}';
-              }
-            }
-
-            if (street.length > 1) {
-              street = street.substring(0, street.length - 2);
-            }
-            if (name.length > 1) name = name.substring(0, name.length - 2);
-            if (administrativeArea.length > 1) {
-              administrativeArea = administrativeArea.substring(
-                  0, administrativeArea.length - 2);
-            }
-            if (subAdministrativeArea.length > 1) {
-              subAdministrativeArea = subAdministrativeArea.substring(
-                  0, subAdministrativeArea.length - 2);
-            }
-            if (locality.length > 1) {
-              locality = locality.substring(0, locality.length - 2);
-            }
-            if (country.length > 1) {
-              country = country.substring(0, country.length - 2);
-            }
-            if (subLocality.length > 1) {
-              subLocality = subLocality.substring(0, subLocality.length - 2);
-            }
+            List<String> plackeMarkImportantData =
+                analyzePlackeMark(placemarks);
 
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
@@ -143,69 +244,8 @@ class _ConveyancePageState extends State<ConveyancePage> {
               context: context,
               builder: (context) => AlertDialog(
                 title: const Text("Are you sure?"),
-                content: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(10),
-                  margin: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white.withOpacity(0.8),
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        "Your location is: ",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Text(
-                        street,
-                        style: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w500),
-                      ),
-                      Text(
-                        "$subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country",
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey.shade700),
-                      ),
-                      Row(
-                        children: [
-                          const Text(
-                            "Lat: ",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const Gap(2),
-                          Text(
-                            position.latitude.toStringAsFixed(4),
-                          ),
-                          const Gap(15),
-                          const Text(
-                            "Lon: ",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const Gap(2),
-                          Text(
-                            position.longitude.toStringAsFixed(4),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
+                content: getAddressWidget(plackeMarkImportantData,
+                    LatLng(position.latitude, position.longitude)),
                 actions: [
                   SizedBox(
                     width: 100,
@@ -238,6 +278,82 @@ class _ConveyancePageState extends State<ConveyancePage> {
           },
           child: const Text("Start New Conveyance"),
         ),
+      ),
+    );
+  }
+
+  Widget getAddressWidget(
+    List<String> plackeMarkImportantData,
+    LatLng latLng, {
+    bool showTitile = true,
+  }) {
+    String street = plackeMarkImportantData[0];
+    String administrativeArea = plackeMarkImportantData[2];
+    String subAdministrativeArea = plackeMarkImportantData[3];
+    String locality = plackeMarkImportantData[4];
+    String country = plackeMarkImportantData[5];
+    String subLocality = plackeMarkImportantData[6];
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(10),
+      margin: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white.withOpacity(0.8),
+        border: Border.all(
+          color: Colors.grey,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (showTitile)
+            const Text(
+              "Your location is: ",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          Text(
+            street,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          ),
+          Text(
+            "$subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country",
+            style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey.shade700),
+          ),
+          Row(
+            children: [
+              const Text(
+                "Lat: ",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Gap(2),
+              Text(
+                latLng.latitude.toStringAsFixed(4),
+              ),
+              const Gap(15),
+              const Text(
+                "Lon: ",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Gap(2),
+              Text(
+                latLng.longitude.toStringAsFixed(4),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -290,4 +406,73 @@ class _ConveyancePageState extends State<ConveyancePage> {
       Navigator.pop(context);
     }
   }
+}
+
+List<String> analyzePlackeMark(List<Placemark> placemarks) {
+  String street = '';
+  String name = '';
+  String administrativeArea = '';
+  String subAdministrativeArea = '';
+  String locality = '';
+  String country = '';
+  String subLocality = '';
+  for (Placemark placemark in placemarks) {
+    street +=
+        '${placemark.street ?? ""}${(placemark.street ?? "").isEmpty ? "" : ", "}';
+
+    name +=
+        '${placemark.name ?? ""}${(placemark.name ?? "").isEmpty ? "" : ", "}';
+    if (!administrativeArea.contains(placemark.administrativeArea ?? "")) {
+      administrativeArea +=
+          '${placemark.administrativeArea ?? ""}${(placemark.administrativeArea ?? "").isEmpty ? "" : ", "}';
+    }
+    if (!subAdministrativeArea
+        .contains(placemark.subAdministrativeArea ?? "")) {
+      subAdministrativeArea +=
+          '${placemark.subAdministrativeArea ?? ""}${(placemark.subAdministrativeArea ?? "").isEmpty ? "" : ", "}';
+    }
+    if (!locality.contains(placemark.locality ?? "")) {
+      locality +=
+          '${placemark.locality ?? ""}${(placemark.locality ?? "").isEmpty ? "" : ", "}';
+    }
+    if (!country.contains(placemark.country ?? "")) {
+      country +=
+          '${placemark.country ?? ""}${(placemark.country ?? "").isEmpty ? "" : ", "}';
+    }
+    if (!subLocality.contains(placemark.subLocality ?? "")) {
+      subLocality +=
+          '${placemark.subLocality ?? ""}${(placemark.subLocality ?? "").isEmpty ? "" : ", "}';
+    }
+  }
+
+  if (street.length > 1) {
+    street = street.substring(0, street.length - 2);
+  }
+  if (name.length > 1) name = name.substring(0, name.length - 2);
+  if (administrativeArea.length > 1) {
+    administrativeArea =
+        administrativeArea.substring(0, administrativeArea.length - 2);
+  }
+  if (subAdministrativeArea.length > 1) {
+    subAdministrativeArea =
+        subAdministrativeArea.substring(0, subAdministrativeArea.length - 2);
+  }
+  if (locality.length > 1) {
+    locality = locality.substring(0, locality.length - 2);
+  }
+  if (country.length > 1) {
+    country = country.substring(0, country.length - 2);
+  }
+  if (subLocality.length > 1) {
+    subLocality = subLocality.substring(0, subLocality.length - 2);
+  }
+  return [
+    street,
+    name,
+    administrativeArea,
+    subAdministrativeArea,
+    locality,
+    country,
+    subLocality,
+  ];
 }

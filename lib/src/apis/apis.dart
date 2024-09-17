@@ -1,4 +1,4 @@
-String base = 'http://192.168.1.104:6042';
+String base = 'http://192.168.155.221:6042';
 // String base = 'http://128.199.199.164:6042';
 String loginPath = '/api/v1/user_login';
 String registationPath = '/api/v1/user_registration';

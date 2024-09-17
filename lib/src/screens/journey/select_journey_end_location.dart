@@ -12,6 +12,7 @@ import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/place_type.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:rdl_radiant/src/screens/home/conveyance/conveyance_page.dart';
 import 'package:rdl_radiant/src/screens/maps/keys/google_maps_api_key.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -106,59 +107,15 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
       latlng.latitude,
       latlng.longitude,
     );
-    street = '';
-    name = '';
-    administrativeArea = '';
-    subAdministrativeArea = '';
-    locality = '';
-    country = '';
-    subLocality = '';
-    for (Placemark placemark in placemarks) {
-      street +=
-          '${placemark.street ?? ""}${(placemark.street ?? "").isEmpty ? "" : ", "}';
+    final listOfAddress = analyzePlackeMark(placemarks);
+    street = listOfAddress[0];
+    name = listOfAddress[1];
+    administrativeArea = listOfAddress[2];
+    subAdministrativeArea = listOfAddress[3];
+    locality = listOfAddress[4];
+    country = listOfAddress[5];
+    subLocality = listOfAddress[6];
 
-      name +=
-          '${placemark.name ?? ""}${(placemark.name ?? "").isEmpty ? "" : ", "}';
-      if (!administrativeArea.contains(placemark.administrativeArea ?? "")) {
-        administrativeArea +=
-            '${placemark.administrativeArea ?? ""}${(placemark.administrativeArea ?? "").isEmpty ? "" : ", "}';
-      }
-      if (!subAdministrativeArea
-          .contains(placemark.subAdministrativeArea ?? "")) {
-        subAdministrativeArea +=
-            '${placemark.subAdministrativeArea ?? ""}${(placemark.subAdministrativeArea ?? "").isEmpty ? "" : ", "}';
-      }
-      if (!locality.contains(placemark.locality ?? "")) {
-        locality +=
-            '${placemark.locality ?? ""}${(placemark.locality ?? "").isEmpty ? "" : ", "}';
-      }
-      if (!country.contains(placemark.country ?? "")) {
-        country +=
-            '${placemark.country ?? ""}${(placemark.country ?? "").isEmpty ? "" : ", "}';
-      }
-      if (!subLocality.contains(placemark.subLocality ?? "")) {
-        subLocality +=
-            '${placemark.subLocality ?? ""}${(placemark.subLocality ?? "").isEmpty ? "" : ", "}';
-      }
-    }
-
-    if (street.length > 1) street = street.substring(0, street.length - 2);
-    if (name.length > 1) name = name.substring(0, name.length - 2);
-    if (administrativeArea.length > 1) {
-      administrativeArea =
-          administrativeArea.substring(0, administrativeArea.length - 2);
-    }
-    if (subAdministrativeArea.length > 1) {
-      subAdministrativeArea =
-          subAdministrativeArea.substring(0, subAdministrativeArea.length - 2);
-    }
-    if (locality.length > 1) {
-      locality = locality.substring(0, locality.length - 2);
-    }
-    if (country.length > 1) country = country.substring(0, country.length - 2);
-    if (subLocality.length > 1) {
-      subLocality = subLocality.substring(0, subLocality.length - 2);
-    }
     setState(() {});
   }
 

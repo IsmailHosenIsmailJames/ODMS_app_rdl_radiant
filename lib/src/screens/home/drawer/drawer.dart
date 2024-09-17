@@ -64,26 +64,26 @@ class _MyDrawerState extends State<MyDrawer> {
                 ),
               ),
             ),
-            SizedBox(
-              child: TextButton(
-                onPressed: () async {
-                  if (Navigator.canPop(context)) {
-                    Navigator.pop(context);
-                  }
-                  Get.to(
-                    () => const SelectJourneyEndLocation(),
-                  );
-                },
-                child: const Row(
-                  children: [
-                    Gap(20),
-                    Icon(Icons.drive_eta),
-                    Gap(20),
-                    Text('Start Journey'),
-                  ],
-                ),
-              ),
-            ),
+            // SizedBox(
+            //   child: TextButton(
+            //     onPressed: () async {
+            //       if (Navigator.canPop(context)) {
+            //         Navigator.pop(context);
+            //       }
+            //       Get.to(
+            //         () => const SelectJourneyEndLocation(),
+            //       );
+            //     },
+            //     child: const Row(
+            //       children: [
+            //         Gap(20),
+            //         Icon(Icons.drive_eta),
+            //         Gap(20),
+            //         Text('Start Journey'),
+            //       ],
+            //     ),
+            //   ),
+            // ),
             SizedBox(
               child: TextButton(
                 onPressed: () async {
