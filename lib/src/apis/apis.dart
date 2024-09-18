@@ -13,6 +13,8 @@ String cashCollectionSave = '/api/$version/cash_collection/save';
 String getCoustomerList = '/api/$version/customer_location/list';
 String getCoustomerDetailsByPartnerID =
     '/api/$version/customer_location/details';
+String setCoustomerLatLon =
+    "/api/$version/customer_location/customer_location_update";
 String conveyanceStart = "/api/$version/conveyance/start";
 String conveyanceList = "/api/$version/conveyance/list";
 String conveyanceEnd = "/api/$version/conveyance/end";

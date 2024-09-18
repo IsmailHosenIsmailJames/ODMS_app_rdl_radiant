@@ -6,4 +6,5 @@ class ConveyanceDataController extends GetxController {
   RxList<SavePharmaceuticalsLocationData> convenceData =
       <SavePharmaceuticalsLocationData>[].obs;
   RxList<String> transportModes = <String>[].obs;
+  RxBool isSummary = false.obs;
 }
