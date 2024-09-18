@@ -28,7 +28,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   if (Navigator.canPop(context)) {
                     Navigator.pop(context);
                   }
-                  Navigator.pop(context);
+
                   Get.to(
                     () => const AttendenceEvening(),
                   );
