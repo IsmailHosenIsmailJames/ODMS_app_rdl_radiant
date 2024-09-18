@@ -112,6 +112,11 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                     ),
                     divider,
                     getRowWidgetForDetailsBox(
+                      "Partner ID",
+                      widget.result.partner ?? "",
+                    ),
+                    divider,
+                    getRowWidgetForDetailsBox(
                       "Da Name",
                       widget.result.daName ?? "",
                     ),
@@ -125,6 +130,16 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                       "Coustomer Address",
                       widget.result.customerAddress ?? "",
                     ),
+                    // divider,
+                    // getRowWidgetForDetailsBox(
+                    //   "Coustomer lat.",
+                    //   widget.result.latitude.toString(),
+                    // ),
+                    // divider,
+                    // getRowWidgetForDetailsBox(
+                    //   "Coustomer lon.",
+                    //   widget.result.longitude.toString(),
+                    // ),
                     divider,
                     getRowWidgetForDetailsBox(
                       "Coustomer Mobile",
@@ -214,6 +229,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                 totalAmount:
                                     (amount - returnAmount).toStringAsFixed(2),
                                 index: index,
+                                dateOfDelivery: widget.dateTime,
                               ),
                             );
                     },

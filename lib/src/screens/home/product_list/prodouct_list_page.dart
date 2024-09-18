@@ -23,6 +23,7 @@ import '../../../widgets/loading/loading_popup_widget.dart';
 import '../../../widgets/loading/loading_text_controller.dart';
 
 class ProdouctListPage extends StatefulWidget {
+  final DateTime? dateOfDelivery;
   final InvoiceList invoice;
   final String invioceNo;
   final String totalAmount;
@@ -33,6 +34,7 @@ class ProdouctListPage extends StatefulWidget {
     required this.invioceNo,
     required this.totalAmount,
     required this.index,
+    this.dateOfDelivery,
   });
 
   @override
@@ -75,6 +77,16 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDeliveryForToday = true;
+    if (widget.dateOfDelivery != null) {
+      DateTime now = DateTime.now();
+      DateTime dateOfDelivery = widget.dateOfDelivery!;
+      if (dateOfDelivery.day != now.day ||
+          dateOfDelivery.month != now.month ||
+          dateOfDelivery.year != now.year) {
+        isDeliveryForToday = false;
+      }
+    }
     double totalReceiveAmmount = 0;
     for (var e in receiveAmountList) {
       totalReceiveAmmount += e;
@@ -92,72 +104,74 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
         actions: pageType == pagesState[1]
             ? null
             : [
-                PopupMenuButton(
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      child: const Row(
-                        children: [
-                          Icon(
-                            Icons.done_all,
-                            color: Colors.green,
-                          ),
-                          Gap(10),
-                          Text("All Received"),
-                        ],
+                if (isDeliveryForToday)
+                  PopupMenuButton(
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.done_all,
+                              color: Colors.green,
+                            ),
+                            Gap(10),
+                            Text("All Received"),
+                          ],
+                        ),
+                        onTap: () {
+                          for (var index = 0;
+                              index < productList.length;
+                              index++) {
+                            ProductList current = productList[index];
+                            double perProduct =
+                                ((current.netVal ?? 0) + (current.vat ?? 0)) /
+                                    (current.quantity ?? 0);
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              receiveTextEditingControllerList[index].text =
+                                  (current.quantity ?? 0).toInt().toString();
+                              returnTextEditingControllerList[index].text = '0';
+                            });
+                            receiveAmountList[index] =
+                                (current.quantity ?? 0) * perProduct;
+                            returnAmountList[index] = 0;
+                          }
+                          setState(() {});
+                        },
                       ),
-                      onTap: () {
-                        for (var index = 0;
-                            index < productList.length;
-                            index++) {
-                          ProductList current = productList[index];
-                          double perProduct =
-                              ((current.netVal ?? 0) + (current.vat ?? 0)) /
-                                  (current.quantity ?? 0);
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            receiveTextEditingControllerList[index].text =
-                                (current.quantity ?? 0).toInt().toString();
-                            returnTextEditingControllerList[index].text = '0';
-                          });
-                          receiveAmountList[index] =
-                              (current.quantity ?? 0) * perProduct;
-                          returnAmountList[index] = 0;
-                        }
-                        setState(() {});
-                      },
-                    ),
-                    PopupMenuItem(
-                      child: const Row(
-                        children: [
-                          Icon(
-                            Icons.close,
-                            color: Colors.deepOrange,
-                          ),
-                          Gap(10),
-                          Text("All Return"),
-                        ],
+                      PopupMenuItem(
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.close,
+                              color: Colors.deepOrange,
+                            ),
+                            Gap(10),
+                            Text("All Return"),
+                          ],
+                        ),
+                        onTap: () {
+                          for (var index = 0;
+                              index < productList.length;
+                              index++) {
+                            ProductList current = productList[index];
+                            double perProduct =
+                                ((current.netVal ?? 0) + (current.vat ?? 0)) /
+                                    (current.quantity ?? 0);
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              returnTextEditingControllerList[index].text =
+                                  (current.quantity ?? 0).toInt().toString();
+                              receiveTextEditingControllerList[index].text =
+                                  '0';
+                            });
+                            returnAmountList[index] =
+                                (current.quantity ?? 0) * perProduct;
+                            receiveAmountList[index] = 0;
+                          }
+                          setState(() {});
+                        },
                       ),
-                      onTap: () {
-                        for (var index = 0;
-                            index < productList.length;
-                            index++) {
-                          ProductList current = productList[index];
-                          double perProduct =
-                              ((current.netVal ?? 0) + (current.vat ?? 0)) /
-                                  (current.quantity ?? 0);
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            returnTextEditingControllerList[index].text =
-                                (current.quantity ?? 0).toInt().toString();
-                            receiveTextEditingControllerList[index].text = '0';
-                          });
-                          returnAmountList[index] =
-                              (current.quantity ?? 0) * perProduct;
-                          receiveAmountList[index] = 0;
-                        }
-                        setState(() {});
-                      },
-                    ),
-                  ],
-                )
+                    ],
+                  )
               ],
       ),
       body: Form(
@@ -367,7 +381,8 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                   ],
                                 ),
                               if (pageType == pagesState[1]) const Divider(),
-                              if (!(pageType == pagesState[1]))
+                              if (!(pageType == pagesState[1]) &&
+                                  isDeliveryForToday)
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -541,8 +556,9 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                     ),
                                   ],
                                 ),
-                              const Gap(5),
-                              if (!(pageType == pagesState[1]))
+                              if (isDeliveryForToday) const Gap(5),
+                              if (!(pageType == pagesState[1]) &&
+                                  isDeliveryForToday)
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -561,7 +577,8 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                     ),
                                   ],
                                 ),
-                              if ((pageType == pagesState[1]))
+                              if ((pageType == pagesState[1]) &&
+                                  isDeliveryForToday)
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -590,7 +607,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
               ) +
               <Widget>[
                 if (!(pageType == pagesState[1])) const Gap(20),
-                if (!(pageType == pagesState[1]))
+                if (!(pageType == pagesState[1]) && isDeliveryForToday)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -637,7 +654,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                     ],
                   ),
                 if (!(pageType == pagesState[1])) const Gap(30),
-                if (!(pageType == pagesState[1]))
+                if (!(pageType == pagesState[1]) && isDeliveryForToday)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

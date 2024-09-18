@@ -375,7 +375,23 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                         style: style,
                       ),
                     ],
-                  )
+                  ),
+                  if (pageType == pagesState[3])
+                    Column(
+                      children: [
+                        Text(
+                          "Due",
+                          style: style,
+                        ),
+                        Text(
+                          (double.parse(amount) -
+                                  (result.invoiceList![index].cashCollection ??
+                                      0))
+                              .toStringAsFixed(2),
+                          style: style,
+                        ),
+                      ],
+                    )
                 ],
               ),
             ),
