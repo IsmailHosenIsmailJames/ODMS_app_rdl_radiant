@@ -22,6 +22,7 @@ class AttendenceEvening extends StatefulWidget {
 
 class _AttendenceEveningState extends State<AttendenceEvening> {
   Map<String, dynamic> jsonUserdata = {};
+  bool isEveningDoneToday = false;
   @override
   void initState() {
     final box = Hive.box('info');
@@ -29,6 +30,11 @@ class _AttendenceEveningState extends State<AttendenceEvening> {
       jsonDecode(box.get('userData', defaultValue: '{}') as String) as Map,
     );
     jsonUserdata = Map<String, dynamic>.from(jsonUserdata['result'] as Map);
+    int lastEveningAttendenceDate = box.get('lastEveningAttendenceDate') ?? -1;
+    int todayDate = DateTime.now().day;
+    if (lastEveningAttendenceDate == todayDate) {
+      isEveningDoneToday = true;
+    }
     super.initState();
   }
 
@@ -155,6 +161,15 @@ class _AttendenceEveningState extends State<AttendenceEvening> {
                   ],
                 ),
               ),
+              if (isEveningDoneToday)
+                Text(
+                  "Your attendence for today is already done",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.grey.shade700,
+                  ),
+                ),
               Container(
                 margin: const EdgeInsets.all(20),
                 width: double.infinity,
@@ -167,60 +182,72 @@ class _AttendenceEveningState extends State<AttendenceEvening> {
                       ),
                     ),
                   ),
-                  onPressed: () async {
-                    setState(() {
-                      sendingData = true;
-                    });
-                    final box = Hive.box('info');
-                    final data = await box.get('userData') as String;
-                    final decodeData =
-                        Map<String, dynamic>.from(jsonDecode(data) as Map);
-                    final uri = Uri.parse(
-                      // ignore: avoid_dynamic_calls
-                      '$base$endWorkPath/${decodeData['result']['sap_id']}',
-                    );
-                    final request = http.MultipartRequest('PUT', uri);
+                  onPressed: isEveningDoneToday
+                      ? null
+                      : () async {
+                          setState(() {
+                            sendingData = true;
+                          });
+                          final box = Hive.box('info');
+                          final data = await box.get('userData') as String;
+                          final decodeData = Map<String, dynamic>.from(
+                              jsonDecode(data) as Map);
+                          final uri = Uri.parse(
+                            // ignore: avoid_dynamic_calls
+                            '$base$endWorkPath/${decodeData['result']['sap_id']}',
+                          );
+                          final request = http.MultipartRequest('PUT', uri);
 
-                    final locationData = await Geolocator.getCurrentPosition();
+                          final locationData =
+                              await Geolocator.getCurrentPosition();
 
-                    request.fields['end_latitude'] =
-                        locationData.latitude.toString();
+                          request.fields['end_latitude'] =
+                              locationData.latitude.toString();
 
-                    request.fields['end_longitude'] =
-                        locationData.longitude.toString();
-                    final response = await request.send();
-                    setState(() {
-                      sendingData = false;
-                    });
-                    if (response.statusCode == 200) {
-                      unawaited(Fluttertoast.showToast(msg: 'Successfull'));
-                      final userLoginDataCridential = Map<String, dynamic>.from(
-                        Hive.box('info').get(
-                          'userLoginCradintial',
-                          defaultValue: Map<String, dynamic>.from({}),
-                        ) as Map,
-                      );
-                      if (userLoginDataCridential.isNotEmpty) {
-                        unawaited(
-                          loginAndGetJsonResponse(userLoginDataCridential).then(
-                            (value) async {
-                              await analyzeResponseLogin(
-                                value,
-                                userLoginDataCridential,
+                          request.fields['end_longitude'] =
+                              locationData.longitude.toString();
+                          final response = await request.send();
+
+                          if (response.statusCode == 200) {
+                            await box.put('lastEveningAttendenceDate',
+                                DateTime.now().day);
+
+                            unawaited(
+                                Fluttertoast.showToast(msg: 'Successfull'));
+                            final userLoginDataCridential =
+                                Map<String, dynamic>.from(
+                              Hive.box('info').get(
+                                'userLoginCradintial',
+                                defaultValue: Map<String, dynamic>.from({}),
+                              ) as Map,
+                            );
+
+                            if (userLoginDataCridential.isNotEmpty) {
+                              unawaited(
+                                loginAndGetJsonResponse(userLoginDataCridential)
+                                    .then(
+                                  (value) async {
+                                    await analyzeResponseLogin(
+                                      value,
+                                      userLoginDataCridential,
+                                    );
+                                  },
+                                ),
                               );
-                            },
-                          ),
-                        );
-                      }
-                    } else {
-                      if (kDebugMode) {
-                        print(response.statusCode);
-                      }
-                      unawaited(
-                        Fluttertoast.showToast(msg: 'Something went worng'),
-                      );
-                    }
-                  },
+                            }
+                            setState(() {
+                              sendingData = false;
+                            });
+                          } else {
+                            if (kDebugMode) {
+                              print(response.statusCode);
+                            }
+                            unawaited(
+                              Fluttertoast.showToast(
+                                  msg: 'Something went worng'),
+                            );
+                          }
+                        },
                   icon: sendingData
                       ? null
                       : const Icon(
