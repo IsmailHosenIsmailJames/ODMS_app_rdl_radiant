@@ -7,7 +7,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:rdl_radiant/src/screens/attendence/attendence_evening.dart';
 import 'package:rdl_radiant/src/screens/auth/login/login_page.dart';
 import 'package:rdl_radiant/src/screens/coustomer_location/set_customer_location.dart';
-import 'package:rdl_radiant/src/screens/journey/select_journey_end_location.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});

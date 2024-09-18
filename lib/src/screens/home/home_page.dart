@@ -668,7 +668,7 @@ class _HomePageState extends State<HomePage> {
         temList.add(SavePharmaceuticalsLocationData.fromMap(
             Map<String, dynamic>.from(tem[i])));
       }
-      conveyanceDataController.convenceData.value = temList;
+      conveyanceDataController.convenceData.value = temList.reversed.toList();
 
       await Future.delayed(const Duration(milliseconds: 100));
       if (Navigator.canPop(context)) {
