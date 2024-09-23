@@ -745,23 +745,17 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
           cashCollectionStatus: null,
           deliverys: listOfDelivery,
         );
-        if (kDebugMode) {
-          print(deliveryData.toJson());
-        }
         loadingTextController.loadingText.value =
             'Your Location Accessed\nSending data to server\nPlease wait...';
         final uri = Uri.parse(base + saveDeliveryList);
+        log("Attempting to post ${deliveryData.toJson()}");
         final response = await http.post(
           uri,
           headers: {"Content-Type": "application/json"},
           body: deliveryData.toJson(),
         );
-        if (kDebugMode) {
-          print(response.body);
-        }
-        if (kDebugMode) {
-          print(response.statusCode);
-        }
+        log("Successfull post : ${response.statusCode}");
+        log("Got response data :${response.body}");
 
         if (response.statusCode == 200) {
           final decoded = Map<String, dynamic>.from(jsonDecode(response.body));
