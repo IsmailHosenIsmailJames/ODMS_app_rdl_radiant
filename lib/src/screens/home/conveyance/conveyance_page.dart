@@ -253,7 +253,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                               Container(
                                 alignment: Alignment.center,
                                 width: deviceWidth * (1 / 4.5),
-                                padding: EdgeInsets.all(2),
+                                padding: const EdgeInsets.all(2),
                                 child: current.transportMode != null
                                     ? Text(
                                         current.transportMode
