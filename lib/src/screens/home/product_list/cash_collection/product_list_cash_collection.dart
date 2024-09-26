@@ -613,7 +613,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                     int.parse(returnText))
                 .toStringAsFixed(2),
             returnQuantity: int.parse(returnText),
-            vat: (e.vat ?? 0) * (int.tryParse(returnText) ?? 0),
+            vat: e.vat,
           ));
         }
 

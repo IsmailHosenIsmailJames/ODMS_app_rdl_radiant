@@ -385,8 +385,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                         ),
                         Text(
                           (double.parse(amount) -
-                                  (result.invoiceList![index].cashCollection ??
-                                      0))
+                                  (result.invoiceList?[0].cashCollection ?? 0))
                               .toStringAsFixed(2),
                           style: style,
                         ),
