@@ -21,6 +21,7 @@ import 'package:rdl_radiant/src/screens/home/conveyance/controller/conveyance_da
 import 'package:rdl_radiant/src/screens/home/conveyance/conveyance_page.dart';
 import 'package:rdl_radiant/src/screens/maps/keys/google_maps_api_key.dart';
 
+import '../../../../theme/text_scaler_theme.dart';
 import '../../../../widgets/loading/loading_popup_widget.dart';
 import '../../../../widgets/loading/loading_text_controller.dart';
 import '../model/conveyance_data_model.dart';
@@ -147,171 +148,178 @@ class _MyMapViewState extends State<FinishConveyance> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Map of Journey"),
-      ),
-      body: Stack(
-        children: [
-          initMyLocation == null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      LoadingAnimationWidget.threeRotatingDots(
-                          color: Colors.blue.shade900, size: 30),
-                      const Text("Loading your location..."),
-                    ],
-                  ),
-                )
-              : GoogleMap(
-                  onCameraMove: (position) {
-                    zoomLavel = position.zoom;
-                  },
-                  zoomControlsEnabled: false,
-                  zoomGesturesEnabled: true,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                      initMyLocation!.latitude,
-                      initMyLocation!.longitude,
+    return MediaQuery(
+      data: MediaQuery.of(context)
+          .copyWith(textScaler: TextScaler.linear(textScalerValue)),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Map of Journey"),
+        ),
+        body: Stack(
+          children: [
+            initMyLocation == null
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        LoadingAnimationWidget.threeRotatingDots(
+                            color: Colors.blue.shade900, size: 30),
+                        const Text("Loading your location..."),
+                      ],
                     ),
-                    tilt: 90,
-                    zoom: zoomLavel,
-                  ),
-                  markers: markers.values.toSet(),
-                  onMapCreated: (controller) {
-                    googleMapController.complete(controller);
+                  )
+                : GoogleMap(
+                    onCameraMove: (position) {
+                      zoomLavel = position.zoom;
+                    },
+                    zoomControlsEnabled: false,
+                    zoomGesturesEnabled: true,
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(
+                        initMyLocation!.latitude,
+                        initMyLocation!.longitude,
+                      ),
+                      tilt: 90,
+                      zoom: zoomLavel,
+                    ),
+                    markers: markers.values.toSet(),
+                    onMapCreated: (controller) {
+                      googleMapController.complete(controller);
 
-                    if (initMyLocation != null) {
-                      addMarkers(
-                        'My Location',
-                        LatLng(initMyLocation!.latitude,
-                            initMyLocation!.longitude),
-                        infoWindow: const InfoWindow(title: "My Location"),
-                      );
-                    }
-                  },
-                  polylines: Set<Polyline>.of(polynlies.values),
+                      if (initMyLocation != null) {
+                        addMarkers(
+                          'My Location',
+                          LatLng(initMyLocation!.latitude,
+                              initMyLocation!.longitude),
+                          infoWindow: const InfoWindow(title: "My Location"),
+                        );
+                      }
+                    },
+                    polylines: Set<Polyline>.of(polynlies.values),
+                  ),
+            Container(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white.withOpacity(0.8),
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
                 ),
-          Container(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-              margin: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white.withOpacity(0.8),
-                border: Border.all(
-                  color: Colors.grey,
-                ),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    "Your Courrent Location Details: ",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      "Your Courrent Location Details: ",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const Divider(
-                    height: 3,
-                  ),
-                  destination == null
-                      ? Container(
-                          width: double.infinity,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: const Center(
-                            child: Text("Loading your location..."),
-                          ),
-                        )
-                          .animate(onPlay: (controller) => controller.repeat())
-                          .shimmer(
-                            duration: 1200.ms,
-                            color: const Color(0xFF80DDFF),
+                    const Divider(
+                      height: 3,
+                    ),
+                    destination == null
+                        ? Container(
+                            width: double.infinity,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Center(
+                              child: Text("Loading your location..."),
+                            ),
                           )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              street,
-                              style: const TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w500),
-                            ),
-                            Text(
-                              "$subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country",
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey.shade700),
-                            ),
-                            Row(
-                              children: [
-                                const Text(
-                                  "Lat: ",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Gap(2),
-                                Text(destination!.latitude.toStringAsFixed(4)),
-                                const Gap(15),
-                                const Text(
-                                  "Lon: ",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Gap(2),
-                                Text(destination!.longitude.toStringAsFixed(4)),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                const Text(
-                                  "Distance: ",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Gap(2),
-                                Text(
-                                  "${(distance / 1000).toStringAsFixed(2)} km",
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton.icon(
-                                onPressed: () {
-                                  finishTheJourney(context, distance);
-                                },
-                                icon: const Icon(Icons.done),
-                                label: const Text("Finish the journey"),
+                            .animate(
+                                onPlay: (controller) => controller.repeat())
+                            .shimmer(
+                              duration: 1200.ms,
+                              color: const Color(0xFF80DDFF),
+                            )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                street,
+                                style: const TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500),
                               ),
-                            ),
-                          ],
-                        ),
-                ],
+                              Text(
+                                "$subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey.shade700),
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Lat: ",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const Gap(2),
+                                  Text(
+                                      destination!.latitude.toStringAsFixed(4)),
+                                  const Gap(15),
+                                  const Text(
+                                    "Lon: ",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const Gap(2),
+                                  Text(destination!.longitude
+                                      .toStringAsFixed(4)),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    "Distance: ",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const Gap(2),
+                                  Text(
+                                    "${(distance / 1000).toStringAsFixed(2)} km",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    finishTheJourney(context, distance);
+                                  },
+                                  icon: const Icon(Icons.done),
+                                  label: const Text("Finish the journey"),
+                                ),
+                              ),
+                            ],
+                          ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

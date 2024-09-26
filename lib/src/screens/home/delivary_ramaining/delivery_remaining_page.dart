@@ -11,6 +11,7 @@ import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_r
 import 'package:http/http.dart' as http;
 import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
 import 'package:rdl_radiant/src/screens/home/invoice_list/invoice_list_page.dart';
+import 'package:rdl_radiant/src/theme/text_scaler_theme.dart';
 
 import '../../../apis/apis.dart';
 import '../page_sate_defination.dart';
@@ -36,114 +37,120 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(pageType),
-        actions: [
-          if (pageType == pagesState[0] ||
-              pageType == pagesState[1] ||
-              pageType == pagesState[2])
-            IconButton(
-              onPressed: () async {
-                await pickDateTimeAndFilter(context);
-              },
-              icon: const Icon(
-                Icons.filter_alt_sharp,
-              ),
-            ),
-          const Gap(10),
-        ],
-      ),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  blurRadius: 10,
-                  color: Colors.grey.shade400,
-                  offset: const Offset(0, 5),
-                ),
-              ],
-            ),
-            child: SizedBox(
-              height: 50,
-              child: CupertinoSearchTextField(
-                onChanged: (value) {
-                  List<Result> filter = [];
-                  for (Result element in deliveryRemaningController
-                      .constDeliveryRemaing.value.result!) {
-                    if (element
-                        .toJson()
-                        .toLowerCase()
-                        .contains(value.toLowerCase())) {
-                      filter.add(element);
-                    }
-                  }
-                  deliveryRemaningController.deliveryRemaing.value.result =
-                      filter;
-                  setState(() {});
+    return MediaQuery(
+      data: MediaQuery.of(context)
+          .copyWith(textScaler: TextScaler.linear(textScalerValue)),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(pageType),
+          actions: [
+            if (pageType == pagesState[0] ||
+                pageType == pagesState[1] ||
+                pageType == pagesState[2])
+              IconButton(
+                onPressed: () async {
+                  await pickDateTimeAndFilter(context);
                 },
+                icon: const Icon(
+                  Icons.filter_alt_sharp,
+                ),
+              ),
+            const Gap(10),
+          ],
+        ),
+        body: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 10,
+                    color: Colors.grey.shade400,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: SizedBox(
+                height: 50,
+                child: CupertinoSearchTextField(
+                  onChanged: (value) {
+                    List<Result> filter = [];
+                    for (Result element in deliveryRemaningController
+                        .constDeliveryRemaing.value.result!) {
+                      if (element
+                          .toJson()
+                          .toLowerCase()
+                          .contains(value.toLowerCase())) {
+                        filter.add(element);
+                      }
+                    }
+                    deliveryRemaningController.deliveryRemaing.value.result =
+                        filter;
+                    setState(() {});
+                  },
+                ),
               ),
             ),
-          ),
-          Expanded(
-            child: deliveryRemaningController
-                    .deliveryRemaing.value.result!.isEmpty
-                ? Center(
-                    child: Text(
-                      "There is no delivery available on this date : ${dateTime.toIso8601String().split('T')[0]}",
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+            Expanded(
+              child: deliveryRemaningController
+                      .deliveryRemaing.value.result!.isEmpty
+                  ? Center(
+                      child: Text(
+                        "There is no delivery available on this date : ${dateTime.toIso8601String().split('T')[0]}",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                  )
-                : Obx(
-                    () {
-                      List<Result> results = deliveryRemaningController
-                          .deliveryRemaing.value.result!;
-                      return ListView.builder(
-                        padding: const EdgeInsets.only(top: 10),
-                        itemCount: results.length,
-                        itemBuilder: (context, index) {
-                          String name = results[index].customerName ?? "";
-                          String address = results[index].customerAddress ?? "";
-                          double quantitty = 0;
-                          double amount = 0;
-                          List<InvoiceList> invoiceList =
-                              results[index].invoiceList ?? [];
-                          for (InvoiceList invoice in invoiceList) {
-                            List<ProductList> droductList =
-                                invoice.productList ?? [];
-                            for (ProductList product in droductList) {
-                              quantitty += product.quantity ?? 0;
-                              amount += product.netVal ?? 0;
-                              amount += product.vat ?? 0;
+                    )
+                  : Obx(
+                      () {
+                        List<Result> results = deliveryRemaningController
+                            .deliveryRemaing.value.result!;
+                        return ListView.builder(
+                          padding: const EdgeInsets.only(top: 10),
+                          itemCount: results.length,
+                          itemBuilder: (context, index) {
+                            String name = results[index].customerName ?? "";
+                            String address =
+                                results[index].customerAddress ?? "";
+                            double quantitty = 0;
+                            double amount = 0;
+                            List<InvoiceList> invoiceList =
+                                results[index].invoiceList ?? [];
+                            for (InvoiceList invoice in invoiceList) {
+                              List<ProductList> droductList =
+                                  invoice.productList ?? [];
+                              for (ProductList product in droductList) {
+                                quantitty += product.quantity ?? 0;
+                                amount += product.netVal ?? 0;
+                                amount += product.vat ?? 0;
+                              }
                             }
-                          }
-                          String floating2Amount = amount.toStringAsFixed(2);
+                            String floating2Amount = amount.toStringAsFixed(2);
 
-                          return card(
-                            index: index,
-                            name: name,
-                            address: address,
-                            invoiceLen: invoiceList.length.toString(),
-                            quantitty: quantitty.toInt().toString(),
-                            amount: floating2Amount,
-                            date: (results[index].billingDate ?? DateTime.now())
-                                .toIso8601String()
-                                .split('T')[0],
-                            result: results[index],
-                          );
-                        },
-                      );
-                    },
-                  ),
-          ),
-        ],
+                            return card(
+                              index: index,
+                              name: name,
+                              address: address,
+                              invoiceLen: invoiceList.length.toString(),
+                              quantitty: quantitty.toInt().toString(),
+                              amount: floating2Amount,
+                              date:
+                                  (results[index].billingDate ?? DateTime.now())
+                                      .toIso8601String()
+                                      .split('T')[0],
+                              result: results[index],
+                            );
+                          },
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }

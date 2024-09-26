@@ -19,6 +19,7 @@ import 'package:rdl_radiant/src/screens/home/product_list/cash_collection/to_sen
 import 'package:http/http.dart' as http;
 import 'package:rdl_radiant/src/widgets/coomon_widgets_function.dart';
 
+import '../../../../theme/text_scaler_theme.dart';
 import '../../../../widgets/loading/loading_popup_widget.dart';
 import '../../../../widgets/loading/loading_text_controller.dart';
 
@@ -86,341 +87,365 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
     for (var e in returnAmountList) {
       totalRetrunAmmount += e;
     }
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Product List",
-        ),
-        actions: pageType == pagesState[1]
-            ? null
-            : [
-                PopupMenuButton(
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      child: const Row(
-                        children: [
-                          Icon(
-                            Icons.close,
-                            color: Colors.deepOrange,
-                          ),
-                          Gap(10),
-                          Text("All Return"),
-                        ],
-                      ),
-                      onTap: () {
-                        for (var index = 0;
-                            index < productList.length;
-                            index++) {
-                          ProductList current = productList[index];
-                          double perProduct =
-                              ((current.netVal ?? 0) + (current.vat ?? 0)) /
-                                  (current.quantity ?? 0);
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            returnTextEditingControllerList[index].text =
-                                (current.quantity ?? 0).toInt().toString();
-                            receiveTextEditingControllerList[index].text = '0';
-                          });
-                          returnAmountList[index] =
-                              (current.quantity ?? 0) * perProduct;
-                          receiveAmountList[index] = 0;
-                        }
-                        setState(() {});
-                      },
-                    ),
-                  ],
-                )
-              ],
-      ),
-      body: Form(
-        key: formKey,
-        child: ListView(
-          padding: const EdgeInsets.all(10),
-          children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+    return MediaQuery(
+      data: MediaQuery.of(context)
+          .copyWith(textScaler: TextScaler.linear(textScalerValue)),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "Product List",
+          ),
+          actions: pageType == pagesState[1]
+              ? null
+              : [
+                  PopupMenuButton(
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: const Row(
                           children: [
-                            Text(
-                              widget.invioceNo,
-                              style: topContainerTextStyle,
+                            Icon(
+                              Icons.close,
+                              color: Colors.deepOrange,
                             ),
+                            Gap(10),
+                            Text("All Return"),
                           ],
                         ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.2),
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(10),
-                            bottomRight: Radius.circular(10),
-                          ),
-                        ),
-                        padding: const EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            getRowWidgetForDetailsBox(
-                              "Coustomer Name",
-                              widget.invoice.customerName ?? "",
-                            ),
-                            divider,
-                            getRowWidgetForDetailsBox(
-                              "Coustomer Address",
-                              widget.invoice.customerAddress ?? "",
-                            ),
-                            divider,
-                            getRowWidgetForDetailsBox(
-                              "Coustomer Mobile",
-                              widget.invoice.customerMobile ?? "",
-                              optionalWidgetsAtLast: SizedBox(
-                                height: 23,
-                                width: 90,
-                                child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  onPressed: () {
-                                    FlutterClipboard.copy(
-                                      widget.invoice.customerMobile ?? "",
-                                    ).then((value) {
-                                      Fluttertoast.showToast(
-                                          msg: "Number Copied");
-                                    });
-                                  },
-                                  icon: const Icon(
-                                    Icons.copy,
-                                    size: 17,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            divider,
-                            getRowWidgetForDetailsBox(
-                              "Gate Pass",
-                              widget.invoice.gatePassNo ?? "",
-                            ),
-                            divider,
-                            getRowWidgetForDetailsBox(
-                              "Vehicle No",
-                              widget.invoice.vehicleNo ?? "",
-                            ),
-                            divider,
-                            getRowWidgetForDetailsBox(
-                              "Total Amount",
-                              widget.totalAmount,
-                            ),
-                            divider,
-                            getRowWidgetForDetailsBox(
-                              "Return Amount",
-                              totalRetrunAmmount.toStringAsFixed(2),
-                            ),
-                            divider,
-                            getRowWidgetForDetailsBox(
-                              "To pay",
-                              (double.parse(widget.totalAmount) -
-                                      totalRetrunAmmount)
-                                  .toStringAsFixed(2),
-                            ),
-                            divider,
-                            getRowWidgetForDetailsBox(
-                              "Due Amount",
-                              (dueAmount).toStringAsFixed(2),
-                            ),
-                          ],
-                        ),
+                        onTap: () {
+                          for (var index = 0;
+                              index < productList.length;
+                              index++) {
+                            ProductList current = productList[index];
+                            double perProduct =
+                                ((current.netVal ?? 0) + (current.vat ?? 0)) /
+                                    (current.quantity ?? 0);
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              returnTextEditingControllerList[index].text =
+                                  (current.quantity ?? 0).toInt().toString();
+                              receiveTextEditingControllerList[index].text =
+                                  '0';
+                            });
+                            returnAmountList[index] =
+                                (current.quantity ?? 0) * perProduct;
+                            receiveAmountList[index] = 0;
+                          }
+                          setState(() {});
+                        },
                       ),
                     ],
-                  ),
-                ),
-                if (!(deliveryRemaningController.pageType.value == "Return" ||
-                    deliveryRemaningController.pageType.value ==
-                        "Cash Collection Done"))
-                  const Gap(15),
-                if (!(deliveryRemaningController.pageType.value == "Return" ||
-                    deliveryRemaningController.pageType.value ==
-                        "Cash Collection Done"))
-                  const Text(
-                    "Received amount",
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                if (!(deliveryRemaningController.pageType.value == "Return" ||
-                    deliveryRemaningController.pageType.value ==
-                        "Cash Collection Done"))
-                  const Gap(5),
-                if (!(deliveryRemaningController.pageType.value == "Return" ||
-                    deliveryRemaningController.pageType.value ==
-                        "Cash Collection Done"))
-                  TextFormField(
-                    keyboardType: TextInputType.number,
-                    controller: receivedAmmountController,
-                    validator: (value) {
-                      value ??= "";
-                      final x = double.tryParse(value);
-                      if (x != null) {
-                        final totalAmount = double.parse(widget.totalAmount) -
-                            totalRetrunAmmount;
-                        if (x > totalAmount) {
-                          return "received amount can't beyond total amount";
-                        }
-                        return null;
-                      } else {
-                        return "Not a valid number";
-                      }
-                    },
-                    onChanged: (_) {
-                      calculate();
-                    },
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    decoration: InputDecoration(
-                      hintText: "Receive ammount",
-                      labelText: "Receive ammount",
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                const Gap(15),
-              ] +
-              List.generate(
-                productList.length,
-                (index) {
-                  double perProduct = ((productList[index].netVal ?? 0) +
-                          (productList[index].vat ?? 0)) /
-                      (productList[index].quantity ?? 0);
-                  return Container(
-                    margin: const EdgeInsets.only(top: 5, bottom: 5),
+                  )
+                ],
+        ),
+        body: Form(
+          key: formKey,
+          child: ListView(
+            padding: const EdgeInsets.all(10),
+            children: <Widget>[
+                  Container(
                     decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey.shade300)),
+                      color: Colors.blue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.only(
-                              top: 8, bottom: 5, left: 8, right: 8),
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.2),
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(10),
-                              topRight: Radius.circular(10),
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    "Product Name: ",
-                                    style: style,
-                                  ),
-                                  const Gap(5),
-                                  Text(
-                                    productList[index].materialName ?? '',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey.shade800,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const Divider(
-                                height: 4,
-                                color: Colors.white,
-                              ),
-                              Row(
-                                children: [
-                                  Text(
-                                    "Quantity : ",
-                                    style: style,
-                                  ),
-                                  const Gap(5),
-                                  Text(
-                                    (productList[index].deliveryQuantity ?? 0)
-                                        .toString(),
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey.shade800,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    "Invoice Amount : ",
-                                    style: style,
-                                  ),
-                                  const Gap(5),
-                                  Text(
-                                    (perProduct *
-                                            (productList[index]
-                                                    .deliveryQuantity ??
-                                                0))
-                                        .toStringAsFixed(2),
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.grey.shade800,
-                                    ),
-                                  ),
-                                ],
+                              Text(
+                                widget.invioceNo,
+                                style: topContainerTextStyle,
                               ),
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.green.withOpacity(0.2),
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10),
+                            ),
+                          ),
+                          padding: const EdgeInsets.all(10),
                           child: Column(
                             children: [
-                              if (!(deliveryRemaningController.pageType.value ==
-                                      "Return" ||
-                                  deliveryRemaningController.pageType.value ==
-                                      "Cash Collection Done"))
-                                TextFormField(
-                                  keyboardType: TextInputType.number,
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  validator: (value) {
-                                    if ((value ?? "") == "") return null;
-                                    int? retQuentaty =
-                                        int.tryParse(value ?? "");
-                                    if (retQuentaty != null) {
-                                      if (retQuentaty >
-                                          (productList[index]
-                                                  .deliveryQuantity ??
-                                              0)) {
-                                        return "Not valid";
-                                      }
+                              getRowWidgetForDetailsBox(
+                                "Coustomer Name",
+                                widget.invoice.customerName ?? "",
+                              ),
+                              divider,
+                              getRowWidgetForDetailsBox(
+                                "Coustomer Address",
+                                widget.invoice.customerAddress ?? "",
+                              ),
+                              divider,
+                              getRowWidgetForDetailsBox(
+                                "Coustomer Mobile",
+                                widget.invoice.customerMobile ?? "",
+                                optionalWidgetsAtLast: SizedBox(
+                                  height: 23,
+                                  width: 90,
+                                  child: IconButton(
+                                    padding: EdgeInsets.zero,
+                                    onPressed: () {
+                                      FlutterClipboard.copy(
+                                        widget.invoice.customerMobile ?? "",
+                                      ).then((value) {
+                                        Fluttertoast.showToast(
+                                            msg: "Number Copied");
+                                      });
+                                    },
+                                    icon: const Icon(
+                                      Icons.copy,
+                                      size: 17,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              divider,
+                              getRowWidgetForDetailsBox(
+                                "Gate Pass",
+                                widget.invoice.gatePassNo ?? "",
+                              ),
+                              divider,
+                              getRowWidgetForDetailsBox(
+                                "Vehicle No",
+                                widget.invoice.vehicleNo ?? "",
+                              ),
+                              divider,
+                              getRowWidgetForDetailsBox(
+                                "Total Amount",
+                                widget.totalAmount,
+                              ),
+                              divider,
+                              getRowWidgetForDetailsBox(
+                                "Return Amount",
+                                totalRetrunAmmount.toStringAsFixed(2),
+                              ),
+                              divider,
+                              getRowWidgetForDetailsBox(
+                                "To pay",
+                                (double.parse(widget.totalAmount) -
+                                        totalRetrunAmmount)
+                                    .toStringAsFixed(2),
+                              ),
+                              divider,
+                              getRowWidgetForDetailsBox(
+                                "Due Amount",
+                                (dueAmount).toStringAsFixed(2),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (!(deliveryRemaningController.pageType.value == "Return" ||
+                      deliveryRemaningController.pageType.value ==
+                          "Cash Collection Done"))
+                    const Gap(15),
+                  if (!(deliveryRemaningController.pageType.value == "Return" ||
+                      deliveryRemaningController.pageType.value ==
+                          "Cash Collection Done"))
+                    const Text(
+                      "Received amount",
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  if (!(deliveryRemaningController.pageType.value == "Return" ||
+                      deliveryRemaningController.pageType.value ==
+                          "Cash Collection Done"))
+                    const Gap(5),
+                  if (!(deliveryRemaningController.pageType.value == "Return" ||
+                      deliveryRemaningController.pageType.value ==
+                          "Cash Collection Done"))
+                    TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: receivedAmmountController,
+                      validator: (value) {
+                        value ??= "";
+                        final x = double.tryParse(value);
+                        if (x != null) {
+                          final totalAmount = double.parse(widget.totalAmount) -
+                              totalRetrunAmmount;
+                          if (x > totalAmount) {
+                            return "received amount can't beyond total amount";
+                          }
+                          return null;
+                        } else {
+                          return "Not a valid number";
+                        }
+                      },
+                      onChanged: (_) {
+                        calculate();
+                      },
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      decoration: InputDecoration(
+                        hintText: "Receive ammount",
+                        labelText: "Receive ammount",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  const Gap(15),
+                ] +
+                List.generate(
+                  productList.length,
+                  (index) {
+                    double perProduct = ((productList[index].netVal ?? 0) +
+                            (productList[index].vat ?? 0)) /
+                        (productList[index].quantity ?? 0);
+                    return Container(
+                      margin: const EdgeInsets.only(top: 5, bottom: 5),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.grey.shade300)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(
+                                top: 8, bottom: 5, left: 8, right: 8),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.blue.withOpacity(0.2),
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Product Name: ",
+                                      style: style,
+                                    ),
+                                    const Gap(5),
+                                    Text(
+                                      productList[index].materialName ?? '',
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey.shade800,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(
+                                  height: 4,
+                                  color: Colors.white,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      "Quantity : ",
+                                      style: style,
+                                    ),
+                                    const Gap(5),
+                                    Text(
+                                      (productList[index].deliveryQuantity ?? 0)
+                                          .toString(),
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey.shade800,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    Text(
+                                      "Invoice Amount : ",
+                                      style: style,
+                                    ),
+                                    const Gap(5),
+                                    Text(
+                                      (perProduct *
+                                              (productList[index]
+                                                      .deliveryQuantity ??
+                                                  0))
+                                          .toStringAsFixed(2),
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey.shade800,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              children: [
+                                if (!(deliveryRemaningController
+                                            .pageType.value ==
+                                        "Return" ||
+                                    deliveryRemaningController.pageType.value ==
+                                        "Cash Collection Done"))
+                                  TextFormField(
+                                    keyboardType: TextInputType.number,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      if ((value ?? "") == "") return null;
+                                      int? retQuentaty =
+                                          int.tryParse(value ?? "");
+                                      if (retQuentaty != null) {
+                                        if (retQuentaty >
+                                            (productList[index]
+                                                    .deliveryQuantity ??
+                                                0)) {
+                                          return "Not valid";
+                                        }
 
-                                      return null;
-                                    } else {
-                                      return "Not a valid digit";
-                                    }
-                                  },
-                                  onChanged: (value) {
-                                    if (value.isEmpty) value = "0";
-                                    int? retQuentaty = int.tryParse(value);
-                                    if (retQuentaty != null) {
-                                      int? recQuentaty = int.tryParse(
-                                          receiveTextEditingControllerList[
-                                                  index]
-                                              .text);
-                                      recQuentaty ??= 0;
-                                      int totalQuentaty = recQuentaty;
-                                      if (totalQuentaty !=
-                                          (productList[index].quantity ?? 0)) {
+                                        return null;
+                                      } else {
+                                        return "Not a valid digit";
+                                      }
+                                    },
+                                    onChanged: (value) {
+                                      if (value.isEmpty) value = "0";
+                                      int? retQuentaty = int.tryParse(value);
+                                      if (retQuentaty != null) {
+                                        int? recQuentaty = int.tryParse(
+                                            receiveTextEditingControllerList[
+                                                    index]
+                                                .text);
+                                        recQuentaty ??= 0;
+                                        int totalQuentaty = recQuentaty;
+                                        if (totalQuentaty !=
+                                            (productList[index].quantity ??
+                                                0)) {
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
+                                            setState(() {
+                                              receiveAmountList[index] = 0;
+                                            });
+                                          });
+                                        }
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          setState(() {
+                                            returnAmountList[index] =
+                                                perProduct * retQuentaty;
+                                            receiveAmountList[index] =
+                                                perProduct * (recQuentaty ?? 0);
+                                          });
+                                          calculate();
+                                        });
+                                      } else {
                                         WidgetsBinding.instance
                                             .addPostFrameCallback((_) {
                                           setState(() {
@@ -428,162 +453,145 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                           });
                                         });
                                       }
-                                      WidgetsBinding.instance
-                                          .addPostFrameCallback((_) {
-                                        setState(() {
-                                          returnAmountList[index] =
-                                              perProduct * retQuentaty;
-                                          receiveAmountList[index] =
-                                              perProduct * (recQuentaty ?? 0);
-                                        });
-                                        calculate();
-                                      });
-                                    } else {
-                                      WidgetsBinding.instance
-                                          .addPostFrameCallback((_) {
-                                        setState(() {
-                                          receiveAmountList[index] = 0;
-                                        });
-                                      });
-                                    }
-                                  },
-                                  controller:
-                                      returnTextEditingControllerList[index],
-                                  decoration: InputDecoration(
-                                    hintText: "Return Qty.",
-                                    labelText: "Return Qty.",
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(10),
+                                    },
+                                    controller:
+                                        returnTextEditingControllerList[index],
+                                    decoration: InputDecoration(
+                                      hintText: "Return Qty.",
+                                      labelText: "Return Qty.",
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              const Gap(5),
-                              if (deliveryRemaningController.pageType.value ==
-                                  "Return")
-                                Text(
-                                  "Return Qty. : ${(productList[index].quantity ?? 0).toInt()}",
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red,
+                                const Gap(5),
+                                if (deliveryRemaningController.pageType.value ==
+                                    "Return")
+                                  Text(
+                                    "Return Qty. : ${(productList[index].quantity ?? 0).toInt()}",
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.red,
+                                    ),
                                   ),
-                                ),
-                              // if (deliveryRemaningController.pageType.value ==
-                              //     "Cash Collection Done")
-                              //   Row(
-                              //     mainAxisAlignment:
-                              //         MainAxisAlignment.spaceBetween,
-                              //     children: [
-                              //       Text(
-                              //         "Received Qty. : ${(productList[index].deliveryQuantity ?? 0).toInt()}",
-                              //         style: TextStyle(
-                              //           fontSize: 16,
-                              //           fontWeight: FontWeight.bold,
-                              //           color: Colors.green.shade900,
-                              //         ),
-                              //       ),
-                              //       Text(
-                              //         "Received Amount. : ${(productList[index].deliveryNetVal ?? 0) * (productList[index].deliveryQuantity ?? 0)}",
-                              //         style: TextStyle(
-                              //           fontSize: 16,
-                              //           fontWeight: FontWeight.bold,
-                              //           color: Colors.green.shade900,
-                              //         ),
-                              //       ),
-                              //     ],
-                              //   ),
-                              //   if (deliveryRemaningController.pageType.value ==
-                              //       "Cash Collection Done")
-                              //     const Divider(),
-                              //   if (deliveryRemaningController.pageType.value ==
-                              //       "Cash Collection Done")
-                              //     Row(
-                              //       mainAxisAlignment:
-                              //           MainAxisAlignment.spaceBetween,
-                              //       children: [
-                              //         Text(
-                              //           "Return Qty. : ${(productList[index].returnQuantity ?? 0).toInt()}",
-                              //           style: TextStyle(
-                              //             fontSize: 16,
-                              //             fontWeight: FontWeight.bold,
-                              //             color: Colors.red.shade800,
-                              //           ),
-                              //         ),
-                              //         Text(
-                              //           "Return Amount. : ${(productList[index].returnNetVal ?? 0) * (productList[index].returnQuantity ?? 0)}",
-                              //           style: TextStyle(
-                              //             fontSize: 16,
-                              //             fontWeight: FontWeight.bold,
-                              //             color: Colors.red.shade800,
-                              //           ),
-                              //         ),
-                              //       ],
-                              //     ),
-                              //   if (deliveryRemaningController.pageType.value ==
-                              //       "Cash Collection Done")
-                              //     Row(
-                              //       mainAxisAlignment:
-                              //           MainAxisAlignment.spaceBetween,
-                              //       children: [
-                              //         if (!(deliveryRemaningController
-                              //                     .pageType.value ==
-                              //                 "Return" ||
-                              //             deliveryRemaningController
-                              //                     .pageType.value ==
-                              //                 "Cash Collection Done"))
-                              //           Text(
-                              //             "Rec. Amount :  ${receiveAmountList[index].toStringAsFixed(2)}",
-                              //             style: style.copyWith(
-                              //               fontWeight: FontWeight.w500,
-                              //             ),
-                              //           ),
-                              //         if (!(deliveryRemaningController
-                              //                     .pageType.value ==
-                              //                 "Return" ||
-                              //             deliveryRemaningController
-                              //                     .pageType.value ==
-                              //                 "Cash Collection Done"))
-                              //           Text(
-                              //             "Ret. Amount :  ${returnAmountList[index].toStringAsFixed(2)}",
-                              //             style: style.copyWith(
-                              //               fontWeight: FontWeight.w500,
-                              //             ),
-                              //           ),
-                              //       ],
-                              //     ),
-                            ],
+                                // if (deliveryRemaningController.pageType.value ==
+                                //     "Cash Collection Done")
+                                //   Row(
+                                //     mainAxisAlignment:
+                                //         MainAxisAlignment.spaceBetween,
+                                //     children: [
+                                //       Text(
+                                //         "Received Qty. : ${(productList[index].deliveryQuantity ?? 0).toInt()}",
+                                //         style: TextStyle(
+                                //           fontSize: 16,
+                                //           fontWeight: FontWeight.bold,
+                                //           color: Colors.green.shade900,
+                                //         ),
+                                //       ),
+                                //       Text(
+                                //         "Received Amount. : ${(productList[index].deliveryNetVal ?? 0) * (productList[index].deliveryQuantity ?? 0)}",
+                                //         style: TextStyle(
+                                //           fontSize: 16,
+                                //           fontWeight: FontWeight.bold,
+                                //           color: Colors.green.shade900,
+                                //         ),
+                                //       ),
+                                //     ],
+                                //   ),
+                                //   if (deliveryRemaningController.pageType.value ==
+                                //       "Cash Collection Done")
+                                //     const Divider(),
+                                //   if (deliveryRemaningController.pageType.value ==
+                                //       "Cash Collection Done")
+                                //     Row(
+                                //       mainAxisAlignment:
+                                //           MainAxisAlignment.spaceBetween,
+                                //       children: [
+                                //         Text(
+                                //           "Return Qty. : ${(productList[index].returnQuantity ?? 0).toInt()}",
+                                //           style: TextStyle(
+                                //             fontSize: 16,
+                                //             fontWeight: FontWeight.bold,
+                                //             color: Colors.red.shade800,
+                                //           ),
+                                //         ),
+                                //         Text(
+                                //           "Return Amount. : ${(productList[index].returnNetVal ?? 0) * (productList[index].returnQuantity ?? 0)}",
+                                //           style: TextStyle(
+                                //             fontSize: 16,
+                                //             fontWeight: FontWeight.bold,
+                                //             color: Colors.red.shade800,
+                                //           ),
+                                //         ),
+                                //       ],
+                                //     ),
+                                //   if (deliveryRemaningController.pageType.value ==
+                                //       "Cash Collection Done")
+                                //     Row(
+                                //       mainAxisAlignment:
+                                //           MainAxisAlignment.spaceBetween,
+                                //       children: [
+                                //         if (!(deliveryRemaningController
+                                //                     .pageType.value ==
+                                //                 "Return" ||
+                                //             deliveryRemaningController
+                                //                     .pageType.value ==
+                                //                 "Cash Collection Done"))
+                                //           Text(
+                                //             "Rec. Amount :  ${receiveAmountList[index].toStringAsFixed(2)}",
+                                //             style: style.copyWith(
+                                //               fontWeight: FontWeight.w500,
+                                //             ),
+                                //           ),
+                                //         if (!(deliveryRemaningController
+                                //                     .pageType.value ==
+                                //                 "Return" ||
+                                //             deliveryRemaningController
+                                //                     .pageType.value ==
+                                //                 "Cash Collection Done"))
+                                //           Text(
+                                //             "Ret. Amount :  ${returnAmountList[index].toStringAsFixed(2)}",
+                                //             style: style.copyWith(
+                                //               fontWeight: FontWeight.w500,
+                                //             ),
+                                //           ),
+                                //       ],
+                                //     ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ) +
+                <Widget>[
+                  if (!(pageType == pagesState[1])) const Gap(30),
+                  if (!((pageType == pagesState[1])))
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.45,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            child: const Text("Cancel"),
+                          ),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.45,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              await onCashCollectedButtonPressed(context);
+                            },
+                            child: const Text("Cash Collected"),
                           ),
                         ),
                       ],
                     ),
-                  );
-                },
-              ) +
-              <Widget>[
-                if (!(pageType == pagesState[1])) const Gap(30),
-                if (!((pageType == pagesState[1])))
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.45,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          child: const Text("Cancel"),
-                        ),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.45,
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await onCashCollectedButtonPressed(context);
-                          },
-                          child: const Text("Cash Collected"),
-                        ),
-                      ),
-                    ],
-                  ),
-              ],
+                ],
+          ),
         ),
       ),
     );
@@ -609,8 +617,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
           listOfDeliveryCash.add(DeliveryCash(
             id: int.parse("${productList[i].id}"),
             returnNetVal: ((((e.netVal ?? 0) + (e.vat ?? 0)) /
-                        (productList[i].quantity ?? 0).toInt()) *
-                    int.parse(returnText))
+                    (productList[i].quantity ?? 0).toInt()))
                 .toStringAsFixed(2),
             returnQuantity: int.parse(returnText),
             vat: e.vat,
