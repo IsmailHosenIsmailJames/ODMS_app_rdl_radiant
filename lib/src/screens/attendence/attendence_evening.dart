@@ -107,11 +107,14 @@ class _AttendenceEveningState extends State<AttendenceEvening> {
                               ),
                             ),
                           ),
-                          Text(
-                            jsonUserdata['full_name'].toString(),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Text(
+                              jsonUserdata['full_name'].toString(),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ],

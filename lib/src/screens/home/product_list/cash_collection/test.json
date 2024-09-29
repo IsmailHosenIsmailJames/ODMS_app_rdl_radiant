@@ -1,0 +1,36 @@
+{
+    "billing_doc_no": "9031476644",
+    "last_status": "cash_collection",
+    "type": "cash_collection",
+    "cash_collection": 5015.99,
+    "cash_collection_latitude": "24.272028",
+    "cash_collection_longitude": "89.9278814",
+    "cash_collection_status": "Done",
+    "deliverys": [
+        {
+            "return_quantity": 0,
+            "return_net_val": "0.00",
+            "id": 261251
+        },
+        {
+            "return_quantity": 2,
+            "return_net_val": "1955.50",
+            "id": 261252
+        },
+        {
+            "return_quantity": 0,
+            "return_net_val": "0.00",
+            "id": 261253
+        },
+        {
+            "return_quantity": 0,
+            "return_net_val": "0.00",
+            "id": 261254
+        },
+        {
+            "return_quantity": 0,
+            "return_net_val": "0.00",
+            "id": 261255
+        }
+    ]
+}

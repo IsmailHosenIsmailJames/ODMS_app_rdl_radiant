@@ -59,9 +59,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
   @override
   void initState() {
     for (ProductList product in (widget.invoice.productList ?? [])) {
-      if ((product.deliveryQuantity ?? 0) != 0 && pageType != pagesState[2]) {
-        productList.add(product);
-      }
+      productList.add(product);
     }
 
     for (int i = 0; i < productList.length; i++) {
@@ -186,7 +184,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                 widget.invoice.customerMobile ?? "",
                                 optionalWidgetsAtLast: SizedBox(
                                   height: 23,
-                                  width: 90,
+                                  width: 50,
                                   child: IconButton(
                                     padding: EdgeInsets.zero,
                                     onPressed: () {
@@ -297,9 +295,9 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                 List.generate(
                   productList.length,
                   (index) {
-                    double perProduct = ((productList[index].netVal ?? 0) +
-                            (productList[index].vat ?? 0)) /
-                        (productList[index].quantity ?? 0);
+                    double perProduct =
+                        ((productList[index].deliveryNetVal ?? 0)) /
+                            (productList[index].deliveryQuantity ?? 0);
                     return Container(
                       margin: const EdgeInsets.only(top: 5, bottom: 5),
                       decoration: BoxDecoration(
@@ -325,22 +323,31 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Product Name: ",
-                                      style: style,
-                                    ),
-                                    const Gap(5),
-                                    Text(
-                                      productList[index].materialName ?? '',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.grey.shade800,
+                                Text(
+                                  "ID: ${productList[index].id}",
+                                  style: TextStyle(
+                                    color: Colors.grey.shade700,
+                                  ),
+                                ),
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Product Name: ",
+                                        style: style,
                                       ),
-                                    ),
-                                  ],
+                                      const Gap(5),
+                                      Text(
+                                        productList[index].materialName ?? '',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey.shade800,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 const Divider(
                                   height: 4,
@@ -382,6 +389,33 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                     ),
                                   ],
                                 ),
+                                if ((productList[index].returnQuantity ?? 0) >
+                                    0)
+                                  const Divider(
+                                    height: 1,
+                                    color: Colors.white,
+                                  ),
+                                if ((productList[index].returnQuantity ?? 0) >
+                                    0)
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Return : ",
+                                        style:
+                                            style.copyWith(color: Colors.red),
+                                      ),
+                                      const Gap(5),
+                                      Text(
+                                        (productList[index].returnQuantity ?? 0)
+                                            .toString(),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                               ],
                             ),
                           ),
@@ -390,10 +424,13 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                             child: Column(
                               children: [
                                 if (!(deliveryRemaningController
-                                            .pageType.value ==
-                                        "Return" ||
-                                    deliveryRemaningController.pageType.value ==
-                                        "Cash Collection Done"))
+                                                .pageType.value ==
+                                            "Return" ||
+                                        deliveryRemaningController
+                                                .pageType.value ==
+                                            "Cash Collection Done") &&
+                                    ((productList[index].returnQuantity ?? 0) ==
+                                        0))
                                   TextFormField(
                                     keyboardType: TextInputType.number,
                                     autovalidateMode:
@@ -614,13 +651,16 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
           final e = productList[i];
           String returnText = returnTextEditingControllerList[i].text.trim();
           if (returnText.isEmpty) returnText = "0";
+          final unitVat = (e.vat ?? 0) / (e.quantity!);
+          final returnQty = int.parse(returnText) +
+              (productList[i].returnQuantity ?? 0).toInt();
           listOfDeliveryCash.add(DeliveryCash(
             id: int.parse("${productList[i].id}"),
-            returnNetVal: ((((e.netVal ?? 0) + (e.vat ?? 0)) /
-                    (productList[i].quantity ?? 0).toInt()))
-                .toStringAsFixed(2),
-            returnQuantity: int.parse(returnText),
-            vat: e.vat,
+            returnNetVal:
+                ((unitVat * returnQty) + ((e.netVal ?? 0) * returnQty))
+                    .toStringAsFixed(2),
+            returnQuantity: returnQty,
+            // vat: (e.vat ?? 0) * int.parse(returnText),
           ));
         }
 
