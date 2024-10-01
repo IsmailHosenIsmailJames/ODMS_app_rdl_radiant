@@ -651,14 +651,11 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
           final e = productList[i];
           String returnText = returnTextEditingControllerList[i].text.trim();
           if (returnText.isEmpty) returnText = "0";
-          final unitVat = (e.vat ?? 0) / (e.quantity!);
-          final returnQty = int.parse(returnText) +
-              (productList[i].returnQuantity ?? 0).toInt();
+          // final unitVat = (e.vat ?? 0) / (e.quantity!);
+          final returnQty =
+              int.parse(returnText) + (e.returnQuantity ?? 0).toInt();
           listOfDeliveryCash.add(DeliveryCash(
-            id: int.parse("${productList[i].id}"),
-            returnNetVal:
-                ((unitVat * returnQty) + ((e.netVal ?? 0) * returnQty))
-                    .toStringAsFixed(2),
+            id: e.matnr,
             returnQuantity: returnQty,
             // vat: (e.vat ?? 0) * int.parse(returnText),
           ));
@@ -689,6 +686,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
           body: toSendCashDataModel.toJson(),
         );
         if (kDebugMode) {
+          log("$base$cashCollectionSave/${widget.invoice.id}");
           log("received form api: ");
           log(response.body);
         }

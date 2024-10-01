@@ -76,13 +76,13 @@ class ToSendCashDataModel {
 
 class DeliveryCash {
   int? returnQuantity;
-  String? returnNetVal;
+  // String? returnNetVal;
   // double? vat;
-  int? id;
+  String? id;
 
   DeliveryCash({
     this.returnQuantity,
-    this.returnNetVal,
+    // this.returnNetVal,
     // this.vat,
     this.id,
   });
@@ -91,11 +91,11 @@ class DeliveryCash {
     int? returnQuantity,
     String? returnNetVal,
     double? vat,
-    int? id,
+    String? id,
   }) =>
       DeliveryCash(
         returnQuantity: returnQuantity ?? this.returnQuantity,
-        returnNetVal: returnNetVal ?? this.returnNetVal,
+        // returnNetVal: returnNetVal ?? this.returnNetVal,
         // vat: vat ?? this.vat,
         id: id ?? this.id,
       );
@@ -107,14 +107,14 @@ class DeliveryCash {
 
   factory DeliveryCash.fromMap(Map<String, dynamic> json) => DeliveryCash(
         returnQuantity: json["return_quantity"],
-        returnNetVal: json["return_net_val"],
+        // returnNetVal: json["return_net_val"],
         // vat: json["vat"],
         id: json["id"],
       );
 
   Map<String, dynamic> toMap() => {
         "return_quantity": returnQuantity,
-        "return_net_val": returnNetVal,
+        // "return_net_val": returnNetVal,
         // "vat": vat,
         "id": id,
       };

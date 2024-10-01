@@ -301,22 +301,25 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      "Product Name: ",
-                                      style: style,
-                                    ),
-                                    const Gap(5),
-                                    Text(
-                                      productList[index].materialName ?? '',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.grey.shade800,
+                                SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Product Name: ",
+                                        style: style,
                                       ),
-                                    ),
-                                  ],
+                                      const Gap(5),
+                                      Text(
+                                        productList[index].materialName ?? '',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.grey.shade800,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                                 const Divider(
                                   height: 4,
