@@ -1,0 +1,55 @@
+{
+    "billing_doc_no": "9031561159",
+    "last_status": "cash_collection",
+    "type": "cash_collection",
+    "cash_collection": 4000.0,
+    "cash_collection_latitude": "24.2753781",
+    "cash_collection_longitude": "89.9217849",
+    "cash_collection_status": "Done",
+    "deliverys": [
+        {
+            "return_quantity": 0,
+            "id": "14000054"
+        },
+        {
+            "return_quantity": 2,
+            "id": "14000054"
+        },
+        {
+            "return_quantity": 0,
+            "id": "14000203"
+        },
+        {
+            "return_quantity": 0,
+            "id": "14000054"
+        },
+        {
+            "return_quantity": 2,
+            "id": "14000054"
+        },
+        {
+            "return_quantity": 0,
+            "id": "14000095"
+        },
+        {
+            "return_quantity": 0,
+            "id": "14000194"
+        },
+        {
+            "return_quantity": 1,
+            "id": "14000106"
+        },
+        {
+            "return_quantity": 0,
+            "id": "14000014"
+        },
+        {
+            "return_quantity": 0,
+            "id": "14000056"
+        },
+        {
+            "return_quantity": 0,
+            "id": "14000060"
+        }
+    ]
+}

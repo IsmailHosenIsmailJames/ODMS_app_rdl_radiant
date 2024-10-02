@@ -1,5 +1,5 @@
-String base = 'http://192.168.0.116:6042';
-// String base = 'http://128.199.199.164:6042';
+// String base = 'http://192.168.0.116:6042';
+String base = 'http://128.199.199.164:6042';
 String version = "v1";
 String loginPath = '/api/$version/user_login';
 String registationPath = '/api/$version/user_registration';
