@@ -177,6 +177,24 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                         "Total Amount",
                         widget.totalAmount,
                       ),
+                      divider,
+                      getRowWidgetForDetailsBox(
+                        "Previous Due",
+                        '0',
+                        optionalWidgetsAtLast: Row(
+                          children: [
+                            const Gap(20),
+                            SizedBox(
+                              height: 25,
+                              width: 90,
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                child: const Text("Collect"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),

@@ -426,47 +426,13 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                             }
                                           },
                                           onChanged: (value) {
-                                            if (value.isEmpty) value = "0";
-                                            int? recQuentaty =
-                                                int.tryParse(value);
-                                            if (recQuentaty != null) {
-                                              int? retQuentaty = int.tryParse(
-                                                  returnTextEditingControllerList[
-                                                          index]
-                                                      .text);
-                                              retQuentaty ??= 0;
-                                              int totalQuentaty =
-                                                  recQuentaty + retQuentaty;
-                                              if (totalQuentaty !=
-                                                  (productList[index]
-                                                          .quantity ??
-                                                      0)) {
-                                                WidgetsBinding.instance
-                                                    .addPostFrameCallback((_) {
-                                                  setState(() {
-                                                    receiveAmountList[index] =
-                                                        0;
-                                                  });
-                                                });
-                                              }
-                                              WidgetsBinding.instance
-                                                  .addPostFrameCallback((_) {
-                                                setState(() {
-                                                  returnAmountList[index] =
-                                                      perProduct *
-                                                          (retQuentaty ?? 0);
-                                                  receiveAmountList[index] =
-                                                      perProduct * recQuentaty;
-                                                });
-                                              });
-                                            } else {
-                                              WidgetsBinding.instance
-                                                  .addPostFrameCallback((_) {
-                                                setState(() {
-                                                  receiveAmountList[index] = 0;
-                                                });
-                                              });
-                                            }
+                                            newRecivedQtyTextFieldChange(
+                                              value,
+                                              index,
+                                              perProduct,
+                                              (productList[index].quantity ?? 0)
+                                                  .toInt(),
+                                            );
                                           },
                                           controller:
                                               receiveTextEditingControllerList[
@@ -513,47 +479,13 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                             }
                                           },
                                           onChanged: (value) {
-                                            if (value.isEmpty) value = "0";
-                                            int? retQuentaty =
-                                                int.tryParse(value);
-                                            if (retQuentaty != null) {
-                                              int? recQuentaty = int.tryParse(
-                                                  receiveTextEditingControllerList[
-                                                          index]
-                                                      .text);
-                                              recQuentaty ??= 0;
-                                              int totalQuentaty =
-                                                  retQuentaty + recQuentaty;
-                                              if (totalQuentaty !=
-                                                  (productList[index]
-                                                          .quantity ??
-                                                      0)) {
-                                                WidgetsBinding.instance
-                                                    .addPostFrameCallback((_) {
-                                                  setState(() {
-                                                    receiveAmountList[index] =
-                                                        0;
-                                                  });
-                                                });
-                                              }
-                                              WidgetsBinding.instance
-                                                  .addPostFrameCallback((_) {
-                                                setState(() {
-                                                  returnAmountList[index] =
-                                                      perProduct * retQuentaty;
-                                                  receiveAmountList[index] =
-                                                      perProduct *
-                                                          (recQuentaty ?? 0);
-                                                });
-                                              });
-                                            } else {
-                                              WidgetsBinding.instance
-                                                  .addPostFrameCallback((_) {
-                                                setState(() {
-                                                  receiveAmountList[index] = 0;
-                                                });
-                                              });
-                                            }
+                                            onRetQtyTextfieldChange(
+                                              value,
+                                              index,
+                                              perProduct,
+                                              (productList[index].quantity ?? 0)
+                                                  .toInt(),
+                                            );
                                           },
                                           controller:
                                               returnTextEditingControllerList[
@@ -695,6 +627,89 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
         ),
       ),
     );
+  }
+
+  void onRetQtyTextfieldChange(
+    String value,
+    int index,
+    double perProduct,
+    int realQty,
+  ) {
+    if (value.isEmpty) value = "0";
+    int? retQuentaty = int.tryParse(value);
+    if (retQuentaty != null) {
+      int? recQuentaty =
+          int.tryParse(receiveTextEditingControllerList[index].text);
+      recQuentaty ??= 0;
+      int totalQuentaty = retQuentaty + recQuentaty;
+      if (totalQuentaty != (productList[index].quantity ?? 0)) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          setState(() {
+            receiveAmountList[index] = 0;
+          });
+        });
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          returnAmountList[index] = perProduct * retQuentaty;
+          receiveAmountList[index] = perProduct * (recQuentaty ?? 0);
+        });
+      });
+      int autoReceviedQty = realQty - retQuentaty;
+      if (autoReceviedQty >= 0) {
+        if (recQuentaty != autoReceviedQty) {
+          receiveTextEditingControllerList[index].text =
+              autoReceviedQty.toString();
+        }
+      }
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          receiveAmountList[index] = 0;
+        });
+      });
+    }
+  }
+
+  void newRecivedQtyTextFieldChange(
+    String value,
+    int index,
+    double perProduct,
+    int realQty,
+  ) {
+    if (value.isEmpty) value = "0";
+    int? recQuentaty = int.tryParse(value);
+    if (recQuentaty != null) {
+      int? retQuentaty =
+          int.tryParse(returnTextEditingControllerList[index].text);
+      retQuentaty ??= 0;
+      int totalQuentaty = recQuentaty + retQuentaty;
+      if (totalQuentaty != (productList[index].quantity ?? 0)) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          setState(() {
+            receiveAmountList[index] = 0;
+          });
+        });
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          returnAmountList[index] = perProduct * (retQuentaty ?? 0);
+          receiveAmountList[index] = perProduct * recQuentaty;
+        });
+      });
+      int autoRetQty = realQty - recQuentaty;
+      if (autoRetQty >= 0) {
+        if (retQuentaty != autoRetQty) {
+          returnTextEditingControllerList[index].text = autoRetQty.toString();
+        }
+      }
+    } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          receiveAmountList[index] = 0;
+        });
+      });
+    }
   }
 
   Future<void> onDeliveredButtonPressed(BuildContext context) async {

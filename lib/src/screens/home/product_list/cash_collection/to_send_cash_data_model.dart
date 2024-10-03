@@ -78,12 +78,14 @@ class DeliveryCash {
   int? returnQuantity;
   // String? returnNetVal;
   // double? vat;
+  String? batch;
   String? id;
 
   DeliveryCash({
     this.returnQuantity,
     // this.returnNetVal,
     // this.vat,
+    this.batch,
     this.id,
   });
 
@@ -91,12 +93,14 @@ class DeliveryCash {
     int? returnQuantity,
     String? returnNetVal,
     double? vat,
+    String? batch,
     String? id,
   }) =>
       DeliveryCash(
         returnQuantity: returnQuantity ?? this.returnQuantity,
         // returnNetVal: returnNetVal ?? this.returnNetVal,
         // vat: vat ?? this.vat,
+        batch: batch ?? this.batch,
         id: id ?? this.id,
       );
 
@@ -109,6 +113,7 @@ class DeliveryCash {
         returnQuantity: json["return_quantity"],
         // returnNetVal: json["return_net_val"],
         // vat: json["vat"],
+        batch: json['batch'],
         id: json["id"],
       );
 
@@ -116,6 +121,7 @@ class DeliveryCash {
         "return_quantity": returnQuantity,
         // "return_net_val": returnNetVal,
         // "vat": vat,
+        "batch": batch,
         "id": id,
       };
 }

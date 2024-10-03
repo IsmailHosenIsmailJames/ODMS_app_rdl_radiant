@@ -323,11 +323,23 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  "ID: ${productList[index].id}",
-                                  style: TextStyle(
-                                    color: Colors.grey.shade700,
-                                  ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "ID: ${productList[index].matnr}",
+                                      style: TextStyle(
+                                        color: Colors.grey.shade700,
+                                      ),
+                                    ),
+                                    const Gap(20),
+                                    Text(
+                                      "Batch: ${productList[index].batch}",
+                                      style: TextStyle(
+                                        color: Colors.grey.shade700,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                                 SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
@@ -429,7 +441,10 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                         deliveryRemaningController
                                                 .pageType.value ==
                                             "Cash Collection Done") &&
-                                    ((productList[index].returnQuantity ?? 0) ==
+                                    (((productList[index].quantity ?? 0) -
+                                            (productList[index]
+                                                    .returnQuantity ??
+                                                0)) !=
                                         0))
                                   TextFormField(
                                     keyboardType: TextInputType.number,
@@ -658,6 +673,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
             id: e.matnr,
             returnQuantity: returnQty,
             // vat: (e.vat ?? 0) * int.parse(returnText),
+            batch: e.batch,
           ));
         }
 
