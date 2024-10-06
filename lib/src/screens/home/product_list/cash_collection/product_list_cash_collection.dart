@@ -110,24 +110,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                           ],
                         ),
                         onTap: () {
-                          for (var index = 0;
-                              index < productList.length;
-                              index++) {
-                            ProductList current = productList[index];
-                            double perProduct =
-                                ((current.netVal ?? 0) + (current.vat ?? 0)) /
-                                    (current.quantity ?? 0);
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              returnTextEditingControllerList[index].text =
-                                  (current.quantity ?? 0).toInt().toString();
-                              receiveTextEditingControllerList[index].text =
-                                  '0';
-                            });
-                            returnAmountList[index] =
-                                (current.quantity ?? 0) * perProduct;
-                            receiveAmountList[index] = 0;
-                          }
-                          setState(() {});
+                          onAllReturnClick();
                         },
                       ),
                     ],
@@ -647,6 +630,22 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
         ),
       ),
     );
+  }
+
+  void onAllReturnClick() {
+    for (var index = 0; index < productList.length; index++) {
+      ProductList current = productList[index];
+      double perProduct = ((current.netVal ?? 0) + (current.vat ?? 0)) /
+          (current.quantity ?? 0);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        returnTextEditingControllerList[index].text =
+            (current.quantity ?? 0).toInt().toString();
+        receiveTextEditingControllerList[index].text = '0';
+      });
+      returnAmountList[index] = (current.deliveryQuantity ?? 0) * perProduct;
+      receiveAmountList[index] = 0;
+    }
+    setState(() {});
   }
 
   Future<void> onCashCollectedButtonPressed(BuildContext context) async {
