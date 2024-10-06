@@ -660,6 +660,11 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
         if (recQuentaty != autoReceviedQty) {
           receiveTextEditingControllerList[index].text =
               autoReceviedQty.toString();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              receiveAmountList[index] = perProduct * autoReceviedQty;
+            });
+          });
         }
       }
     } else {
@@ -701,6 +706,11 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
       if (autoRetQty >= 0) {
         if (retQuentaty != autoRetQty) {
           returnTextEditingControllerList[index].text = autoRetQty.toString();
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              returnAmountList[index] = perProduct * autoRetQty;
+            });
+          });
         }
       }
     } else {
