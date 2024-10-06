@@ -262,9 +262,9 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                         }
                       },
                       onChanged: (_) {
-                        calculate();
+                        calculateDependOnReceviedAmmount();
                       },
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      autovalidateMode: AutovalidateMode.always,
                       decoration: InputDecoration(
                         hintText: "Receive ammount",
                         labelText: "Receive ammount",
@@ -478,7 +478,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                             receiveAmountList[index] =
                                                 perProduct * (recQuentaty ?? 0);
                                           });
-                                          calculate();
+                                          calculateDependOnReceviedAmmount();
                                         });
                                       } else {
                                         WidgetsBinding.instance
@@ -774,7 +774,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
     fontWeight: FontWeight.bold,
   );
 
-  void calculate() {
+  void calculateDependOnReceviedAmmount() {
     String receivedText = receivedAmmountController.text;
     if (receivedText.isEmpty) receivedText = "0";
     double? receivedAmount = double.tryParse(receivedText);
