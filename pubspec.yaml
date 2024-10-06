@@ -1,7 +1,7 @@
 name: rdl_radiant
 description: Demonstrates how to use the location plugin.
 publish_to: none
-version: 1.4.11+8
+version: 1.4.12+9
 
 environment:
   sdk: ">=3.1.0 <4.0.0"
@@ -72,14 +72,8 @@ flutter_native_splash:
   color_dark: "##D7D6DA"
   image_dark: assets/splash.png
 
-  android_12:
-    image: assets/splash.png
-    icon_background_color: "##D7D6DA"
-    image_dark: assets/splash.png
-    icon_background_color_dark: "##D7D6DA"
-
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: false
-  image_path: "assets/logo.png"
+  image_path: "assets/app_logo_big.png"
   min_sdk_android: 21
