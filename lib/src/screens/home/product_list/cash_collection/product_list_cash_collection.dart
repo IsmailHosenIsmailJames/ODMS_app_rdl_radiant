@@ -618,7 +618,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                           width: MediaQuery.of(context).size.width * 0.45,
                           child: ElevatedButton(
                             onPressed: () async {
-                              await onCashCollectedButtonPressed(context);
+                              await onCashCollectedButtonPressed(
+                                  context, totalRetrunAmmount);
                             },
                             child: const Text("Cash Collected"),
                           ),
@@ -639,17 +640,39 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
           (current.quantity ?? 0);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         returnTextEditingControllerList[index].text =
-            (current.quantity ?? 0).toInt().toString();
+            (current.deliveryQuantity ?? 0).toInt().toString();
         receiveTextEditingControllerList[index].text = '0';
       });
+      log((current.deliveryQuantity ?? 0).toInt().toString());
       returnAmountList[index] = (current.deliveryQuantity ?? 0) * perProduct;
       receiveAmountList[index] = 0;
     }
     setState(() {});
   }
 
-  Future<void> onCashCollectedButtonPressed(BuildContext context) async {
-    if (formKey.currentState!.validate()) {
+  Future<void> onCashCollectedButtonPressed(
+      BuildContext context, double totalRetrunAmmount) async {
+    String receviedAmmount = receivedAmmountController.text;
+    bool isValidate = false;
+    final x = double.tryParse(receviedAmmount);
+    if (x != null) {
+      final totalAmount = double.parse(widget.totalAmount) - totalRetrunAmmount;
+      log(totalAmount.toString());
+      if (x > totalAmount) {
+        isValidate = false;
+      } else {
+        isValidate = true;
+      }
+    } else {
+      isValidate = false;
+    }
+    if (isValidate == false) {
+      Fluttertoast.showToast(
+        msg: "Received ammount is not valid",
+      );
+    }
+
+    if (formKey.currentState!.validate() && isValidate) {
       loadingTextController.currentState.value = 0;
       loadingTextController.loadingText.value =
           'Accessing Your Location\nPlease wait...';
