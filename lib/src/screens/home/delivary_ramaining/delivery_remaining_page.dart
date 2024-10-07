@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bottom_picker/bottom_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -129,15 +131,14 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                                 amount += product.vat ?? 0;
                               }
                             }
-                            String floating2Amount = amount.toStringAsFixed(2);
-
+                            log(amount.toString());
                             return card(
                               index: index,
                               name: name,
                               address: address,
                               invoiceLen: invoiceList.length.toString(),
                               quantitty: quantitty.toInt().toString(),
-                              amount: floating2Amount,
+                              amount: amount,
                               date:
                                   (results[index].billingDate ?? DateTime.now())
                                       .toIso8601String()
@@ -281,7 +282,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
     required String address,
     required String invoiceLen,
     required String quantitty,
-    required String amount,
+    required double amount,
     required String date,
     required Result result,
   }) {
@@ -296,7 +297,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
         Get.to(() => InvoiceListPage(
               dateTime: dateTime,
               result: result,
-              totalAmount: amount,
+              totalAmount: amount.toString(),
             ));
       },
       child: Container(
@@ -378,7 +379,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                         style: style,
                       ),
                       Text(
-                        amount,
+                        amount.toStringAsFixed(2),
                         style: style,
                       ),
                     ],
@@ -391,7 +392,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                           style: style,
                         ),
                         Text(
-                          (double.parse(amount) -
+                          (amount -
                                   (result.invoiceList?[0].cashCollection ?? 0))
                               .toStringAsFixed(2),
                           style: style,

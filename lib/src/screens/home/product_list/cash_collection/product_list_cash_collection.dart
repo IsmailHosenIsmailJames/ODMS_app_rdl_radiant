@@ -81,6 +81,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
 
   @override
   Widget build(BuildContext context) {
+    log(widget.invoice.toJson());
     double totalRetrunAmmount = 0;
     for (var e in returnAmountList) {
       totalRetrunAmmount += e;
@@ -208,14 +209,17 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               divider,
                               getRowWidgetForDetailsBox(
                                 "To pay",
-                                (double.parse(widget.totalAmount) -
-                                        totalRetrunAmmount)
-                                    .toStringAsFixed(2),
+                                calculateFloatValueWithHighPrecition(
+                                  double.parse(widget.totalAmount),
+                                  totalRetrunAmmount,
+                                ).toStringAsFixed(2),
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
                                 "Due Amount",
-                                (dueAmount).toStringAsFixed(2),
+                                calculateFloatValueWithHighPrecition(
+                                        dueAmount, null)
+                                    .toStringAsFixed(2),
                               ),
                             ],
                           ),
@@ -251,8 +255,11 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                         value ??= "";
                         final x = double.tryParse(value);
                         if (x != null) {
-                          final totalAmount = double.parse(widget.totalAmount) -
-                              totalRetrunAmmount;
+                          final totalAmount =
+                              calculateFloatValueWithHighPrecition(
+                            double.parse(widget.totalAmount),
+                            totalRetrunAmmount,
+                          );
                           if (x > totalAmount) {
                             return "received amount can't beyond total amount";
                           }
@@ -656,7 +663,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
     bool isValidate = false;
     final x = double.tryParse(receviedAmmount);
     if (x != null) {
-      final totalAmount = double.parse(widget.totalAmount) - totalRetrunAmmount;
+      final totalAmount = calculateFloatValueWithHighPrecition(
+          double.parse(widget.totalAmount), totalRetrunAmmount);
       log(totalAmount.toString());
       if (x > totalAmount) {
         isValidate = false;
@@ -698,11 +706,17 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
             batch: e.batch,
           ));
         }
-
         final toSendCashDataModel = ToSendCashDataModel(
           billingDocNo: widget.invoice.billingDocNo,
           lastStatus: "cash_collection",
           type: "cash_collection",
+          billingDate: widget.invoice.billingDate == null
+              ? null
+              : DateFormat('yyyy-MM-dd').format(widget.invoice.billingDate!),
+          daCode: widget.invoice.daCode?.toInt().toString(),
+          gatePassNo: widget.invoice.gatePassNo,
+          partner: widget.invoice.partner,
+          routeCode: widget.invoice.routeCode,
           cashCollection: double.tryParse(receivedAmmountController.text),
           cashCollectionLatitude: position.latitude.toString(),
           cashCollectionLongitude: position.longitude.toString(),
@@ -816,5 +830,13 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
         dueAmount;
       });
     }
+  }
+
+  double calculateFloatValueWithHighPrecition(double x, double? y) {
+    double res = x - (y ?? 0);
+    // if (res < 0) {
+    //   res = res.toPrecision(0);
+    // }
+    return res;
   }
 }

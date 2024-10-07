@@ -9,6 +9,17 @@ class ToSendCashDataModel {
   String? cashCollectionLongitude;
   String? cashCollectionStatus;
   List<DeliveryCash> deliverys;
+  dynamic billingDate;
+  String? partner;
+  String? gatePassNo;
+  String? daCode;
+  String? routeCode;
+
+  // "billing_date":"2024-10-06",
+  //   "partner":"11044314",
+  //   "gate_pass_no":"2426005431",
+  //   "da_code":"50010",
+  //   "route_code":"400551",
 
   ToSendCashDataModel({
     this.billingDocNo,
@@ -18,6 +29,11 @@ class ToSendCashDataModel {
     this.cashCollectionLatitude,
     this.cashCollectionLongitude,
     this.cashCollectionStatus,
+    this.billingDate,
+    this.partner,
+    this.gatePassNo,
+    this.daCode,
+    this.routeCode,
     required this.deliverys,
   });
 
@@ -29,6 +45,11 @@ class ToSendCashDataModel {
     String? cashCollectionLatitude,
     String? cashCollectionLongitude,
     String? cashCollectionStatus,
+    dynamic billingDate,
+    String? partner,
+    String? gatePassNo,
+    String? daCode,
+    String? routeCode,
     List<DeliveryCash>? deliverys,
   }) =>
       ToSendCashDataModel(
@@ -41,6 +62,11 @@ class ToSendCashDataModel {
         cashCollectionLongitude:
             cashCollectionLongitude ?? this.cashCollectionLongitude,
         cashCollectionStatus: cashCollectionStatus ?? this.cashCollectionStatus,
+        billingDate: billingDate ?? this.billingDate,
+        partner: partner ?? this.partner,
+        gatePassNo: gatePassNo ?? this.gatePassNo,
+        daCode: daCode ?? this.daCode,
+        routeCode: routeCode ?? this.routeCode,
         deliverys: deliverys ?? this.deliverys,
       );
 
@@ -58,6 +84,11 @@ class ToSendCashDataModel {
         cashCollectionLatitude: json["cash_collection_latitude"],
         cashCollectionLongitude: json["cash_collection_longitude"],
         cashCollectionStatus: json["cash_collection_status"],
+        billingDate: json["billing_date"],
+        partner: json["partner"],
+        gatePassNo: json['gate_pass_no'],
+        daCode: json["da_code"],
+        routeCode: json["route_code"],
         deliverys: List<DeliveryCash>.from(
             json["deliverys"].map((x) => DeliveryCash.fromMap(x))),
       );
@@ -70,6 +101,11 @@ class ToSendCashDataModel {
         "cash_collection_latitude": cashCollectionLatitude,
         "cash_collection_longitude": cashCollectionLongitude,
         "cash_collection_status": cashCollectionStatus,
+        "billing_date": billingDate,
+        "partner": partner,
+        "gate_pass_no": gatePassNo,
+        "da_code": daCode,
+        "route_code": routeCode,
         "deliverys": List<dynamic>.from(deliverys.map((x) => x.toMap())),
       };
 }

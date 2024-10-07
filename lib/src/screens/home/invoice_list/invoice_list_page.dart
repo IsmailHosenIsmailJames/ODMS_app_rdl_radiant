@@ -238,8 +238,8 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                   invioceNo:
                                       (invoiceList[index].billingDocNo ?? 0)
                                           .toString(),
-                                  totalAmount: (amount - returnAmount)
-                                      .toStringAsFixed(2),
+                                  totalAmount:
+                                      (amount - returnAmount).toString(),
                                   index: index,
                                 ),
                               )
@@ -249,8 +249,8 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                   invioceNo:
                                       (invoiceList[index].billingDocNo ?? 0)
                                           .toString(),
-                                  totalAmount: (amount - returnAmount)
-                                      .toStringAsFixed(2),
+                                  totalAmount:
+                                      (amount - returnAmount).toString(),
                                   index: index,
                                   dateOfDelivery: widget.dateTime,
                                 ),
