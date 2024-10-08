@@ -1,8 +1,16 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:clipboard/clipboard.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:http/http.dart';
+import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
 import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
 import 'package:rdl_radiant/src/screens/home/page_sate_defination.dart';
@@ -13,7 +21,10 @@ import 'package:simple_icons/simple_icons.dart';
 
 import '../../../theme/text_scaler_theme.dart';
 import '../../../widgets/coomon_widgets_function.dart';
+import '../../../widgets/loading/loading_popup_widget.dart';
+import '../../../widgets/loading/loading_text_controller.dart';
 import '../delivary_ramaining/controller/delivery_remaning_controller.dart';
+import 'controller/overdue_collect_controller.dart';
 
 class InvoiceListPage extends StatefulWidget {
   final DateTime dateTime;
@@ -32,6 +43,8 @@ class InvoiceListPage extends StatefulWidget {
 class _InvoiceListPageState extends State<InvoiceListPage> {
   final invoiceListController = Get.put(InvoiceListController());
   final DeliveryRemaningController deliveryRemaningController = Get.find();
+  final LoadingTextController loadingTextController = Get.find();
+
   String pageType = '';
 
   @override
@@ -321,13 +334,16 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                             ),
                                           ],
                                         ),
-                                        Gap(10),
+                                        const Gap(10),
                                         SizedBox(
                                           width: double.infinity,
                                           height: 30,
                                           child: ElevatedButton(
-                                            onPressed: () {},
-                                            child: Text("Collect"),
+                                            onPressed: () {
+                                              callDueCollectionApi(
+                                                  invoiceList, index, context);
+                                            },
+                                            child: const Text("Collect"),
                                           ),
                                         ),
                                       ],
@@ -544,6 +560,238 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
           ),
         ]),
       ),
+    );
+  }
+
+  void callDueCollectionApi(
+      List<InvoiceList> invoiceList, int index, BuildContext context) {
+    final dueController = Get.put(OverdueCollectController());
+    dueController.previousDue.value = invoiceList[index].dueAmount ?? 0;
+    dueController.currentDue.value = invoiceList[index].dueAmount ?? 0;
+
+    TextEditingController textEditingController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          insetPadding: const EdgeInsets.all(5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Collect Due",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue.shade900,
+                  ),
+                ),
+                const Gap(20),
+                TextFormField(
+                  autovalidateMode: AutovalidateMode.always,
+                  validator: (value) {
+                    double? doubleValue = double.tryParse(value ?? "");
+                    if (doubleValue != null) {
+                      if (doubleValue > dueController.previousDue.value) {
+                        return "amount can't be bigger than due amount";
+                      } else {
+                        return null;
+                      }
+                    } else {
+                      return "value is not valid";
+                    }
+                  },
+                  onChanged: (value) {
+                    dueController.collectAmount.value =
+                        double.tryParse(value) ?? 0;
+                    double currentDue = (invoiceList[index].dueAmount ?? 0) -
+                        (double.tryParse(value) ?? 0);
+
+                    dueController.currentDue.value = currentDue < 0
+                        ? (invoiceList[index].dueAmount ?? 0)
+                        : currentDue;
+                  },
+                  controller: textEditingController,
+                  decoration: InputDecoration(
+                    hintText: "type amount here",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(
+                        10,
+                      ),
+                    ),
+                  ),
+                ),
+                const Gap(10),
+                Row(
+                  children: [
+                    const Text(
+                      "Previous due:",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Gap(10),
+                    Obx(
+                      () => Text(
+                        dueController.previousDue.toString(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                const Gap(5),
+                Row(
+                  children: [
+                    const Text(
+                      "Due after cash collection:",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Gap(10),
+                    Obx(
+                      () => Text(
+                        dueController.currentDue.toString(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Gap(15),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        double? doubleValue =
+                            double.tryParse(textEditingController.text);
+                        if (doubleValue != null) {
+                          if (doubleValue > dueController.previousDue.value) {
+                            return;
+                          } else {
+                            loadingTextController.currentState.value = 0;
+                            loadingTextController.loadingText.value =
+                                'Accessing Your Location\nPlease wait...';
+
+                            showCoustomPopUpLoadingDialog(context,
+                                isCuputino: true);
+                            try {
+                              final position =
+                                  await Geolocator.getCurrentPosition(
+                                locationSettings: AndroidSettings(
+                                    timeLimit: const Duration(seconds: 30)),
+                              );
+                              String encodedDataToSend = jsonEncode({
+                                "billing_doc_no":
+                                    invoiceList[index].billingDocNo ?? "",
+                                "cash_collection":
+                                    dueController.collectAmount.value,
+                                "da_code":
+                                    Hive.box('info').get("sap_id") as int,
+                                "cash_collection_latitude": position.latitude,
+                                "cash_collection_longitude": position.longitude,
+                              });
+                              if (kDebugMode) {
+                                log("Sending to api: ");
+
+                                log(encodedDataToSend);
+                              }
+                              loadingTextController.loadingText.value =
+                                  'Your Location Accessed\nSending data to server\nPlease wait...';
+
+                              final response = await put(
+                                Uri.parse(
+                                  base + collectOverdue,
+                                ),
+                                body: encodedDataToSend,
+                                headers: {
+                                  "content-type": "application/json",
+                                },
+                              );
+                              if (response.statusCode == 200) {
+                                final decoded = Map<String, dynamic>.from(
+                                    jsonDecode(response.body));
+                                if (decoded['success'] == true) {
+                                  try {
+                                    final box = Hive.box('info');
+                                    final url = Uri.parse(
+                                        "$base$getOverdueList/${box.get('sap_id')}");
+
+                                    final response = await get(url);
+
+                                    if (response.statusCode == 200) {
+                                      if (kDebugMode) {
+                                        print("Got Due List");
+                                        print(response.body);
+                                      }
+
+                                      final controller = Get.put(
+                                        DeliveryRemaningController(
+                                          DeliveryRemaing.fromJson(
+                                              response.body),
+                                        ),
+                                      );
+                                      controller.deliveryRemaing.value =
+                                          DeliveryRemaing.fromJson(
+                                              response.body);
+                                      controller.constDeliveryRemaing.value =
+                                          DeliveryRemaing.fromJson(
+                                              response.body);
+                                      controller
+                                          .deliveryRemaing.value.result ??= [];
+                                      controller.constDeliveryRemaing.value
+                                          .result ??= [];
+                                    }
+                                  } catch (e) {
+                                    log(e.toString());
+                                  }
+                                  loadingTextController.currentState.value = 0;
+                                  loadingTextController.loadingText.value =
+                                      'Successful';
+                                  invoiceListController.invoiceList.removeAt(
+                                    index,
+                                  );
+                                  if (Navigator.canPop(context)) {
+                                    Navigator.pop(context);
+                                  }
+                                  if (Navigator.canPop(context)) {
+                                    Navigator.pop(context);
+                                  }
+                                } else {
+                                  loadingTextController.currentState.value = -1;
+                                  loadingTextController.loadingText.value =
+                                      decoded['message'];
+                                }
+                              }
+                            } catch (e) {
+                              loadingTextController.currentState.value = -1;
+                              loadingTextController.loadingText.value =
+                                  'Unable to access your location';
+                            }
+                            return;
+                          }
+                        }
+                        Fluttertoast.showToast(msg: "Amount is not valid");
+                      },
+                      child: Text("Collect")),
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

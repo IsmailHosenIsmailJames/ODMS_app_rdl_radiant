@@ -133,7 +133,6 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                                 amount += product.vat ?? 0;
                               }
                             }
-                            log(amount.toString());
                             return card(
                               index: index,
                               name: name,

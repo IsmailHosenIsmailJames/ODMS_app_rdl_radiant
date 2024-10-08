@@ -81,7 +81,6 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
 
   @override
   Widget build(BuildContext context) {
-    log(widget.invoice.toJson());
     double totalRetrunAmmount = 0;
     for (var e in returnAmountList) {
       totalRetrunAmmount += e;
