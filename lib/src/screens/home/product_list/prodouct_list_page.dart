@@ -390,7 +390,8 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                   ),
                                 if (pageType == pagesState[1]) const Divider(),
                                 if (!(pageType == pagesState[1]) &&
-                                    isDeliveryForToday)
+                                    isDeliveryForToday &&
+                                    pageType != pagesState[5])
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -504,7 +505,8 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                   ),
                                 if (isDeliveryForToday) const Gap(5),
                                 if (!(pageType == pagesState[1]) &&
-                                    isDeliveryForToday)
+                                    isDeliveryForToday &&
+                                    pageType != pagesState[5])
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,

@@ -164,6 +164,7 @@ class InvoiceList {
   String? cashCollectionStatus;
   String? gatePassNo;
   String? vehicleNo;
+  double? dueAmount;
   dynamic transportType;
   List<ProductList>? productList;
 
@@ -186,6 +187,7 @@ class InvoiceList {
     this.cashCollectionStatus,
     this.gatePassNo,
     this.vehicleNo,
+    this.dueAmount,
     this.transportType,
     this.productList,
   });
@@ -209,6 +211,7 @@ class InvoiceList {
     String? cashCollectionStatus,
     String? gatePassNo,
     String? vehicleNo,
+    double? dueAmount,
     dynamic transportType,
     List<ProductList>? productList,
   }) =>
@@ -231,6 +234,7 @@ class InvoiceList {
         cashCollectionStatus: cashCollectionStatus ?? this.cashCollectionStatus,
         gatePassNo: gatePassNo ?? this.gatePassNo,
         vehicleNo: vehicleNo ?? this.vehicleNo,
+        dueAmount: dueAmount ?? this.dueAmount,
         transportType: transportType ?? this.transportType,
         productList: productList ?? this.productList,
       );
@@ -261,6 +265,7 @@ class InvoiceList {
         cashCollectionStatus: json["cash_collection_status"],
         gatePassNo: json["gate_pass_no"],
         vehicleNo: json["vehicle_no"],
+        dueAmount: json["due_amount"],
         transportType: json["transport_type"],
         productList: json["product_list"] == null
             ? []
@@ -288,6 +293,7 @@ class InvoiceList {
         "cash_collection_status": cashCollectionStatus,
         "gate_pass_no": gatePassNo,
         "vehicle_no": vehicleNo,
+        "due_amount": dueAmount,
         "transport_type": transportType,
         "product_list": productList == null
             ? []

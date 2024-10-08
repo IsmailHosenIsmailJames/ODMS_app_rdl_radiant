@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData.light().copyWith(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.blue.shade900,

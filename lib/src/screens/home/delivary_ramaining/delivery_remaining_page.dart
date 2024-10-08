@@ -120,11 +120,13 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                                 results[index].customerAddress ?? "";
                             double quantitty = 0;
                             double amount = 0;
+                            double dueAmount = 0;
                             List<InvoiceList> invoiceList =
                                 results[index].invoiceList ?? [];
                             for (InvoiceList invoice in invoiceList) {
                               List<ProductList> droductList =
                                   invoice.productList ?? [];
+                              dueAmount += invoice.dueAmount ?? 0;
                               for (ProductList product in droductList) {
                                 quantitty += product.quantity ?? 0;
                                 amount += product.netVal ?? 0;
@@ -139,6 +141,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                               invoiceLen: invoiceList.length.toString(),
                               quantitty: quantitty.toInt().toString(),
                               amount: amount,
+                              dueAmount: dueAmount,
                               date:
                                   (results[index].billingDate ?? DateTime.now())
                                       .toIso8601String()
@@ -283,6 +286,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
     required String invoiceLen,
     required String quantitty,
     required double amount,
+    double? dueAmount,
     required String date,
     required Result result,
   }) {
@@ -343,65 +347,90 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Text(
-                        "Total Invoice",
-                        style: style,
-                      ),
-                      Text(
-                        invoiceLen,
-                        style: style,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Text(
-                        "Quantity",
-                        style: style,
-                      ),
-                      Text(
-                        quantitty,
-                        style: style,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Text(
-                        "Amount",
-                        style: style,
-                      ),
-                      Text(
-                        amount.toStringAsFixed(2),
-                        style: style,
-                      ),
-                    ],
-                  ),
-                  if (pageType == pagesState[3])
-                    Column(
+            pageType == pagesState[5]
+                ? Container(
+                    padding: const EdgeInsets.only(
+                        left: 10, right: 10, bottom: 10, top: 10),
+                    child: Row(
                       children: [
-                        Text(
-                          "Due",
-                          style: style,
+                        const Text(
+                          "Due amount: ",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        Text(
-                          (amount -
-                                  (result.invoiceList?[0].cashCollection ?? 0))
-                              .toStringAsFixed(2),
-                          style: style,
+                        const Gap(10),
+                        Text((dueAmount ?? 0).toStringAsFixed(2)),
+                        const Spacer(),
+                        const Icon(
+                          Icons.arrow_forward,
+                          size: 17,
                         ),
                       ],
-                    )
-                ],
-              ),
-            ),
+                    ),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              "Total Invoice",
+                              style: style,
+                            ),
+                            Text(
+                              invoiceLen,
+                              style: style,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              "Quantity",
+                              style: style,
+                            ),
+                            Text(
+                              quantitty,
+                              style: style,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              "Amount",
+                              style: style,
+                            ),
+                            Text(
+                              amount.toStringAsFixed(2),
+                              style: style,
+                            ),
+                          ],
+                        ),
+                        if (pageType == pagesState[3])
+                          Column(
+                            children: [
+                              Text(
+                                "Due",
+                                style: style,
+                              ),
+                              Text(
+                                (amount -
+                                        (result.invoiceList?[0]
+                                                .cashCollection ??
+                                            0))
+                                    .toStringAsFixed(2),
+                                style: style,
+                              ),
+                            ],
+                          )
+                      ],
+                    ),
+                  ),
           ],
         ),
       ),

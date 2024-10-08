@@ -219,6 +219,15 @@ class _HomePageState extends State<HomePage> {
                             0,
                             onPressed: callConveyanceList,
                           ),
+                          getCardView(
+                            0.toString(),
+                            Image.asset(
+                              "assets/overdue.jpg",
+                            ),
+                            'Overdue',
+                            0,
+                            onPressed: callOverDueList,
+                          ),
                         ],
                       );
                     } else {
@@ -275,6 +284,15 @@ class _HomePageState extends State<HomePage> {
                           'Conveyance',
                           0,
                           onPressed: callConveyanceList,
+                        ),
+                        getCardView(
+                          null,
+                          Image.asset(
+                            "assets/overdue.jpg",
+                          ),
+                          'Overdue',
+                          0,
+                          onPressed: callOverDueList,
                         ),
                       ],
                     );
@@ -442,6 +460,54 @@ class _HomePageState extends State<HomePage> {
       controller.deliveryRemaing.value.result ??= [];
       controller.constDeliveryRemaing.value.result ??= [];
       controller.pageType.value = 'Delivery Remaining';
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      await Get.to(
+        () => const DeliveryRemainingPage(),
+      );
+      getDashBoardData();
+    } else {
+      loadingTextController.currentState.value = -1;
+      loadingTextController.loadingText.value = 'Something went worng';
+    }
+  }
+
+  void callOverDueList() async {
+    final box = Hive.box('info');
+    final url = Uri.parse(
+      "$base$getOverdueList/${box.get('sap_id')}",
+    );
+
+    loadingTextController.currentState.value = 0;
+    loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
+    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+
+    final response = await http.get(url);
+
+    if (kDebugMode) {
+      log("Got Delivery Remaning List");
+      log(response.statusCode.toString());
+      log(response.body);
+    }
+
+    if (response.statusCode == 200) {
+      loadingTextController.currentState.value = 1;
+      loadingTextController.loadingText.value = 'Successful';
+
+      final controller = Get.put(
+        DeliveryRemaningController(
+          DeliveryRemaing.fromJson(response.body),
+        ),
+      );
+      controller.deliveryRemaing.value =
+          DeliveryRemaing.fromJson(response.body);
+      controller.constDeliveryRemaing.value =
+          DeliveryRemaing.fromJson(response.body);
+      controller.deliveryRemaing.value.result ??= [];
+      controller.constDeliveryRemaing.value.result ??= [];
+      controller.pageType.value = 'Overdue';
       await Future.delayed(const Duration(milliseconds: 100));
       if (Navigator.canPop(context)) {
         Navigator.pop(context);

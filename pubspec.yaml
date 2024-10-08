@@ -64,6 +64,7 @@ flutter:
     - assets/animations/bubnly.riv
     - assets/icon_for_medical_shop.png
     - assets/Map-100x100.bmp
+    - assets/overdue.jpg
 
 
 flutter_native_splash:

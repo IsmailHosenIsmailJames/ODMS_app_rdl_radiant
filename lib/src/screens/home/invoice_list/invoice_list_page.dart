@@ -175,26 +175,27 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                       divider,
                       getRowWidgetForDetailsBox(
                         "Total Amount",
-                        widget.totalAmount,
+                        double.parse(widget.totalAmount).toStringAsFixed(2),
                       ),
-                      divider,
-                      getRowWidgetForDetailsBox(
-                        "Previous Due",
-                        '0',
-                        optionalWidgetsAtLast: Row(
-                          children: [
-                            const Gap(20),
-                            SizedBox(
-                              height: 25,
-                              width: 90,
-                              child: ElevatedButton(
-                                onPressed: () {},
-                                child: const Text("Collect"),
+                      if (pageType != pagesState[5]) divider,
+                      if (pageType != pagesState[5])
+                        getRowWidgetForDetailsBox(
+                          "Previous Due",
+                          '0',
+                          optionalWidgetsAtLast: Row(
+                            children: [
+                              const Gap(20),
+                              SizedBox(
+                                height: 25,
+                                width: 90,
+                                child: ElevatedButton(
+                                  onPressed: () {},
+                                  child: const Text("Collect"),
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -296,189 +297,241 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                             ),
                             Container(
                               padding: const EdgeInsets.all(8),
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey.withOpacity(0.3),
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                              child: pageType == pagesState[5]
+                                  ? Column(
                                       children: [
-                                        SizedBox(
-                                          width: width / 3.5,
-                                          child: Text(
-                                            "Type",
-                                            style: style,
-                                          ),
+                                        Row(
+                                          children: [
+                                            const Text(
+                                              "Due amount: ",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const Gap(10),
+                                            Text(
+                                                (invoiceList[index].dueAmount ??
+                                                        0)
+                                                    .toStringAsFixed(2)),
+                                            const Spacer(),
+                                            const Icon(
+                                              Icons.arrow_forward,
+                                              size: 17,
+                                            ),
+                                          ],
                                         ),
+                                        Gap(10),
                                         SizedBox(
-                                          width: width / 3.5,
-                                          child: Text(
-                                            "Quantity",
-                                            style: style,
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: width / 3.5,
-                                          child: Text(
-                                            "Amount",
-                                            style: style,
+                                          width: double.infinity,
+                                          height: 30,
+                                          child: ElevatedButton(
+                                            onPressed: () {},
+                                            child: Text("Collect"),
                                           ),
                                         ),
                                       ],
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.purple.withOpacity(0.3),
-                                      borderRadius: !(returnQty == 0 ||
-                                              deliveryQty == 0)
-                                          ? null
-                                          : const BorderRadius.only(
-                                              bottomLeft: Radius.circular(10),
-                                              bottomRight: Radius.circular(10),
-                                            ),
-                                    ),
-                                    child: Row(
+                                    )
+                                  : Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
-                                        SizedBox(
-                                          width: width / 3.5,
-                                          child: Text(
-                                            "Invoice",
-                                            style: style.copyWith(
-                                              fontWeight: FontWeight.w500,
+                                        Container(
+                                          padding: const EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.withOpacity(0.2),
+                                            borderRadius:
+                                                const BorderRadius.only(
+                                              topLeft: Radius.circular(10),
+                                              topRight: Radius.circular(10),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: width / 3.5,
-                                          child: Text(
-                                            (invoiceList[index].productList ??
-                                                    [])
-                                                .length
-                                                .toString(),
-                                            style: style.copyWith(
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SizedBox(
+                                                width: width / 3.5,
+                                                child: Text(
+                                                  "Type",
+                                                  style: style,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / 3.5,
+                                                child: Text(
+                                                  "Quantity",
+                                                  style: style,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / 3.5,
+                                                child: Text(
+                                                  "Amount",
+                                                  style: style,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        SizedBox(
-                                          width: width / 3.5,
-                                          child: Text(
-                                            amount.toStringAsFixed(2),
-                                            style: style.copyWith(
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                                        Container(
+                                          padding: const EdgeInsets.all(5),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Colors.purple.withOpacity(0.2),
+                                            borderRadius: !(returnQty == 0 ||
+                                                    deliveryQty == 0)
+                                                ? null
+                                                : const BorderRadius.only(
+                                                    bottomLeft:
+                                                        Radius.circular(10),
+                                                    bottomRight:
+                                                        Radius.circular(10),
+                                                  ),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SizedBox(
+                                                width: width / 3.5,
+                                                child: Text(
+                                                  "Invoice",
+                                                  style: style.copyWith(
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / 3.5,
+                                                child: Text(
+                                                  (invoiceList[index]
+                                                              .productList ??
+                                                          [])
+                                                      .length
+                                                      .toString(),
+                                                  style: style.copyWith(
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: width / 3.5,
+                                                child: Text(
+                                                  amount.toStringAsFixed(2),
+                                                  style: style.copyWith(
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  if (deliveryQty > 0)
-                                    Container(
-                                      padding: const EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                        color: Colors.green.withOpacity(0.35),
-                                        borderRadius: returnQty < 0
-                                            ? const BorderRadius.only(
+                                        if (deliveryQty > 0)
+                                          Container(
+                                            padding: const EdgeInsets.all(5),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.green.withOpacity(0.2),
+                                              borderRadius: returnQty < 0
+                                                  ? const BorderRadius.only(
+                                                      bottomLeft:
+                                                          Radius.circular(10),
+                                                      bottomRight:
+                                                          Radius.circular(10))
+                                                  : null,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  width: width / 3.5,
+                                                  child: Text(
+                                                    "Delivered",
+                                                    style: style.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: width / 3.5,
+                                                  child: Text(
+                                                    deliveryQty.toString(),
+                                                    style: style.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: width / 3.5,
+                                                  child: Text(
+                                                    deliveryAmmount
+                                                        .toStringAsFixed(2),
+                                                    style: style.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        if (returnQty > 0)
+                                          Container(
+                                            padding: const EdgeInsets.all(5),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.red.withOpacity(0.35),
+                                              borderRadius:
+                                                  const BorderRadius.only(
                                                 bottomLeft: Radius.circular(10),
                                                 bottomRight:
-                                                    Radius.circular(10))
-                                            : null,
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                            width: width / 3.5,
-                                            child: Text(
-                                              "Delivered",
-                                              style: style.copyWith(
-                                                fontWeight: FontWeight.w500,
+                                                    Radius.circular(10),
                                               ),
                                             ),
-                                          ),
-                                          SizedBox(
-                                            width: width / 3.5,
-                                            child: Text(
-                                              deliveryQty.toString(),
-                                              style: style.copyWith(
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  width: width / 3.5,
+                                                  child: Text(
+                                                    "Returned",
+                                                    style: style.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: width / 3.5,
+                                                  child: Text(
+                                                    returnQty.toString(),
+                                                    style: style.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: width / 3.5,
+                                                  child: Text(
+                                                    returnAmount
+                                                        .toStringAsFixed(2),
+                                                    style: style.copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                          SizedBox(
-                                            width: width / 3.5,
-                                            child: Text(
-                                              deliveryAmmount
-                                                  .toStringAsFixed(2),
-                                              style: style.copyWith(
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                      ],
                                     ),
-                                  if (returnQty > 0)
-                                    Container(
-                                      padding: const EdgeInsets.all(5),
-                                      decoration: BoxDecoration(
-                                        color: Colors.red.withOpacity(0.35),
-                                        borderRadius: const BorderRadius.only(
-                                          bottomLeft: Radius.circular(10),
-                                          bottomRight: Radius.circular(10),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                            width: width / 3.5,
-                                            child: Text(
-                                              "Returned",
-                                              style: style.copyWith(
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width / 3.5,
-                                            child: Text(
-                                              returnQty.toString(),
-                                              style: style.copyWith(
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width / 3.5,
-                                            child: Text(
-                                              returnAmount.toStringAsFixed(2),
-                                              style: style.copyWith(
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                ],
-                              ),
                             ),
                           ],
                         ),

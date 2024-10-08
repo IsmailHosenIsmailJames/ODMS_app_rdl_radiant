@@ -34,6 +34,7 @@
           "cash_collection_status": "Pending",
           "gate_pass_no": "2434003384",
           "vehicle_no": "DM-THA-12-0092 V",
+          "due_amount": 191.0,
           "transport_type": null,
           "product_list": [
             {
