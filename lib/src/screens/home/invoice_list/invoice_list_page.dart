@@ -46,6 +46,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
   final LoadingTextController loadingTextController = Get.find();
 
   String pageType = '';
+  late double due = widget.result.invoiceList![0].previousDueAmmount ?? 0;
 
   @override
   void initState() {
@@ -194,7 +195,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                       if (pageType != pagesState[5])
                         getRowWidgetForDetailsBox(
                           "Previous Due",
-                          '0',
+                          due.toStringAsFixed(2),
                           optionalWidgetsAtLast: Row(
                             children: [
                               const Gap(20),

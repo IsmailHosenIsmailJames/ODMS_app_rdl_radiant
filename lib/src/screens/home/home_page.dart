@@ -444,8 +444,8 @@ class _HomePageState extends State<HomePage> {
       loadingTextController.loadingText.value = 'Successful';
 
       if (kDebugMode) {
-        print("Got Delivery Remaning List");
-        print(response.body);
+        log("Got Delivery Remaning List");
+        log(response.body);
       }
 
       final controller = Get.put(
@@ -538,8 +538,8 @@ class _HomePageState extends State<HomePage> {
       loadingTextController.currentState.value = 1;
       loadingTextController.loadingText.value = 'Successful';
       if (kDebugMode) {
-        print("Got Delivery Remaning List");
-        print(response.body);
+        log("Got Delivery Remaning List");
+        log(response.body);
       }
 
       final controller = Get.put(

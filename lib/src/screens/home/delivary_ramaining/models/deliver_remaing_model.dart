@@ -165,6 +165,7 @@ class InvoiceList {
   String? gatePassNo;
   String? vehicleNo;
   double? dueAmount;
+  double? previousDueAmmount;
   dynamic transportType;
   List<ProductList>? productList;
 
@@ -188,6 +189,7 @@ class InvoiceList {
     this.gatePassNo,
     this.vehicleNo,
     this.dueAmount,
+    this.previousDueAmmount,
     this.transportType,
     this.productList,
   });
@@ -212,6 +214,7 @@ class InvoiceList {
     String? gatePassNo,
     String? vehicleNo,
     double? dueAmount,
+    double? previousDueAmmount,
     dynamic transportType,
     List<ProductList>? productList,
   }) =>
@@ -237,6 +240,7 @@ class InvoiceList {
         dueAmount: dueAmount ?? this.dueAmount,
         transportType: transportType ?? this.transportType,
         productList: productList ?? this.productList,
+        previousDueAmmount: previousDueAmmount ?? this.previousDueAmmount,
       );
 
   factory InvoiceList.fromJson(String str) =>
@@ -266,6 +270,7 @@ class InvoiceList {
         gatePassNo: json["gate_pass_no"],
         vehicleNo: json["vehicle_no"],
         dueAmount: json["due_amount"],
+        previousDueAmmount: json["previous_due_amount"],
         transportType: json["transport_type"],
         productList: json["product_list"] == null
             ? []
@@ -294,6 +299,7 @@ class InvoiceList {
         "gate_pass_no": gatePassNo,
         "vehicle_no": vehicleNo,
         "due_amount": dueAmount,
+        "previous_due_amount": previousDueAmmount,
         "transport_type": transportType,
         "product_list": productList == null
             ? []
