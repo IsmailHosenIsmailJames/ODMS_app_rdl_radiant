@@ -496,15 +496,32 @@ class _HomePageState extends State<HomePage> {
       loadingTextController.currentState.value = 1;
       loadingTextController.loadingText.value = 'Successful';
 
-      final controller = Get.put(
-        DeliveryRemaningController(
-          DeliveryRemaing.fromJson(response.body),
-        ),
+      final modelFormHTTPResponse = DeliveryRemaing.fromJson(response.body);
+      final patners = modelFormHTTPResponse.result!;
+      Map<String, List<Result>> mapForMarge = {};
+      for (var patner in patners) {
+        List<Result> previosList = mapForMarge[patner.partner] ?? [];
+        if (previosList.isNotEmpty) {
+          previosList[0].invoiceList!.addAll(patner.invoiceList!);
+          mapForMarge[patner.partner!] = previosList;
+        } else {
+          previosList.add(patner);
+          mapForMarge[patner.partner!] = previosList;
+        }
+      }
+
+      modelFormHTTPResponse.result = [];
+      mapForMarge.forEach(
+        (key, value) {
+          modelFormHTTPResponse.result!.add(value[0]);
+        },
       );
-      controller.deliveryRemaing.value =
-          DeliveryRemaing.fromJson(response.body);
-      controller.constDeliveryRemaing.value =
-          DeliveryRemaing.fromJson(response.body);
+
+      final controller = Get.put(
+        DeliveryRemaningController(modelFormHTTPResponse),
+      );
+      controller.deliveryRemaing.value = modelFormHTTPResponse;
+      controller.constDeliveryRemaing.value = modelFormHTTPResponse;
       controller.deliveryRemaing.value.result ??= [];
       controller.constDeliveryRemaing.value.result ??= [];
       controller.pageType.value = 'Overdue';
