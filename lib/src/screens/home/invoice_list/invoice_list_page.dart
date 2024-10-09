@@ -46,13 +46,14 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
   final LoadingTextController loadingTextController = Get.find();
 
   String pageType = '';
-  late double due = widget.result.invoiceList![0].previousDueAmmount ?? 0;
-  late String totalDueAmount;
+  late double due =
+      invoiceListController.invoiceList[0].previousDueAmmount ?? 0;
+  late String totalAmount;
 
   @override
   void initState() {
     pageType = deliveryRemaningController.pageType.value;
-    totalDueAmount = widget.totalAmount;
+    totalAmount = widget.totalAmount;
     super.initState();
   }
 
@@ -128,43 +129,45 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                     children: [
                       getRowWidgetForDetailsBox(
                         "Route Name",
-                        widget.result.routeName ?? "",
+                        invoiceListController.invoiceList[0].routeName ?? "",
                       ),
 
                       divider,
                       getRowWidgetForDetailsBox(
                         "Da Name",
-                        widget.result.daName ?? "",
+                        invoiceListController.invoiceList[0].daName ?? "",
                       ),
                       divider,
                       getRowWidgetForDetailsBox(
                         "Partner ID",
-                        widget.result.partner ?? "",
+                        invoiceListController.invoiceList[0].partner ?? "",
                       ),
                       divider,
                       getRowWidgetForDetailsBox(
                         "Coustomer Name",
-                        widget.result.customerName ?? "",
+                        invoiceListController.invoiceList[0].customerName ?? "",
                       ),
                       divider,
                       getRowWidgetForDetailsBox(
                         "Coustomer Address",
-                        widget.result.customerAddress ?? "",
+                        invoiceListController.invoiceList[0].customerAddress ??
+                            "",
                       ),
                       // divider,
                       // getRowWidgetForDetailsBox(
                       //   "Coustomer lat.",
-                      //   widget.result.latitude.toString(),
+                      //   invoiceListController.invoiceList[0].latitude.toString(),
                       // ),
                       // divider,
                       // getRowWidgetForDetailsBox(
                       //   "Coustomer lon.",
-                      //   widget.result.longitude.toString(),
+                      //   invoiceListController.invoiceList[0].longitude.toString(),
                       // ),
                       divider,
                       getRowWidgetForDetailsBox(
                         "Coustomer Mobile",
-                        widget.result.customerMobile ?? "",
+                        invoiceListController.invoiceList[0].customerMobile ??
+                            "",
                         optionalWidgetsAtLast: SizedBox(
                           height: 23,
                           width: 50,
@@ -172,7 +175,9 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                             padding: EdgeInsets.zero,
                             onPressed: () {
                               FlutterClipboard.copy(
-                                widget.result.customerMobile ?? "",
+                                invoiceListController
+                                        .invoiceList[0].customerMobile ??
+                                    "",
                               ).then((value) {
                                 Fluttertoast.showToast(msg: "Number Copied");
                               });
@@ -187,14 +192,14 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                       divider,
                       getRowWidgetForDetailsBox(
                         "Gate Pass",
-                        widget.result.gatePassNo ?? "",
+                        invoiceListController.invoiceList[0].gatePassNo ?? "",
                       ),
                       divider,
                       getRowWidgetForDetailsBox(
                         (pageType == pagesState[5])
                             ? "Total Due Amount"
                             : "Total Amount",
-                        double.parse(totalDueAmount).toStringAsFixed(2),
+                        double.parse(totalAmount).toStringAsFixed(2),
                       ),
                       if (pageType != pagesState[5]) divider,
                       if (pageType != pagesState[5])
@@ -208,7 +213,161 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                 height: 25,
                                 width: 90,
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: due == 0
+                                      ? null
+                                      : () async {
+                                          // Backup Current Data
+                                          final invoiceList =
+                                              invoiceListController
+                                                  .invoiceList.value
+                                                  .toList();
+                                          final String? patnerPrev =
+                                              invoiceListController
+                                                  .invoiceList[0].partner;
+
+                                          final constDeliveryRemaing =
+                                              deliveryRemaningController
+                                                  .constDeliveryRemaing.value
+                                                  .toMap();
+                                          final pageTypePrev =
+                                              deliveryRemaningController
+                                                  .pageType.value
+                                                  .toString();
+                                          final x = deliveryRemaningController.x
+                                              .toMap();
+
+                                          //Call api for due list
+                                          final box = Hive.box('info');
+                                          final url = Uri.parse(
+                                            "$base$getOverdueList/${box.get('sap_id')}",
+                                          );
+
+                                          loadingTextController
+                                              .currentState.value = 0;
+                                          loadingTextController
+                                                  .loadingText.value =
+                                              'Loading Data\nPlease wait...';
+                                          showCoustomPopUpLoadingDialog(context,
+                                              isCuputino: true);
+
+                                          final response = await get(url);
+
+                                          if (kDebugMode) {
+                                            log("Got Overdue List");
+                                            log(response.statusCode.toString());
+                                            log(response.body);
+                                          }
+
+                                          if (response.statusCode == 200) {
+                                            loadingTextController
+                                                .currentState.value = 1;
+                                            loadingTextController.loadingText
+                                                .value = 'Successful';
+
+                                            final modelFormHTTPResponse =
+                                                DeliveryRemaing.fromJson(
+                                                    response.body);
+                                            final patners =
+                                                modelFormHTTPResponse.result!;
+                                            Map<String, List<Result>>
+                                                mapForMarge = {};
+                                            for (var patner in patners) {
+                                              List<Result> previosList =
+                                                  mapForMarge[patner.partner] ??
+                                                      [];
+                                              if (previosList.isNotEmpty) {
+                                                previosList[0]
+                                                    .invoiceList!
+                                                    .addAll(
+                                                        patner.invoiceList!);
+                                                mapForMarge[patner.partner!] =
+                                                    previosList;
+                                              } else {
+                                                previosList.add(patner);
+                                                mapForMarge[patner.partner!] =
+                                                    previosList;
+                                              }
+                                            }
+
+                                            modelFormHTTPResponse.result = [];
+                                            mapForMarge.forEach(
+                                              (key, value) {
+                                                modelFormHTTPResponse.result!
+                                                    .add(value[0]);
+                                              },
+                                            );
+
+                                            final controller = Get.put(
+                                              DeliveryRemaningController(
+                                                  modelFormHTTPResponse),
+                                            );
+                                            controller.deliveryRemaing.value =
+                                                modelFormHTTPResponse;
+                                            controller.constDeliveryRemaing
+                                                .value = modelFormHTTPResponse;
+                                            controller.deliveryRemaing.value
+                                                .result ??= [];
+                                            controller.constDeliveryRemaing
+                                                .value.result ??= [];
+                                            controller.pageType.value =
+                                                'Overdue';
+                                            await Future.delayed(const Duration(
+                                                milliseconds: 100));
+                                            if (Navigator.canPop(context)) {
+                                              Navigator.pop(context);
+                                            }
+                                            //  Go to invoice direcly
+                                            final results = controller
+                                                .constDeliveryRemaing
+                                                .value
+                                                .result!;
+                                            Result? result;
+                                            for (var r in results) {
+                                              if (r.partner == patnerPrev) {
+                                                result = r;
+                                              }
+                                            }
+
+                                            if (result != null) {
+                                              invoiceListController
+                                                      .invoiceList.value =
+                                                  result.invoiceList ??
+                                                      <InvoiceList>[];
+                                              await showModalBottomSheet(
+                                                  scrollControlDisabledMaxHeightRatio:
+                                                      0.8,
+                                                  context: context,
+                                                  builder: (context) =>
+                                                      InvoiceListPage(
+                                                        dateTime:
+                                                            widget.dateTime,
+                                                        result: result!,
+                                                        totalAmount:
+                                                            due.toString(),
+                                                      ));
+                                            }
+
+                                            // back
+                                          } else {
+                                            loadingTextController
+                                                .currentState.value = -1;
+                                            loadingTextController.loadingText
+                                                .value = 'Something went worng';
+                                          }
+
+                                          //Back backuped data again
+                                          invoiceListController
+                                              .invoiceList.value = invoiceList;
+
+                                          deliveryRemaningController
+                                                  .constDeliveryRemaing.value =
+                                              DeliveryRemaing.fromMap(
+                                                  constDeliveryRemaing);
+                                          deliveryRemaningController
+                                              .pageType.value = pageTypePrev;
+                                          deliveryRemaningController.x =
+                                              DeliveryRemaing.fromMap(x);
+                                        },
                                   child: const Text("Collect"),
                                 ),
                               ),
@@ -811,7 +970,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                     );
                                   } else {
                                     setState(() {
-                                      totalDueAmount = due.toString();
+                                      totalAmount = due.toString();
                                       invoiceList[index].dueAmount = due;
                                     });
                                   }

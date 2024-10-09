@@ -289,13 +289,13 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
   }) {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
-      onTap: () {
+      onTap: () async {
         deliveryRemaningController.deliveryRemaing.value =
             deliveryRemaningController.constDeliveryRemaing.value;
         final invoiceListController = Get.put(InvoiceListController());
         invoiceListController.invoiceList.value =
             result.invoiceList ?? <InvoiceList>[];
-        Get.to(() => InvoiceListPage(
+        await Get.to(() => InvoiceListPage(
               dateTime: dateTime,
               result: result,
               totalAmount: (pageType == pagesState[5])
