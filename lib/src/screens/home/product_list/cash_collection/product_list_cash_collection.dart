@@ -198,7 +198,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               divider,
                               getRowWidgetForDetailsBox(
                                 "Total Amount",
-                                widget.totalAmount,
+                                double.parse(widget.totalAmount)
+                                    .toStringAsFixed(2),
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
@@ -821,7 +822,9 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
         returnAmountNow += returnAmount;
       }
 
-      dueAmount = totalAmountPrevious - returnAmountNow - receivedAmount;
+      dueAmount = (totalAmountPrevious - (returnAmountNow + receivedAmount))
+          .toPrecision(2);
+
       if (dueAmount < 0) {
         dueAmount = totalAmountPrevious - returnAmountNow;
       }
@@ -833,8 +836,9 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
 
   double calculateFloatValueWithHighPrecition(double x, double? y) {
     double res = x - (y ?? 0);
+    // print(res);
     // if (res < 0) {
-    //   res = res.toPrecision(0);
+    res = res.toPrecision(2);
     // }
     return res;
   }
