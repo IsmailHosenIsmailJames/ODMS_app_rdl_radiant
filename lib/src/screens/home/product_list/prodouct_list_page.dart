@@ -108,7 +108,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
           actions: pageType == pagesState[1]
               ? null
               : [
-                  if (isDeliveryForToday)
+                  if (isDeliveryForToday && pageType != pagesState[5])
                     PopupMenuButton(
                       itemBuilder: (context) => [
                         PopupMenuItem(
@@ -259,7 +259,9 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Total Amount",
+                                pageType == pagesState[5]
+                                    ? "Total Due Amount"
+                                    : "Total Amount",
                                 widget.totalAmount,
                               ),
                             ],
@@ -555,7 +557,9 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                 ) +
                 <Widget>[
                   if (!(pageType == pagesState[1])) const Gap(20),
-                  if (!(pageType == pagesState[1]) && isDeliveryForToday)
+                  if (!(pageType == pagesState[1]) &&
+                      isDeliveryForToday &&
+                      pageType != pagesState[5])
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -602,7 +606,9 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                       ],
                     ),
                   if (!(pageType == pagesState[1])) const Gap(30),
-                  if (!(pageType == pagesState[1]) && isDeliveryForToday)
+                  if (!(pageType == pagesState[1]) &&
+                      isDeliveryForToday &&
+                      pageType != pagesState[5])
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

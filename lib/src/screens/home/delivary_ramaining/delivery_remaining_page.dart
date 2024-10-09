@@ -298,7 +298,9 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
         Get.to(() => InvoiceListPage(
               dateTime: dateTime,
               result: result,
-              totalAmount: amount.toString(),
+              totalAmount: (pageType == pagesState[5])
+                  ? dueAmount.toString()
+                  : amount.toString(),
             ));
       },
       child: Container(

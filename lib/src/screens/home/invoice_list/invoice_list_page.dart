@@ -47,10 +47,12 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
 
   String pageType = '';
   late double due = widget.result.invoiceList![0].previousDueAmmount ?? 0;
+  late String totalDueAmount;
 
   @override
   void initState() {
     pageType = deliveryRemaningController.pageType.value;
+    totalDueAmount = widget.totalAmount;
     super.initState();
   }
 
@@ -128,15 +130,16 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                         "Route Name",
                         widget.result.routeName ?? "",
                       ),
-                      divider,
-                      getRowWidgetForDetailsBox(
-                        "Partner ID",
-                        widget.result.partner ?? "",
-                      ),
+
                       divider,
                       getRowWidgetForDetailsBox(
                         "Da Name",
                         widget.result.daName ?? "",
+                      ),
+                      divider,
+                      getRowWidgetForDetailsBox(
+                        "Partner ID",
+                        widget.result.partner ?? "",
                       ),
                       divider,
                       getRowWidgetForDetailsBox(
@@ -188,8 +191,10 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                       ),
                       divider,
                       getRowWidgetForDetailsBox(
-                        "Total Amount",
-                        double.parse(widget.totalAmount).toStringAsFixed(2),
+                        (pageType == pagesState[5])
+                            ? "Total Due Amount"
+                            : "Total Amount",
+                        double.parse(totalDueAmount).toStringAsFixed(2),
                       ),
                       if (pageType != pagesState[5]) divider,
                       if (pageType != pagesState[5])
@@ -264,8 +269,10 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                   invioceNo:
                                       (invoiceList[index].billingDocNo ?? 0)
                                           .toString(),
-                                  totalAmount:
-                                      (amount - returnAmount).toString(),
+                                  totalAmount: pageType == pagesState[5]
+                                      ? (invoiceList[index].dueAmount ?? 0)
+                                          .toStringAsFixed(2)
+                                      : (amount - returnAmount).toString(),
                                   index: index,
                                   dateOfDelivery: widget.dateTime,
                                 ),
@@ -292,20 +299,55 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                   topRight: Radius.circular(10),
                                 ),
                               ),
-                              child: Row(
+                              child: Column(
                                 children: [
-                                  Text(
-                                    (invoiceList[index].billingDocNo ?? 0)
-                                        .toString(),
-                                    style: style,
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        "Billing Doc No:",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const Gap(7),
+                                      Text(
+                                        (invoiceList[index].billingDocNo ?? 0)
+                                            .toString(),
+                                        style: style,
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        invoiceList[index].deliveryStatus ?? "",
+                                        style: style.copyWith(
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                  const Spacer(),
-                                  Text(
-                                    invoiceList[index].deliveryStatus ?? "",
-                                    style: style.copyWith(
-                                      color: Colors.grey.shade600,
+                                  if (pageType == pagesState[5])
+                                    Row(
+                                      children: [
+                                        const Text(
+                                          "Billing Date: ",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const Gap(5),
+                                        Text(
+                                          invoiceList[index]
+                                              .billingDate!
+                                              .toIso8601String()
+                                              .split('T')[0],
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey.shade700,
+                                          ),
+                                        )
+                                      ],
                                     ),
-                                  )
                                 ],
                               ),
                             ),
@@ -671,7 +713,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                     )
                   ],
                 ),
-                Gap(15),
+                const Gap(15),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -761,9 +803,18 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                   loadingTextController.currentState.value = 0;
                                   loadingTextController.loadingText.value =
                                       'Successful';
-                                  invoiceListController.invoiceList.removeAt(
-                                    index,
-                                  );
+                                  double due = dueController.previousDue.value -
+                                      dueController.collectAmount.value;
+                                  if (due == 0) {
+                                    invoiceListController.invoiceList.removeAt(
+                                      index,
+                                    );
+                                  } else {
+                                    setState(() {
+                                      totalDueAmount = due.toString();
+                                      invoiceList[index].dueAmount = due;
+                                    });
+                                  }
                                   if (Navigator.canPop(context)) {
                                     Navigator.pop(context);
                                   }
@@ -786,7 +837,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                         }
                         Fluttertoast.showToast(msg: "Amount is not valid");
                       },
-                      child: Text("Collect")),
+                      child: const Text("Collect")),
                 )
               ],
             ),
