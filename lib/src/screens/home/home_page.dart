@@ -15,8 +15,6 @@ import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:rdl_radiant/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
 import 'package:rdl_radiant/src/core/background/socket_manager/socket_manager.dart';
-import 'package:rdl_radiant/src/screens/home/conveyance/controller/conveyance_data_controller.dart';
-import 'package:rdl_radiant/src/screens/home/conveyance/conveyance_page.dart';
 import 'package:rdl_radiant/src/screens/home/dash_board_controller/dash_board_model.dart';
 import 'package:rdl_radiant/src/screens/home/dash_board_controller/dashboard_controller_getx.dart';
 import 'package:rdl_radiant/src/screens/home/delivary_ramaining/controller/delivery_remaning_controller.dart';
@@ -27,7 +25,6 @@ import 'package:rdl_radiant/src/widgets/loading/loading_popup_widget.dart';
 import 'package:rdl_radiant/src/widgets/loading/loading_text_controller.dart';
 
 import '../../core/background/background_setup.dart';
-import 'conveyance/model/conveyance_data_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -212,22 +209,6 @@ class _HomePageState extends State<HomePage> {
                             0,
                             onPressed: callReturnedList,
                           ),
-                          getCardView(
-                            0.toString(),
-                            const Icon(Icons.emoji_transportation, size: 40),
-                            'Conveyance',
-                            0,
-                            onPressed: callConveyanceList,
-                          ),
-                          getCardView(
-                            0.toString(),
-                            Image.asset(
-                              "assets/overdue.jpg",
-                            ),
-                            'Overdue',
-                            0,
-                            onPressed: callOverDueList,
-                          ),
                         ],
                       );
                     } else {
@@ -277,22 +258,6 @@ class _HomePageState extends State<HomePage> {
                           'Returned',
                           0,
                           onPressed: callReturnedList,
-                        ),
-                        getCardView(
-                          null,
-                          const Icon(Icons.emoji_transportation, size: 40),
-                          'Conveyance',
-                          0,
-                          onPressed: callConveyanceList,
-                        ),
-                        getCardView(
-                          null,
-                          Image.asset(
-                            "assets/overdue.jpg",
-                          ),
-                          'Overdue',
-                          0,
-                          onPressed: callOverDueList,
                         ),
                       ],
                     );
@@ -460,71 +425,6 @@ class _HomePageState extends State<HomePage> {
       controller.deliveryRemaing.value.result ??= [];
       controller.constDeliveryRemaing.value.result ??= [];
       controller.pageType.value = 'Delivery Remaining';
-      await Future.delayed(const Duration(milliseconds: 100));
-      if (Navigator.canPop(context)) {
-        Navigator.pop(context);
-      }
-      await Get.to(
-        () => const DeliveryRemainingPage(),
-      );
-      getDashBoardData();
-    } else {
-      loadingTextController.currentState.value = -1;
-      loadingTextController.loadingText.value = 'Something went worng';
-    }
-  }
-
-  void callOverDueList() async {
-    final box = Hive.box('info');
-    final url = Uri.parse(
-      "$base$getOverdueList/${box.get('sap_id')}",
-    );
-
-    loadingTextController.currentState.value = 0;
-    loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
-    showCoustomPopUpLoadingDialog(context, isCuputino: true);
-
-    final response = await http.get(url);
-
-    if (kDebugMode) {
-      log("Got Delivery Remaning List");
-      log(response.statusCode.toString());
-      log(response.body);
-    }
-
-    if (response.statusCode == 200) {
-      loadingTextController.currentState.value = 1;
-      loadingTextController.loadingText.value = 'Successful';
-
-      final modelFormHTTPResponse = DeliveryRemaing.fromJson(response.body);
-      final patners = modelFormHTTPResponse.result!;
-      Map<String, List<Result>> mapForMarge = {};
-      for (var patner in patners) {
-        List<Result> previosList = mapForMarge[patner.partner] ?? [];
-        if (previosList.isNotEmpty) {
-          previosList[0].invoiceList!.addAll(patner.invoiceList!);
-          mapForMarge[patner.partner!] = previosList;
-        } else {
-          previosList.add(patner);
-          mapForMarge[patner.partner!] = previosList;
-        }
-      }
-
-      modelFormHTTPResponse.result = [];
-      mapForMarge.forEach(
-        (key, value) {
-          modelFormHTTPResponse.result!.add(value[0]);
-        },
-      );
-
-      final controller = Get.put(
-        DeliveryRemaningController(modelFormHTTPResponse),
-      );
-      controller.deliveryRemaing.value = modelFormHTTPResponse;
-      controller.constDeliveryRemaing.value = modelFormHTTPResponse;
-      controller.deliveryRemaing.value.result ??= [];
-      controller.constDeliveryRemaing.value.result ??= [];
-      controller.pageType.value = 'Overdue';
       await Future.delayed(const Duration(milliseconds: 100));
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
@@ -715,51 +615,6 @@ class _HomePageState extends State<HomePage> {
       }
       await Get.to(
         () => const DeliveryRemainingPage(),
-      );
-      getDashBoardData();
-    } else {
-      loadingTextController.currentState.value = -1;
-      loadingTextController.loadingText.value = 'Something went worng';
-    }
-  }
-
-  void callConveyanceList() async {
-    final box = Hive.box('info');
-    final url = Uri.parse(
-      "$base$conveyanceList?da_code=${box.get('sap_id')}&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
-    );
-
-    loadingTextController.currentState.value = 0;
-    loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
-    showCoustomPopUpLoadingDialog(context, isCuputino: true);
-
-    final response = await http.get(url);
-    log(response.body);
-
-    if (response.statusCode == 200) {
-      loadingTextController.currentState.value = 1;
-      loadingTextController.loadingText.value = 'Successful';
-
-      dev.log("Message with success: ${response.body}");
-
-      Map decoded = jsonDecode(response.body);
-
-      final conveyanceDataController = Get.put(ConveyanceDataController());
-      var temList = <SavePharmaceuticalsLocationData>[];
-      List<Map> tem = List<Map>.from(decoded['result']);
-      for (int i = 0; i < tem.length; i++) {
-        temList.add(SavePharmaceuticalsLocationData.fromMap(
-            Map<String, dynamic>.from(tem[i])));
-      }
-      conveyanceDataController.convenceData.value = temList.reversed.toList();
-
-      await Future.delayed(const Duration(milliseconds: 100));
-      if (Navigator.canPop(context)) {
-        Navigator.pop(context);
-      }
-
-      await Get.to(
-        () => const ConveyancePage(),
       );
       getDashBoardData();
     } else {
