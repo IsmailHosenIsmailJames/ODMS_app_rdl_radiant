@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:get/get_utils/src/extensions/double_extensions.dart';
+
 class DeliveryData {
   String? billingDocNo;
   String? billingDate;
@@ -211,11 +213,11 @@ class Delivery {
         "quantity": quantity,
         "tp": tp,
         "vat": vat,
-        "net_val": netVal,
+        "net_val": netVal?.toPrecision(2),
         "delivery_quantity": deliveryQuantity,
-        "delivery_net_val": deliveryNetVal,
+        "delivery_net_val": deliveryNetVal?.toPrecision(2),
         "return_quantity": returnQuantity,
-        "return_net_val": returnNetVal,
+        "return_net_val": returnNetVal?.toPrecision(2),
         "id": id,
       };
 }

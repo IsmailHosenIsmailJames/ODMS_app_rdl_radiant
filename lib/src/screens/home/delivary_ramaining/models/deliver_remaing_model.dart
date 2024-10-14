@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
+
 class DeliveryRemaing {
   bool? success;
   List<Result>? result;
@@ -382,33 +384,36 @@ class ProductList {
         id: json["id"],
         matnr: json["matnr"],
         quantity: json["quantity"],
-        tp: double.parse('${json['tp'] ?? 0}'),
-        vat: double.parse('${json['vat'] ?? 0}'),
-        netVal: double.parse('${json['net_val'] ?? 0}'),
+        tp: double.parse('${json['tp'] ?? 0}').toPrecision(2),
+        vat: double.parse('${json['vat'] ?? 0}').toPrecision(2),
+        netVal: double.parse('${json['net_val'] ?? 0}').toPrecision(2),
         batch: json["batch"],
         materialName: json["material_name"],
         brandDescription: json["brand_description"],
         brandName: json["brand_name"],
         deliveryQuantity: double.parse("${json['delivery_quantity'] ?? 0}"),
-        deliveryNetVal: double.parse("${json['delivery_net_val'] ?? 0}"),
-        returnQuantity: double.parse("${json['return_quantity'] ?? 0}"),
-        returnNetVal: double.parse("${json['return_net_val'] ?? 0}"),
+        deliveryNetVal:
+            double.parse("${json['delivery_net_val'] ?? 0}").toPrecision(2),
+        returnQuantity:
+            double.parse("${json['return_quantity'] ?? 0}").toPrecision(2),
+        returnNetVal:
+            double.parse("${json['return_net_val'] ?? 0}").toPrecision(2),
       );
 
   Map<String, dynamic> toMap() => {
         "id": id,
         "matnr": matnr,
         "quantity": quantity,
-        "tp": tp,
-        "vat": vat,
-        "net_val": netVal,
+        "tp": tp?.toPrecision(2),
+        "vat": vat?.toPrecision(2),
+        "net_val": netVal?.toPrecision(2),
         "batch": batch,
         "material_name": materialName,
         "brand_description": brandDescription,
         "brand_name": brandName,
         "delivery_quantity": deliveryQuantity,
-        "delivery_net_val": deliveryNetVal,
-        "return_quantity": returnQuantity,
-        "return_net_val": returnNetVal,
+        "delivery_net_val": deliveryNetVal?.toPrecision(2),
+        "return_quantity": returnQuantity?.toPrecision(2),
+        "return_net_val": returnNetVal?.toPrecision(2),
       };
 }

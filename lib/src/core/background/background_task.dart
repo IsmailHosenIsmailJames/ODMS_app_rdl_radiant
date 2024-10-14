@@ -23,7 +23,7 @@ class MyTaskHandler extends TaskHandler {
 
   // Called when the task is started.
   @override
-  void onStart(DateTime timestamp) {
+  Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
     if (kDebugMode) {
       print('onStart');
     }
@@ -56,7 +56,7 @@ class MyTaskHandler extends TaskHandler {
 
   // Called when the task is destroyed.
   @override
-  void onDestroy(DateTime timestamp) {
+  Future<void> onDestroy(DateTime timestamp) async {
     if (kDebugMode) {
       print('onDestroy');
     }
