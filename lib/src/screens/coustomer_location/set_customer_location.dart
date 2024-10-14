@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:rdl_radiant/src/screens/coustomer_location/customer_details.dart';
@@ -80,7 +81,7 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
       int? limit}) async {
     try {
       http.Response response = await http.get(Uri.parse(
-          "$base$getCoustomerList${page == null ? "" : "?page=$page"}${searchName == null ? "" : "&name1=$searchName"}${searchPartner == null ? "" : "&partner=$searchPartner"}${limit == null ? "" : "&limit=$limit"}"));
+          "$base$getCoustomerList/${Hive.box('info').get('sap_id')}${page == null ? "" : "?page=$page"}${searchName == null ? "" : "&name1=$searchName"}${searchPartner == null ? "" : "&partner=$searchPartner"}${limit == null ? "" : "&limit=$limit"}"));
       customerListModel = customerListModel ?? [];
       if (response.statusCode == 200) {
         final decodedData = jsonDecode(response.body);
