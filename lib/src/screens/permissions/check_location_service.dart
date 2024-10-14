@@ -8,20 +8,20 @@ import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
-import '../attendence/attendence_page.dart';
+import '../attendance/attendance_page.dart';
 import '../home/home_page.dart';
-import 'cheak_and_request_permissions.dart';
+import 'check_and_request_permissions.dart';
 
-class CheakLocationService extends StatefulWidget {
+class CheckLocationService extends StatefulWidget {
   final Map<String, dynamic> responseMapData;
-  const CheakLocationService({super.key, required this.responseMapData});
+  const CheckLocationService({super.key, required this.responseMapData});
 
   @override
-  State<CheakLocationService> createState() => _CheakLocationServiceState();
+  State<CheckLocationService> createState() => _CheckLocationServiceState();
 }
 
-class _CheakLocationServiceState extends State<CheakLocationService> {
-  String? accestStatusText;
+class _CheckLocationServiceState extends State<CheckLocationService> {
+  String? accessStatusText;
   @override
   void initState() {
     Geolocator.getServiceStatusStream().listen(
@@ -48,12 +48,12 @@ class _CheakLocationServiceState extends State<CheakLocationService> {
       } else {
         unawaited(
           Get.offAll(
-            () => const AttendencePage(),
+            () => const AttendancePage(),
           ),
         );
       }
     } else {
-      await Get.off(() => const CheakAndRequestPermissions());
+      await Get.off(() => const CheckAndRequestPermissions());
     }
     if (kDebugMode) {
       print(widget.responseMapData);
@@ -61,7 +61,7 @@ class _CheakLocationServiceState extends State<CheakLocationService> {
 
     unawaited(
       Fluttertoast.showToast(
-        msg: 'Login Successfull',
+        msg: 'Login Successfully',
         toastLength: Toast.LENGTH_LONG,
       ),
     );
@@ -119,8 +119,8 @@ class _CheakLocationServiceState extends State<CheakLocationService> {
             ),
           ),
           const Gap(30),
-          Text(accestStatusText ?? ''),
-          if (accestStatusText != null)
+          Text(accessStatusText ?? ''),
+          if (accessStatusText != null)
             Text(
               'Go to app settings and allow all the time location access',
               style: TextStyle(

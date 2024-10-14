@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class CoustomerDetailsModel {
+class CustomerListModel {
   String? partner;
   String? name1;
   String? name2;
@@ -17,13 +17,8 @@ class CoustomerDetailsModel {
   String? drugRegNo;
   String? customerGrp;
   String? transPZone;
-  DateTime? createdOn;
-  String? createdAt;
-  String? updatedAt;
-  double? latitude;
-  double? longitude;
 
-  CoustomerDetailsModel({
+  CustomerListModel({
     this.partner,
     this.name1,
     this.name2,
@@ -40,14 +35,9 @@ class CoustomerDetailsModel {
     this.drugRegNo,
     this.customerGrp,
     this.transPZone,
-    this.createdOn,
-    this.createdAt,
-    this.updatedAt,
-    this.latitude,
-    this.longitude,
   });
 
-  CoustomerDetailsModel copyWith({
+  CustomerListModel copyWith({
     String? partner,
     String? name1,
     String? name2,
@@ -64,13 +54,8 @@ class CoustomerDetailsModel {
     String? drugRegNo,
     String? customerGrp,
     String? transPZone,
-    DateTime? createdOn,
-    String? createdAt,
-    String? updatedAt,
-    double? latitude,
-    double? longitude,
   }) =>
-      CoustomerDetailsModel(
+      CustomerListModel(
         partner: partner ?? this.partner,
         name1: name1 ?? this.name1,
         name2: name2 ?? this.name2,
@@ -87,20 +72,15 @@ class CoustomerDetailsModel {
         drugRegNo: drugRegNo ?? this.drugRegNo,
         customerGrp: customerGrp ?? this.customerGrp,
         transPZone: transPZone ?? this.transPZone,
-        createdOn: createdOn ?? this.createdOn,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        latitude: latitude ?? this.latitude,
-        longitude: longitude ?? this.longitude,
       );
 
-  factory CoustomerDetailsModel.fromJson(String str) =>
-      CoustomerDetailsModel.fromMap(json.decode(str));
+  factory CustomerListModel.fromJson(String str) =>
+      CustomerListModel.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory CoustomerDetailsModel.fromMap(Map<String, dynamic> json) =>
-      CoustomerDetailsModel(
+  factory CustomerListModel.fromMap(Map<String, dynamic> json) =>
+      CustomerListModel(
         partner: json["partner"],
         name1: json["name1"],
         name2: json["name2"],
@@ -117,13 +97,6 @@ class CoustomerDetailsModel {
         drugRegNo: json["drug_reg_no"],
         customerGrp: json["customer_grp"],
         transPZone: json["trans_p_zone"],
-        createdOn: json["created_on"] == null
-            ? null
-            : DateTime.parse(json["created_on"]),
-        createdAt: json["created_at"],
-        updatedAt: json["updated_at"],
-        latitude: json["latitude"]?.toDouble(),
-        longitude: json["longitude"]?.toDouble(),
       );
 
   Map<String, dynamic> toMap() => {
@@ -143,11 +116,5 @@ class CoustomerDetailsModel {
         "drug_reg_no": drugRegNo,
         "customer_grp": customerGrp,
         "trans_p_zone": transPZone,
-        "created_on":
-            "${createdOn!.year.toString().padLeft(4, '0')}-${createdOn!.month.toString().padLeft(2, '0')}-${createdOn!.day.toString().padLeft(2, '0')}",
-        "created_at": createdAt,
-        "updated_at": updatedAt,
-        "latitude": latitude,
-        "longitude": longitude,
       };
 }

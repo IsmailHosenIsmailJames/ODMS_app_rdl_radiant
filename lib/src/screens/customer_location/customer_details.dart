@@ -13,10 +13,10 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
-import 'package:rdl_radiant/src/screens/coustomer_location/model/coustomer_details_model.dart';
+import 'package:rdl_radiant/src/screens/customer_location/model/customer_details_model.dart';
 
 import '../../theme/text_scaler_theme.dart';
-import '../../widgets/coomon_widgets_function.dart';
+import '../../widgets/common_widgets_function.dart';
 import '../../widgets/loading/loading_popup_widget.dart';
 import '../../widgets/loading/loading_text_controller.dart';
 import '../home/conveyance/conveyance_page.dart';
@@ -36,17 +36,17 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
     super.initState();
   }
 
-  CoustomerDetailsModel? coustomerDetailsModel;
+  CustomerDetailsModel? customerDetailsModel;
   bool isUnsuccessful = false;
 
   Future<void> getData() async {
     String paternerID = widget.paternerID;
     http.Response response = await http
-        .get(Uri.parse("$base$getCoustomerDetailsByPartnerID/$paternerID"));
+        .get(Uri.parse("$base$getCustomerDetailsByPartnerID/$paternerID"));
     if (response.statusCode == 200) {
       Map decodedData = jsonDecode(response.body);
       if (decodedData['success'] == true) {
-        coustomerDetailsModel = CoustomerDetailsModel.fromMap(
+        customerDetailsModel = CustomerDetailsModel.fromMap(
             Map<String, dynamic>.from(decodedData['result']));
         setState(() {});
         return;
@@ -72,7 +72,7 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
         appBar: AppBar(
           title: const Text("Customer Details"),
         ),
-        body: coustomerDetailsModel == null || isUnsuccessful
+        body: customerDetailsModel == null || isUnsuccessful
             ? Center(
                 child: LoadingAnimationWidget.threeArchedCircle(
                   color: Colors.green,
@@ -92,17 +92,17 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                     child: Column(
                       children: [
                         getRowWidgetForDetailsBox(
-                            "Partner ID", coustomerDetailsModel?.partner),
+                            "Partner ID", customerDetailsModel?.partner),
                         dividerWhite,
                         getRowWidgetForDetailsBox(
-                            "Pharmacy Name", coustomerDetailsModel?.name1),
+                            "Pharmacy Name", customerDetailsModel?.name1),
                         dividerWhite,
                         getRowWidgetForDetailsBox("Customer Name",
-                            coustomerDetailsModel?.contactPerson),
+                            customerDetailsModel?.contactPerson),
                         dividerWhite,
                         getRowWidgetForDetailsBox(
-                          "Coustomer Mobile",
-                          coustomerDetailsModel?.mobileNo,
+                          "Customer Mobile",
+                          customerDetailsModel?.mobileNo,
                           optionalWidgetsAtLast: SizedBox(
                             height: 23,
                             width: 50,
@@ -110,11 +110,11 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                               padding: EdgeInsets.zero,
                               onPressed: () {
                                 FlutterClipboard.copy(
-                                  coustomerDetailsModel?.mobileNo ?? "",
+                                  customerDetailsModel?.mobileNo ?? "",
                                 ).then((value) {
                                   Fluttertoast.showToast(
-                                      msg: coustomerDetailsModel?.mobileNo ??
-                                          "");
+                                      msg:
+                                          customerDetailsModel?.mobileNo ?? "");
                                 });
                               },
                               icon: const Icon(
@@ -126,42 +126,41 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                         ),
                         dividerWhite,
                         getRowWidgetForDetailsBox(
-                            "Street", coustomerDetailsModel?.street),
-                        if ((coustomerDetailsModel?.street1 ?? "").isNotEmpty)
+                            "Street", customerDetailsModel?.street),
+                        if ((customerDetailsModel?.street1 ?? "").isNotEmpty)
                           const Divider(
                             color: Colors.white,
                             height: 1,
                           ),
-                        if ((coustomerDetailsModel?.street1 ?? "").isNotEmpty)
+                        if ((customerDetailsModel?.street1 ?? "").isNotEmpty)
                           getRowWidgetForDetailsBox(
-                              "Street 1", coustomerDetailsModel?.street1),
-                        if ((coustomerDetailsModel?.street2 ?? "").isNotEmpty)
+                              "Street 1", customerDetailsModel?.street1),
+                        if ((customerDetailsModel?.street2 ?? "").isNotEmpty)
                           const Divider(
                             color: Colors.white,
                             height: 1,
                           ),
-                        if ((coustomerDetailsModel?.street2 ?? "").isNotEmpty)
+                        if ((customerDetailsModel?.street2 ?? "").isNotEmpty)
                           getRowWidgetForDetailsBox(
-                              "Street 2", coustomerDetailsModel?.street2),
+                              "Street 2", customerDetailsModel?.street2),
                         dividerWhite,
                         getRowWidgetForDetailsBox(
-                            "District", coustomerDetailsModel?.district),
+                            "District", customerDetailsModel?.district),
                         dividerWhite,
                         getRowWidgetForDetailsBox(
-                            "Upazilla", coustomerDetailsModel?.upazilla),
+                            "Upazila", customerDetailsModel?.upazilla),
                         dividerWhite,
-                        getRowWidgetForDetailsBox("Trans. P. zone",
-                            coustomerDetailsModel?.transPZone),
+                        getRowWidgetForDetailsBox(
+                            "Trans. P. zone", customerDetailsModel?.transPZone),
                         dividerWhite,
                         getRowWidgetForDetailsBox(
                             "Latitude",
-                            (coustomerDetailsModel?.latitude ??
-                                    "Not Data Found")
+                            (customerDetailsModel?.latitude ?? "Not Data Found")
                                 .toString()),
                         dividerWhite,
                         getRowWidgetForDetailsBox(
                             "Longitude",
-                            (coustomerDetailsModel?.longitude ??
+                            (customerDetailsModel?.longitude ??
                                     "Not Data Found")
                                 .toString()),
                       ],
@@ -170,8 +169,8 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                   const Gap(30),
                   Center(
                     child: Text(
-                      (coustomerDetailsModel?.longitude == null ||
-                              coustomerDetailsModel?.latitude == null)
+                      (customerDetailsModel?.longitude == null ||
+                              customerDetailsModel?.latitude == null)
                           ? "Location data not found."
                           : "Already have location data.",
                       style: const TextStyle(
@@ -190,33 +189,33 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                         loadingTextController.loadingText.value =
                             'Getting your Location\nPlease wait...';
 
-                        showCoustomPopUpLoadingDialog(context,
-                            isCuputino: true);
+                        showCustomPopUpLoadingDialog(context,
+                            isCupertino: true);
 
                         Position position = await Geolocator.getCurrentPosition(
                             locationSettings: AndroidSettings(
                           accuracy: LocationAccuracy.best,
                           forceLocationManager: true,
                         ));
-                        List<Placemark> placemarks =
+                        List<Placemark> placeMarks =
                             await placemarkFromCoordinates(
                           position.latitude,
                           position.longitude,
                         );
-                        List<String> plackeMarkImportantData =
-                            analyzePlackeMark(placemarks);
+                        List<String> placeMarkImportantData =
+                            analyzePlaceMark(placeMarks);
 
                         if (Navigator.canPop(context)) {
                           Navigator.pop(context);
                         }
 
-                        if (coustomerDetailsModel != null) {
+                        if (customerDetailsModel != null) {
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
                               title: const Text("Are you sure?"),
                               content: getAddressWidget(
-                                  plackeMarkImportantData,
+                                  placeMarkImportantData,
                                   LatLng(
                                       position.latitude, position.longitude)),
                               actions: [
@@ -239,10 +238,10 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                                     onPressed: () {
                                       final box = Hive.box('info');
 
-                                      callSetLocationOfCoustomer(
+                                      callSetLocationOfCustomer(
                                           position,
                                           box.get('sap_id').toString(),
-                                          coustomerDetailsModel!);
+                                          customerDetailsModel!);
                                     },
                                     child: const Text("Yes"),
                                   ),
@@ -254,8 +253,8 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                       },
                       icon: const Icon(Icons.location_on),
                       label: Text(
-                        (coustomerDetailsModel?.longitude == null ||
-                                coustomerDetailsModel?.latitude == null)
+                        (customerDetailsModel?.longitude == null ||
+                                customerDetailsModel?.latitude == null)
                             ? "Set Location now!"
                             : "Update Location now!",
                         style: const TextStyle(
@@ -271,17 +270,17 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
     );
   }
 
-  Future<void> callSetLocationOfCoustomer(Position position, String sapID,
-      CoustomerDetailsModel coustomerDetailsModel) async {
+  Future<void> callSetLocationOfCustomer(Position position, String sapID,
+      CustomerDetailsModel customerDetailsModel) async {
     Navigator.pop(context);
     loadingTextController.currentState.value = 0;
     loadingTextController.loadingText.value = 'Please wait...';
 
     final box = Hive.box('info');
 
-    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+    showCustomPopUpLoadingDialog(context, isCupertino: true);
 
-    final uri = Uri.parse(base + setCoustomerLatLon);
+    final uri = Uri.parse(base + setCustomerLatLon);
     final response = await http.post(uri,
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
@@ -294,7 +293,7 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
       final decoded = jsonDecode(response.body);
       log(decoded.toString());
       loadingTextController.currentState.value = 1;
-      loadingTextController.loadingText.value = 'Successfull...';
+      loadingTextController.loadingText.value = 'Successful...';
       await Future.delayed(const Duration(milliseconds: 100));
       Navigator.pop(context);
       Navigator.pop(context);

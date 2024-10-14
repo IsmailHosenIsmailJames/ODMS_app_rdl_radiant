@@ -173,7 +173,7 @@ class _MyMapViewState extends State<MyMapView> {
                   ),
                 );
               },
-              // if you want to add seperator between list items
+              // if you want to add separator between list items
               seperatedBuilder: const Divider(),
               // want to show close icon
               isCrossBtnShown: true,

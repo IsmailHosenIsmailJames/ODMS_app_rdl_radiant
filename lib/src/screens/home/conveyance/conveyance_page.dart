@@ -74,16 +74,16 @@ class _ConveyancePageState extends State<ConveyancePage> {
         ),
         body: GetX<ConveyanceDataController>(
           builder: (controller) {
-            var convenceData = controller.convenceData;
+            var convinceData = controller.convinceData;
             bool isAnyLive = false;
 
-            for (var e in convenceData) {
+            for (var e in convinceData) {
               if (isAnyLive == false) isAnyLive = (e.journeyStatus == 'live');
             }
 
             log(isAnyLive.toString());
 
-            if (convenceData.isEmpty) {
+            if (convinceData.isEmpty) {
               return Column(
                 children: [
                   const Spacer(),
@@ -163,9 +163,9 @@ class _ConveyancePageState extends State<ConveyancePage> {
                       ),
                       Expanded(
                           child: ListView.builder(
-                        itemCount: controller.convenceData.length,
+                        itemCount: controller.convinceData.length,
                         itemBuilder: (context, index) {
-                          var current = controller.convenceData[index];
+                          var current = controller.convinceData[index];
                           return Container(
                             color: index % 2 == 0
                                 ? Colors.white
@@ -306,9 +306,9 @@ class _ConveyancePageState extends State<ConveyancePage> {
                       Expanded(
                         child: ListView.builder(
                           padding: const EdgeInsets.all(10),
-                          itemCount: convenceData.length,
+                          itemCount: convinceData.length,
                           itemBuilder: (context, index) {
-                            final current = convenceData[index];
+                            final current = convinceData[index];
                             String transportMode = current.transportMode
                                 .toString()
                                 .replaceAll('[', '')
@@ -316,10 +316,10 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                 .replaceAll('"', '')
                                 .replaceAll(',', ', ');
                             DateTime? staringDate = DateTime.tryParse(controller
-                                .convenceData[index].startJourneyDateTime
+                                .convinceData[index].startJourneyDateTime
                                 .toString());
                             // DateTime? endDate = DateTime.tryParse(controller
-                            //     .convenceData[index].endJourneyDateTime
+                            //     .convinceData[index].endJourneyDateTime
                             //     .toString());
 
                             bool isLive = current.journeyStatus != 'end';
@@ -353,18 +353,18 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                   FutureBuilder(
                                     future: placemarkFromCoordinates(
                                       double.parse(controller
-                                          .convenceData[index]
+                                          .convinceData[index]
                                           .startJourneyLatitude!),
                                       double.parse(controller
-                                          .convenceData[index]
+                                          .convinceData[index]
                                           .startJourneyLongitude!),
                                     ),
                                     builder: (context, snapshot) {
                                       if (snapshot.hasData == false) {
                                         return const SizedBox();
                                       }
-                                      List<String> plackeMarkImportantData =
-                                          analyzePlackeMark(snapshot.data!);
+                                      List<String> placeMarkImportantData =
+                                          analyzePlaceMark(snapshot.data!);
 
                                       return Column(
                                         mainAxisAlignment:
@@ -403,16 +403,16 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                             ],
                                           ),
                                           getAddressWidget(
-                                            plackeMarkImportantData,
+                                            placeMarkImportantData,
                                             LatLng(
                                               double.parse(controller
-                                                  .convenceData[index]
+                                                  .convinceData[index]
                                                   .startJourneyLatitude!),
                                               double.parse(controller
-                                                  .convenceData[index]
+                                                  .convinceData[index]
                                                   .startJourneyLongitude!),
                                             ),
-                                            showTitile: false,
+                                            showTitle: false,
                                           ),
                                         ],
                                       );
@@ -427,9 +427,9 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                             current.endJourneyLongitude ?? '0'),
                                       ),
                                       builder: (context, snapshot) {
-                                        List<String>? plackeMarkImportantData =
+                                        List<String>? placeMarkImportantData =
                                             snapshot.hasData
-                                                ? analyzePlackeMark(
+                                                ? analyzePlaceMark(
                                                     snapshot.data!)
                                                 : null;
 
@@ -452,7 +452,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                                   ),
                                                 ],
                                               ),
-                                            plackeMarkImportantData == null
+                                            placeMarkImportantData == null
                                                 ? const Row(
                                                     children: [
                                                       Text(
@@ -465,20 +465,20 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                                     ],
                                                   )
                                                 : getAddressWidget(
-                                                    plackeMarkImportantData,
+                                                    placeMarkImportantData,
                                                     LatLng(
                                                       double.parse(controller
-                                                              .convenceData[
+                                                              .convinceData[
                                                                   index]
                                                               .endJourneyLatitude ??
                                                           '0'),
                                                       double.parse(controller
-                                                              .convenceData[
+                                                              .convinceData[
                                                                   index]
                                                               .endJourneyLongitude ??
                                                           '0'),
                                                     ),
-                                                    showTitile: false,
+                                                    showTitle: false,
                                                   ),
                                           ],
                                         );
@@ -500,7 +500,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                           Get.to(
                                             () => FinishConveyance(
                                               conveyanceData:
-                                                  convenceData.value[index],
+                                                  convinceData.value[index],
                                             ),
                                           );
                                         },
@@ -593,7 +593,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
             loadingTextController.loadingText.value =
                 'Getting your Location\nPlease wait...';
 
-            showCoustomPopUpLoadingDialog(context, isCuputino: true);
+            showCustomPopUpLoadingDialog(context, isCupertino: true);
 
             Position position = await Geolocator.getCurrentPosition(
                 locationSettings: AndroidSettings(
@@ -601,12 +601,11 @@ class _ConveyancePageState extends State<ConveyancePage> {
               forceLocationManager: true,
               distanceFilter: 10,
             ));
-            List<Placemark> placemarks = await placemarkFromCoordinates(
+            List<Placemark> placeMarks = await placemarkFromCoordinates(
               position.latitude,
               position.longitude,
             );
-            List<String> plackeMarkImportantData =
-                analyzePlackeMark(placemarks);
+            List<String> placeMarkImportantData = analyzePlaceMark(placeMarks);
 
             if (Navigator.canPop(context)) {
               Navigator.pop(context);
@@ -616,7 +615,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
               context: context,
               builder: (context) => AlertDialog(
                 title: const Text("Are you sure?"),
-                content: getAddressWidget(plackeMarkImportantData,
+                content: getAddressWidget(placeMarkImportantData,
                     LatLng(position.latitude, position.longitude)),
                 actions: [
                   SizedBox(
@@ -659,7 +658,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
     loadingTextController.currentState.value = 0;
     loadingTextController.loadingText.value = 'Please wait...';
 
-    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+    showCustomPopUpLoadingDialog(context, isCupertino: true);
 
     final uri = Uri.parse(base + conveyanceStart);
     final response = await http.post(
@@ -696,7 +695,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
             temList.add(SavePharmaceuticalsLocationData.fromMap(
                 Map<String, dynamic>.from(tem[i])));
           }
-          conveyanceDataController.convenceData.value =
+          conveyanceDataController.convinceData.value =
               temList.reversed.toList();
         }
       }
@@ -728,7 +727,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
     if (pickedDateTime != null) {
       loadingTextController.currentState.value = 0;
       loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
-      showCoustomPopUpLoadingDialog(context, isCuputino: true);
+      showCustomPopUpLoadingDialog(context, isCupertino: true);
 
       final box = Hive.box('info');
       final url = Uri.parse(
@@ -750,7 +749,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
           temList.add(SavePharmaceuticalsLocationData.fromMap(
               Map<String, dynamic>.from(tem[i])));
         }
-        conveyanceDataController.convenceData.value = temList.reversed.toList();
+        conveyanceDataController.convinceData.value = temList.reversed.toList();
 
         await Future.delayed(const Duration(milliseconds: 100));
         if (Navigator.canPop(context)) {
@@ -758,7 +757,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
         }
       } else {
         loadingTextController.currentState.value = -1;
-        loadingTextController.loadingText.value = 'Something went worng';
+        loadingTextController.loadingText.value = 'Something went wrong';
 
         Fluttertoast.showToast(msg: "Something went wrong");
       }
@@ -766,7 +765,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
   }
 }
 
-List<String> analyzePlackeMark(List<Placemark> placemarks) {
+List<String> analyzePlaceMark(List<Placemark> placeMarks) {
   String street = '';
   String name = '';
   String administrativeArea = '';
@@ -774,7 +773,7 @@ List<String> analyzePlackeMark(List<Placemark> placemarks) {
   String locality = '';
   String country = '';
   String subLocality = '';
-  for (Placemark placemark in placemarks) {
+  for (Placemark placemark in placeMarks) {
     street +=
         '${placemark.street ?? ""}${(placemark.street ?? "").isEmpty ? "" : ", "}';
 
@@ -836,16 +835,16 @@ List<String> analyzePlackeMark(List<Placemark> placemarks) {
 }
 
 Widget getAddressWidget(
-  List<String> plackeMarkImportantData,
+  List<String> placeMarkImportantData,
   LatLng latLng, {
-  bool showTitile = true,
+  bool showTitle = true,
 }) {
-  String street = plackeMarkImportantData[0];
-  String administrativeArea = plackeMarkImportantData[2];
-  String subAdministrativeArea = plackeMarkImportantData[3];
-  String locality = plackeMarkImportantData[4];
-  String country = plackeMarkImportantData[5];
-  String subLocality = plackeMarkImportantData[6];
+  String street = placeMarkImportantData[0];
+  String administrativeArea = placeMarkImportantData[2];
+  String subAdministrativeArea = placeMarkImportantData[3];
+  String locality = placeMarkImportantData[4];
+  String country = placeMarkImportantData[5];
+  String subLocality = placeMarkImportantData[6];
   return Container(
     width: double.infinity,
     padding: const EdgeInsets.all(10),
@@ -862,7 +861,7 @@ Widget getAddressWidget(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (showTitile)
+        if (showTitle)
           const Text(
             "Your location is: ",
             style: TextStyle(

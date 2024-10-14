@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:rdl_radiant/src/screens/permissions/internet_connection_off_notify.dart';
 import 'package:rdl_radiant/src/widgets/loading/loading_text_controller.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light().copyWith(
+        textTheme: GoogleFonts.poppinsTextTheme(),
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.blue.shade900,
         ),
@@ -50,19 +52,19 @@ class MyApp extends StatelessWidget {
         if (connectivityResult.contains(ConnectivityResult.mobile) ||
             connectivityResult.contains(ConnectivityResult.ethernet) ||
             connectivityResult.contains(ConnectivityResult.wifi)) {
-          final userLoginDataCridential = Map<String, dynamic>.from(
+          final userLoginDataCredential = Map<String, dynamic>.from(
             Hive.box('info').get(
               'userLoginCradintial',
               defaultValue: Map<String, dynamic>.from({}),
             ) as Map,
           );
-          if (userLoginDataCridential.isNotEmpty) {
+          if (userLoginDataCredential.isNotEmpty) {
             unawaited(
-              loginAndGetJsonResponse(userLoginDataCridential).then(
+              loginAndGetJsonResponse(userLoginDataCredential).then(
                 (value) async {
                   await analyzeResponseLogin(
                     value,
-                    userLoginDataCridential,
+                    userLoginDataCredential,
                   );
                 },
               ),

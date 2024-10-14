@@ -2,18 +2,18 @@
 String base = 'http://128.199.199.164:6042';
 String version = "v1";
 String loginPath = '/api/$version/user_login';
-String registationPath = '/api/$version/user_registration';
+String registrationPath = '/api/$version/user_registration';
 String startWorkPath = '/api/$version/attendance/start_work';
 String dashBoardGetDataPath = '/api/$version/reports/dashboard';
 String endWorkPath = '/api/$version/attendance/end_work';
-String getDelivaryList = '/api/$version/delivery/v2/list';
+String getDeliveryList = '/api/$version/delivery/v2/list';
 String saveDeliveryList = '/api/$version/delivery/save';
 String cashCollectionList = '/api/$version/cash_collection/v2/list';
 String cashCollectionSave = '/api/$version/cash_collection/save';
-String getCoustomerList = '/api/$version/customer_location/list';
-String getCoustomerDetailsByPartnerID =
+String getCustomerList = '/api/$version/customer_location/list';
+String getCustomerDetailsByPartnerID =
     '/api/$version/customer_location/details';
-String setCoustomerLatLon =
+String setCustomerLatLon =
     "/api/$version/customer_location/customer_location_update";
 String conveyanceStart = "/api/$version/conveyance/start";
 String conveyanceList = "/api/$version/conveyance/list";

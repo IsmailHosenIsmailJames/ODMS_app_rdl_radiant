@@ -10,12 +10,12 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
-import 'package:rdl_radiant/src/screens/coustomer_location/customer_details.dart';
-import 'package:rdl_radiant/src/screens/coustomer_location/model/coustomer_list_model.dart';
+import 'package:rdl_radiant/src/screens/customer_location/customer_details.dart';
+import 'package:rdl_radiant/src/screens/customer_location/model/customer_list_model.dart';
 import 'package:http/http.dart' as http;
 
 import '../../theme/text_scaler_theme.dart';
-import '../../widgets/coomon_widgets_function.dart';
+import '../../widgets/common_widgets_function.dart';
 
 class SetCustomerLocation extends StatefulWidget {
   const SetCustomerLocation({super.key});
@@ -44,7 +44,7 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
         }
       },
     );
-    loadListOfCoustomer(
+    loadListOfCustomer(
       page: page,
       searchName: searchName,
       limit: limit,
@@ -60,7 +60,7 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
         isLoadingMore = true;
       });
       page++;
-      await loadListOfCoustomer(
+      await loadListOfCustomer(
         page: page,
         searchName: searchName,
         searchPartner: searchPartner,
@@ -72,16 +72,16 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
     }
   }
 
-  List<CoustomerListModel>? customerListModel;
+  List<CustomerListModel>? customerListModel;
 
-  Future<void> loadListOfCoustomer(
+  Future<void> loadListOfCustomer(
       {int? page,
       String? searchName,
       String? searchPartner,
       int? limit}) async {
     try {
       http.Response response = await http.get(Uri.parse(
-          "$base$getCoustomerList/${Hive.box('info').get('sap_id')}${page == null ? "" : "?page=$page"}${searchName == null ? "" : "&name1=$searchName"}${searchPartner == null ? "" : "&partner=$searchPartner"}${limit == null ? "" : "&limit=$limit"}"));
+          "$base$getCustomerList/${Hive.box("info").get("sap_id")}${page == null ? "" : "?page=$page"}${searchName == null ? "" : "&name1=$searchName"}${searchPartner == null ? "" : "&partner=$searchPartner"}${limit == null ? "" : "&limit=$limit"}"));
       customerListModel = customerListModel ?? [];
       if (response.statusCode == 200) {
         final decodedData = jsonDecode(response.body);
@@ -89,7 +89,7 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
           List<Map> listOfResult = List<Map>.from(decodedData['results']);
           for (Map result in listOfResult) {
             customerListModel!.add(
-              CoustomerListModel.fromMap(
+              CustomerListModel.fromMap(
                 Map<String, dynamic>.from(result),
               ),
             );
@@ -188,7 +188,7 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
                                 "Customer Name", current.contactPerson),
                             dividerWhite,
                             getRowWidgetForDetailsBox(
-                              "Coustomer Mobile",
+                              "Customer Mobile",
                               current.mobileNo,
                               optionalWidgetsAtLast: SizedBox(
                                 height: 23,
@@ -233,7 +233,7 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
                                 "District", current.district),
                             dividerWhite,
                             getRowWidgetForDetailsBox(
-                                "Upazilla", current.upazilla),
+                                "Upazila", current.upazilla),
                             dividerWhite,
                             getRowWidgetForDetailsBox(
                                 "Trans. P. zone", current.transPZone),

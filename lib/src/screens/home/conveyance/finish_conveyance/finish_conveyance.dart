@@ -74,7 +74,7 @@ class _MyMapViewState extends State<FinishConveyance> {
     );
   }
 
-  double zoomLavel = 13;
+  double zoomLabel = 13;
 
   Map<PolylineId, Polyline> polynlies = {};
 
@@ -115,7 +115,7 @@ class _MyMapViewState extends State<FinishConveyance> {
 
     cameraPositionUpdater(
         destination = LatLng(latlng.latitude, latlng.longitude),
-        zoom: zoomLavel);
+        zoom: zoomLabel);
 
     getPoliLinePoints(
             LatLng(initMyLocation!.latitude, initMyLocation!.longitude),
@@ -130,11 +130,11 @@ class _MyMapViewState extends State<FinishConveyance> {
         generatePolylinesFormsPoints(value);
       },
     );
-    List<Placemark> placemarks = await placemarkFromCoordinates(
+    List<Placemark> placeMarks = await placemarkFromCoordinates(
       latlng.latitude,
       latlng.longitude,
     );
-    final listOfAddress = analyzePlackeMark(placemarks);
+    final listOfAddress = analyzePlaceMark(placeMarks);
     street = listOfAddress[0];
     name = listOfAddress[1];
     administrativeArea = listOfAddress[2];
@@ -171,7 +171,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                   )
                 : GoogleMap(
                     onCameraMove: (position) {
-                      zoomLavel = position.zoom;
+                      zoomLabel = position.zoom;
                     },
                     zoomControlsEnabled: false,
                     zoomGesturesEnabled: true,
@@ -181,7 +181,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                         initMyLocation!.longitude,
                       ),
                       tilt: 90,
-                      zoom: zoomLavel,
+                      zoom: zoomLabel,
                     ),
                     markers: markers.values.toSet(),
                     onMapCreated: (controller) {
@@ -217,7 +217,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
-                      "Your Courrent Location Details: ",
+                      "Your Current Location Details: ",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -364,7 +364,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                         if (double.tryParse(value) != null) {
                           return null;
                         } else {
-                          return "Cost ammount must always be a number";
+                          return "Cost amount must always be a number";
                         }
                       }
                     },
@@ -390,7 +390,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                   builder: (context, snapshot) {
                     // {
                     //   "id": 1,
-                    //   "transport_name": "Rickshawcar",
+                    //   "transport_name": "Rickshaw",
                     //   "status": 1,
                     //   "created_at": "2024-09-16T16:24:35+06:00",
                     //   "updated_at": "2024-09-16T16:24:48+06:00"
@@ -488,8 +488,8 @@ class _MyMapViewState extends State<FinishConveyance> {
                         loadingTextController.currentState.value = 0;
                         loadingTextController.loadingText.value =
                             'Loading Data\nPlease wait...';
-                        showCoustomPopUpLoadingDialog(context,
-                            isCuputino: true);
+                        showCustomPopUpLoadingDialog(context,
+                            isCupertino: true);
 
                         String toSendData = jsonEncode({
                           "end_journey_latitude":
@@ -537,7 +537,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                                       SavePharmaceuticalsLocationData.fromMap(
                                           Map<String, dynamic>.from(tem[i])));
                                 }
-                                conveyanceDataController.convenceData.value =
+                                conveyanceDataController.convinceData.value =
                                     temList.reversed.toList();
                               }
                             } catch (e) {
@@ -579,7 +579,7 @@ class _MyMapViewState extends State<FinishConveyance> {
   Future<void> cameraPositionUpdater(LatLng latlon, {double? zoom}) async {
     final GoogleMapController controller = await googleMapController.future;
     CameraPosition cameraPosition =
-        CameraPosition(target: latlon, zoom: zoomLavel);
+        CameraPosition(target: latlon, zoom: zoomLabel);
     await controller.animateCamera(
       CameraUpdate.newCameraPosition(cameraPosition),
     );

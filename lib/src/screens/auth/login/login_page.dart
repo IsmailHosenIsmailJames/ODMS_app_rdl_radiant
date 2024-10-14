@@ -13,15 +13,15 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:rdl_radiant/src/core/login/login_function.dart';
-import 'package:rdl_radiant/src/screens/attendence/attendence_page.dart';
+import 'package:rdl_radiant/src/screens/attendance/attendance_page.dart';
 import 'package:rdl_radiant/src/screens/home/home_page.dart';
 import 'package:rdl_radiant/src/screens/permissions/unable_to_connect.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../theme/textfield_theme.dart';
-import '../../permissions/cheak_and_request_permissions.dart';
-import '../../permissions/cheak_location_service.dart';
-import '../register/register_page.dart';
+import '../../permissions/check_and_request_permissions.dart';
+import '../../permissions/check_location_service.dart';
+import '../registration/register_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -242,7 +242,7 @@ class _LoginPageState extends State<LoginPage> {
 
 Future<void> analyzeResponseLogin(
   http.Response? response,
-  Map<String, dynamic> userCrid,
+  Map<String, dynamic> userCredential,
 ) async {
   if (response == null) {
     if (kDebugMode) {
@@ -264,13 +264,13 @@ Future<void> analyzeResponseLogin(
         await box.put('sap_id', jsonMapData['result']['sap_id']);
         await box.put(
           'userLoginCradintial',
-          userCrid,
+          userCredential,
         );
 
         await SharedPreferences.getInstance().then((instance) async {
           await instance.setString(
             'userLoginCradintial',
-            jsonEncode(userCrid),
+            jsonEncode(userCredential),
           );
           await instance.setString('userData', response.body);
         });
@@ -278,7 +278,7 @@ Future<void> analyzeResponseLogin(
         final serviceEnabled = await Geolocator.isLocationServiceEnabled();
         if (!serviceEnabled) {
           Get.offAll(
-            () => CheakLocationService(
+            () => CheckLocationService(
               responseMapData: jsonMapData,
             ),
           );
@@ -298,12 +298,12 @@ Future<void> analyzeResponseLogin(
           } else {
             unawaited(
               Get.offAll(
-                () => const AttendencePage(),
+                () => const AttendancePage(),
               ),
             );
           }
         } else {
-          await Get.off(() => const CheakAndRequestPermissions());
+          await Get.off(() => const CheckAndRequestPermissions());
         }
         if (kDebugMode) {
           print(response.body);
@@ -311,14 +311,14 @@ Future<void> analyzeResponseLogin(
 
         unawaited(
           Fluttertoast.showToast(
-            msg: 'Login Successfull',
+            msg: 'Login Successfully',
             toastLength: Toast.LENGTH_LONG,
           ),
         );
       } else {
         unawaited(
           Fluttertoast.showToast(
-            msg: (jsonMapData['message'] ?? 'Something Went Worng').toString(),
+            msg: (jsonMapData['message'] ?? 'Something Went Wrong').toString(),
             toastLength: Toast.LENGTH_LONG,
           ),
         );
@@ -333,7 +333,7 @@ Future<void> analyzeResponseLogin(
     } catch (e) {
       unawaited(
         Fluttertoast.showToast(
-          msg: 'Something Went Worng',
+          msg: 'Something Went Wrong',
           toastLength: Toast.LENGTH_LONG,
         ),
       );

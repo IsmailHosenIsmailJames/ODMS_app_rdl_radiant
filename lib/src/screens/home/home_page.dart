@@ -17,14 +17,14 @@ import 'package:rdl_radiant/src/core/background/socket_connection_state.dart/soc
 import 'package:rdl_radiant/src/core/background/socket_manager/socket_manager.dart';
 import 'package:rdl_radiant/src/screens/home/dash_board_controller/dash_board_model.dart';
 import 'package:rdl_radiant/src/screens/home/dash_board_controller/dashboard_controller_getx.dart';
-import 'package:rdl_radiant/src/screens/home/delivary_ramaining/controller/delivery_remaning_controller.dart';
-import 'package:rdl_radiant/src/screens/home/delivary_ramaining/delivery_remaining_page.dart';
-import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
+import 'package:rdl_radiant/src/screens/home/delivery_remaining/delivery_remaining_page.dart';
+import 'package:rdl_radiant/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
 import 'package:rdl_radiant/src/screens/home/drawer/drawer.dart';
 import 'package:rdl_radiant/src/widgets/loading/loading_popup_widget.dart';
 import 'package:rdl_radiant/src/widgets/loading/loading_text_controller.dart';
 
 import '../../core/background/background_setup.dart';
+import 'delivery_remaining/controller/delivery_remaining_controller.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -37,15 +37,15 @@ class _HomePageState extends State<HomePage> {
   final socketConnectionStateGetx = Get.put(SocketConnectionState());
   final dashboardController = Get.put(DashboardControllerGetx());
   final LoadingTextController loadingTextController = Get.find();
-  Map<String, dynamic> jsonUserdata = {};
+  Map<String, dynamic> jsonUserData = {};
 
   @override
   void initState() {
     final box = Hive.box('info');
-    jsonUserdata = Map<String, dynamic>.from(
+    jsonUserData = Map<String, dynamic>.from(
       jsonDecode(box.get('userData', defaultValue: '{}') as String) as Map,
     );
-    jsonUserdata = Map<String, dynamic>.from(jsonUserdata['result'] as Map);
+    jsonUserData = Map<String, dynamic>.from(jsonUserData['result'] as Map);
 
     FlutterForegroundTask.addTaskDataCallback(onReceiveTaskData);
     SocketManager().connect();
@@ -141,14 +141,14 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    jsonUserdata['full_name'].toString(),
+                    jsonUserData['full_name'].toString(),
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
-                    jsonUserdata['sap_id'].toString(),
+                    jsonUserData['sap_id'].toString(),
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -172,14 +172,14 @@ class _HomePageState extends State<HomePage> {
                           getCardView(
                             data.deliveryRemaining.toString(),
                             Image.asset('assets/delivery-truck.png'),
-                            'Delivary Remaining',
+                            'Delivery Remaining',
                             0,
                             onPressed: callDeliveryRemainingList,
                           ),
                           getCardView(
                             data.deliveryDone.toString(),
                             Image.asset('assets/delivery_done.png'),
-                            'Delivary Done',
+                            'Delivery Done',
                             1,
                             onPressed: callDeliveryDoneList,
                           ),
@@ -213,7 +213,7 @@ class _HomePageState extends State<HomePage> {
                       );
                     } else {
                       return const Center(
-                        child: Text("Something went worng"),
+                        child: Text("Something went wrong"),
                       );
                     }
                   } else {
@@ -223,13 +223,13 @@ class _HomePageState extends State<HomePage> {
                         getCardView(
                             null,
                             Image.asset('assets/delivery-truck.png'),
-                            'Delivary Remaining',
+                            'Delivery Remaining',
                             0,
                             onPressed: callDeliveryRemainingList),
                         getCardView(
                           null,
                           Image.asset('assets/delivery_done.png'),
-                          'Delivary Done',
+                          'Delivery Done',
                           1,
                           onPressed: callDeliveryDoneList,
                         ),
@@ -355,9 +355,6 @@ class _HomePageState extends State<HomePage> {
                             duration: 1200.ms,
                             color: const Color(0xFF80DDFF),
                           )
-                          .animate()
-                          .fadeIn(duration: 1200.ms, curve: Curves.easeOutQuad)
-                          .slide()
                       : Text(
                           count,
                           style: const TextStyle(
@@ -395,12 +392,12 @@ class _HomePageState extends State<HomePage> {
   void callDeliveryRemainingList() async {
     final box = Hive.box('info');
     final url = Uri.parse(
-      "$base$getDelivaryList/${box.get('sap_id')}?type=Remaining&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+      "$base$getDeliveryList/${box.get('sap_id')}?type=Remaining&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
     );
 
     loadingTextController.currentState.value = 0;
     loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
-    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+    showCustomPopUpLoadingDialog(context, isCupertino: true);
 
     final response = await http.get(url);
 
@@ -409,21 +406,21 @@ class _HomePageState extends State<HomePage> {
       loadingTextController.loadingText.value = 'Successful';
 
       if (kDebugMode) {
-        log("Got Delivery Remaning List");
+        log("Got Delivery Remaining List");
         log(response.body);
       }
 
       final controller = Get.put(
-        DeliveryRemaningController(
-          DeliveryRemaing.fromJson(response.body),
+        DeliveryRemainingController(
+          DeliveryRemaining.fromJson(response.body),
         ),
       );
-      controller.deliveryRemaing.value =
-          DeliveryRemaing.fromJson(response.body);
-      controller.constDeliveryRemaing.value =
-          DeliveryRemaing.fromJson(response.body);
-      controller.deliveryRemaing.value.result ??= [];
-      controller.constDeliveryRemaing.value.result ??= [];
+      controller.deliveryRemaining.value =
+          DeliveryRemaining.fromJson(response.body);
+      controller.constDeliveryRemaining.value =
+          DeliveryRemaining.fromJson(response.body);
+      controller.deliveryRemaining.value.result ??= [];
+      controller.constDeliveryRemaining.value.result ??= [];
       controller.pageType.value = 'Delivery Remaining';
       await Future.delayed(const Duration(milliseconds: 100));
       if (Navigator.canPop(context)) {
@@ -435,19 +432,19 @@ class _HomePageState extends State<HomePage> {
       getDashBoardData();
     } else {
       loadingTextController.currentState.value = -1;
-      loadingTextController.loadingText.value = 'Something went worng';
+      loadingTextController.loadingText.value = 'Something went wrong';
     }
   }
 
   void callDeliveryDoneList() async {
     final box = Hive.box('info');
     final url = Uri.parse(
-      "$base$getDelivaryList/${box.get('sap_id')}?type=Done&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+      "$base$getDeliveryList/${box.get('sap_id')}?type=Done&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
     );
 
     loadingTextController.currentState.value = 0;
     loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
-    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+    showCustomPopUpLoadingDialog(context, isCupertino: true);
 
     final response = await http.get(url);
 
@@ -455,21 +452,21 @@ class _HomePageState extends State<HomePage> {
       loadingTextController.currentState.value = 1;
       loadingTextController.loadingText.value = 'Successful';
       if (kDebugMode) {
-        log("Got Delivery Remaning List");
+        log("Got Delivery Remaining List");
         log(response.body);
       }
 
       final controller = Get.put(
-        DeliveryRemaningController(
-          DeliveryRemaing.fromJson(response.body),
+        DeliveryRemainingController(
+          DeliveryRemaining.fromJson(response.body),
         ),
       );
-      controller.deliveryRemaing.value =
-          DeliveryRemaing.fromJson(response.body);
-      controller.constDeliveryRemaing.value =
-          DeliveryRemaing.fromJson(response.body);
-      controller.deliveryRemaing.value.result ??= [];
-      controller.constDeliveryRemaing.value.result ??= [];
+      controller.deliveryRemaining.value =
+          DeliveryRemaining.fromJson(response.body);
+      controller.constDeliveryRemaining.value =
+          DeliveryRemaining.fromJson(response.body);
+      controller.deliveryRemaining.value.result ??= [];
+      controller.constDeliveryRemaining.value.result ??= [];
       controller.pageType.value = 'Delivery Done';
       await Future.delayed(const Duration(milliseconds: 100));
       if (Navigator.canPop(context)) {
@@ -481,7 +478,7 @@ class _HomePageState extends State<HomePage> {
       getDashBoardData();
     } else {
       loadingTextController.currentState.value = -1;
-      loadingTextController.loadingText.value = 'Something went worng';
+      loadingTextController.loadingText.value = 'Something went wrong';
     }
   }
 
@@ -493,7 +490,7 @@ class _HomePageState extends State<HomePage> {
 
     loadingTextController.currentState.value = 0;
     loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
-    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+    showCustomPopUpLoadingDialog(context, isCupertino: true);
 
     final response = await http.get(url);
 
@@ -507,16 +504,16 @@ class _HomePageState extends State<HomePage> {
       dev.log(response.body);
 
       final controller = Get.put(
-        DeliveryRemaningController(
-          DeliveryRemaing.fromJson(response.body),
+        DeliveryRemainingController(
+          DeliveryRemaining.fromJson(response.body),
         ),
       );
-      controller.deliveryRemaing.value =
-          DeliveryRemaing.fromJson(response.body);
-      controller.constDeliveryRemaing.value =
-          DeliveryRemaing.fromJson(response.body);
-      controller.deliveryRemaing.value.result ??= [];
-      controller.constDeliveryRemaing.value.result ??= [];
+      controller.deliveryRemaining.value =
+          DeliveryRemaining.fromJson(response.body);
+      controller.constDeliveryRemaining.value =
+          DeliveryRemaining.fromJson(response.body);
+      controller.deliveryRemaining.value.result ??= [];
+      controller.constDeliveryRemaining.value.result ??= [];
       controller.pageType.value = 'Cash Collection Remaining';
       await Future.delayed(const Duration(milliseconds: 100));
       if (Navigator.canPop(context)) {
@@ -528,7 +525,7 @@ class _HomePageState extends State<HomePage> {
       getDashBoardData();
     } else {
       loadingTextController.currentState.value = -1;
-      loadingTextController.loadingText.value = 'Something went worng';
+      loadingTextController.loadingText.value = 'Something went wrong';
     }
   }
 
@@ -540,7 +537,7 @@ class _HomePageState extends State<HomePage> {
 
     loadingTextController.currentState.value = 0;
     loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
-    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+    showCustomPopUpLoadingDialog(context, isCupertino: true);
 
     final response = await http.get(url);
     log(response.body);
@@ -552,16 +549,16 @@ class _HomePageState extends State<HomePage> {
       dev.log(response.body);
 
       final controller = Get.put(
-        DeliveryRemaningController(
-          DeliveryRemaing.fromJson(response.body),
+        DeliveryRemainingController(
+          DeliveryRemaining.fromJson(response.body),
         ),
       );
-      controller.deliveryRemaing.value =
-          DeliveryRemaing.fromJson(response.body);
-      controller.constDeliveryRemaing.value =
-          DeliveryRemaing.fromJson(response.body);
-      controller.deliveryRemaing.value.result ??= [];
-      controller.constDeliveryRemaing.value.result ??= [];
+      controller.deliveryRemaining.value =
+          DeliveryRemaining.fromJson(response.body);
+      controller.constDeliveryRemaining.value =
+          DeliveryRemaining.fromJson(response.body);
+      controller.deliveryRemaining.value.result ??= [];
+      controller.constDeliveryRemaining.value.result ??= [];
       controller.pageType.value = 'Cash Collection Done';
 
       await Future.delayed(const Duration(milliseconds: 100));
@@ -575,7 +572,7 @@ class _HomePageState extends State<HomePage> {
       getDashBoardData();
     } else {
       loadingTextController.currentState.value = -1;
-      loadingTextController.loadingText.value = 'Something went worng';
+      loadingTextController.loadingText.value = 'Something went wrong';
     }
   }
 
@@ -587,7 +584,7 @@ class _HomePageState extends State<HomePage> {
 
     loadingTextController.currentState.value = 0;
     loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
-    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+    showCustomPopUpLoadingDialog(context, isCupertino: true);
 
     final response = await http.get(url);
     log(response.body);
@@ -598,16 +595,16 @@ class _HomePageState extends State<HomePage> {
       dev.log(response.body);
 
       final controller = Get.put(
-        DeliveryRemaningController(
-          DeliveryRemaing.fromJson(response.body),
+        DeliveryRemainingController(
+          DeliveryRemaining.fromJson(response.body),
         ),
       );
-      controller.deliveryRemaing.value =
-          DeliveryRemaing.fromJson(response.body);
-      controller.constDeliveryRemaing.value =
-          DeliveryRemaing.fromJson(response.body);
-      controller.deliveryRemaing.value.result ??= [];
-      controller.constDeliveryRemaing.value.result ??= [];
+      controller.deliveryRemaining.value =
+          DeliveryRemaining.fromJson(response.body);
+      controller.constDeliveryRemaining.value =
+          DeliveryRemaining.fromJson(response.body);
+      controller.deliveryRemaining.value.result ??= [];
+      controller.constDeliveryRemaining.value.result ??= [];
       controller.pageType.value = 'Returned';
       await Future.delayed(const Duration(milliseconds: 100));
       if (Navigator.canPop(context)) {
@@ -619,7 +616,7 @@ class _HomePageState extends State<HomePage> {
       getDashBoardData();
     } else {
       loadingTextController.currentState.value = -1;
-      loadingTextController.loadingText.value = 'Something went worng';
+      loadingTextController.loadingText.value = 'Something went wrong';
     }
   }
 }

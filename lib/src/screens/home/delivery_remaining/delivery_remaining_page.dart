@@ -7,15 +7,15 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
-import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
+import 'package:rdl_radiant/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
 import 'package:rdl_radiant/src/screens/home/invoice_list/invoice_list_page.dart';
 import 'package:rdl_radiant/src/theme/text_scaler_theme.dart';
 
 import '../../../apis/apis.dart';
-import '../page_sate_defination.dart';
-import 'controller/delivery_remaning_controller.dart';
+import '../page_sate_definition.dart';
+import 'controller/delivery_remaining_controller.dart';
 
 class DeliveryRemainingPage extends StatefulWidget {
   const DeliveryRemainingPage({super.key});
@@ -26,13 +26,13 @@ class DeliveryRemainingPage extends StatefulWidget {
 
 class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
   DateTime dateTime = DateTime.now();
-  final DeliveryRemaningController deliveryRemaningController = Get.find();
+  final DeliveryRemainingController deliveryRemainingController = Get.find();
   String pageType = '';
 
   @override
   void initState() {
     super.initState();
-    pageType = deliveryRemaningController.pageType.value;
+    pageType = deliveryRemainingController.pageType.value;
   }
 
   @override
@@ -77,8 +77,8 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                 child: CupertinoSearchTextField(
                   onChanged: (value) {
                     List<Result> filter = [];
-                    for (Result element in deliveryRemaningController
-                        .constDeliveryRemaing.value.result!) {
+                    for (Result element in deliveryRemainingController
+                        .constDeliveryRemaining.value.result!) {
                       if (element
                           .toJson()
                           .toLowerCase()
@@ -86,7 +86,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                         filter.add(element);
                       }
                     }
-                    deliveryRemaningController.deliveryRemaing.value.result =
+                    deliveryRemainingController.deliveryRemaining.value.result =
                         filter;
                     setState(() {});
                   },
@@ -94,21 +94,18 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
               ),
             ),
             Expanded(
-              child: deliveryRemaningController
-                      .deliveryRemaing.value.result!.isEmpty
+              child: deliveryRemainingController
+                      .deliveryRemaining.value.result!.isEmpty
                   ? Center(
                       child: Text(
                         "There is no delivery available on this date : ${dateTime.toIso8601String().split('T')[0]}",
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     )
                   : Obx(
                       () {
-                        List<Result> results = deliveryRemaningController
-                            .deliveryRemaing.value.result!;
+                        List<Result> results = deliveryRemainingController
+                            .deliveryRemaining.value.result!;
                         return ListView.builder(
                           padding: const EdgeInsets.only(top: 10),
                           itemCount: results.length,
@@ -116,17 +113,17 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                             String name = results[index].customerName ?? "";
                             String address =
                                 results[index].customerAddress ?? "";
-                            double quantitty = 0;
+                            double quantity = 0;
                             double amount = 0;
                             double dueAmount = 0;
                             List<InvoiceList> invoiceList =
                                 results[index].invoiceList ?? [];
                             for (InvoiceList invoice in invoiceList) {
-                              List<ProductList> droductList =
+                              List<ProductList> productList =
                                   invoice.productList ?? [];
                               dueAmount += invoice.dueAmount ?? 0;
-                              for (ProductList product in droductList) {
-                                quantitty += product.quantity ?? 0;
+                              for (ProductList product in productList) {
+                                quantity += product.quantity ?? 0;
                                 amount += product.netVal ?? 0;
                                 amount += product.vat ?? 0;
                               }
@@ -136,7 +133,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                               name: name,
                               address: address,
                               invoiceLen: invoiceList.length.toString(),
-                              quantitty: quantitty.toInt().toString(),
+                              quantity: quantity.toInt().toString(),
                               amount: amount,
                               dueAmount: dueAmount,
                               date:
@@ -228,7 +225,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
     if (pickedDateTime != null) {
       final box = Hive.box('info');
       final url = Uri.parse(
-        "$base${(pageType == pagesState[0] || pageType == pagesState[1]) ? getDelivaryList : cashCollectionList}/${box.get('sap_id')}?type=${filterBy ?? ((pageType == pagesState[1]) ? "Done" : "Remaining")}&date=${DateFormat('yyyy-MM-dd').format(pickedDateTime!)}",
+        "$base${(pageType == pagesState[0] || pageType == pagesState[1]) ? getDeliveryList : cashCollectionList}/${box.get('sap_id')}?type=${filterBy ?? ((pageType == pagesState[1]) ? "Done" : "Remaining")}&date=${DateFormat('yyyy-MM-dd').format(pickedDateTime!)}",
       );
 
       showCupertinoModalPopup(
@@ -251,14 +248,14 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
 
       if (response.statusCode == 200) {
         if (kDebugMode) {
-          print("Got Delivery Remaning List");
+          print("Got Delivery Remaining List");
           print(response.body);
         }
 
-        deliveryRemaningController.deliveryRemaing.value =
-            DeliveryRemaing.fromJson(response.body);
-        deliveryRemaningController.constDeliveryRemaing.value =
-            DeliveryRemaing.fromJson(response.body);
+        deliveryRemainingController.deliveryRemaining.value =
+            DeliveryRemaining.fromJson(response.body);
+        deliveryRemainingController.constDeliveryRemaining.value =
+            DeliveryRemaining.fromJson(response.body);
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
@@ -281,7 +278,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
     required String name,
     required String address,
     required String invoiceLen,
-    required String quantitty,
+    required String quantity,
     required double amount,
     double? dueAmount,
     required String date,
@@ -290,8 +287,8 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () async {
-        deliveryRemaningController.deliveryRemaing.value =
-            deliveryRemaningController.constDeliveryRemaing.value;
+        deliveryRemainingController.deliveryRemaining.value =
+            deliveryRemainingController.constDeliveryRemaining.value;
         final invoiceListController = Get.put(InvoiceListController());
         invoiceListController.invoiceList.value =
             result.invoiceList ?? <InvoiceList>[];
@@ -393,7 +390,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                               style: style,
                             ),
                             Text(
-                              quantitty,
+                              quantity,
                               style: style,
                             ),
                           ],

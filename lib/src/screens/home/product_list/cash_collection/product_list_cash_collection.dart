@@ -11,13 +11,13 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
-import 'package:rdl_radiant/src/screens/home/delivary_ramaining/controller/delivery_remaning_controller.dart';
-import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
+import 'package:rdl_radiant/src/screens/home/delivery_remaining/controller/delivery_remaining_controller.dart';
+import 'package:rdl_radiant/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
 import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
-import 'package:rdl_radiant/src/screens/home/page_sate_defination.dart';
+import 'package:rdl_radiant/src/screens/home/page_sate_definition.dart';
 import 'package:rdl_radiant/src/screens/home/product_list/cash_collection/to_send_cash_data_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:rdl_radiant/src/widgets/coomon_widgets_function.dart';
+import 'package:rdl_radiant/src/widgets/common_widgets_function.dart';
 
 import '../../../../theme/text_scaler_theme.dart';
 import '../../../../widgets/loading/loading_popup_widget.dart';
@@ -25,13 +25,13 @@ import '../../../../widgets/loading/loading_text_controller.dart';
 
 class ProductListCashCollection extends StatefulWidget {
   final InvoiceList invoice;
-  final String invioceNo;
+  final String invoiceNo;
   final String totalAmount;
   final int index;
   const ProductListCashCollection({
     super.key,
     required this.invoice,
-    required this.invioceNo,
+    required this.invoiceNo,
     required this.totalAmount,
     required this.index,
   });
@@ -47,13 +47,13 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
   List<ProductList> productList = [];
   List<TextEditingController> receiveTextEditingControllerList = [];
   List<TextEditingController> returnTextEditingControllerList = [];
-  TextEditingController receivedAmmountController = TextEditingController();
+  TextEditingController receivedAmountController = TextEditingController();
   List<double> receiveAmountList = [];
   List<double> returnAmountList = [];
   double dueAmount = 0;
   final formKey = GlobalKey<FormState>();
 
-  final DeliveryRemaningController deliveryRemaningController = Get.find();
+  final DeliveryRemainingController deliveryRemainingController = Get.find();
 
   String pageType = '';
   @override
@@ -70,7 +70,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
     }
 
     dueAmount = double.parse(widget.totalAmount);
-    pageType = deliveryRemaningController.pageType.value;
+    pageType = deliveryRemainingController.pageType.value;
     super.initState();
   }
 
@@ -81,9 +81,9 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
 
   @override
   Widget build(BuildContext context) {
-    double totalRetrunAmmount = 0;
+    double totalReturnAmount = 0;
     for (var e in returnAmountList) {
-      totalRetrunAmmount += e;
+      totalReturnAmount += e;
     }
     return MediaQuery(
       data: MediaQuery.of(context)
@@ -135,7 +135,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                widget.invioceNo,
+                                widget.invoiceNo,
                                 style: topContainerTextStyle,
                               ),
                             ],
@@ -153,17 +153,17 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                           child: Column(
                             children: [
                               getRowWidgetForDetailsBox(
-                                "Coustomer Name",
+                                "Customer Name",
                                 widget.invoice.customerName ?? "",
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Coustomer Address",
+                                "Customer Address",
                                 widget.invoice.customerAddress ?? "",
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Coustomer Mobile",
+                                "Customer Mobile",
                                 widget.invoice.customerMobile ?? "",
                                 optionalWidgetsAtLast: SizedBox(
                                   height: 23,
@@ -204,20 +204,20 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               divider,
                               getRowWidgetForDetailsBox(
                                 "Return Amount",
-                                totalRetrunAmmount.toStringAsFixed(2),
+                                totalReturnAmount.toStringAsFixed(2),
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
                                 "To pay",
-                                calculateFloatValueWithHighPrecition(
+                                calculateFloatValueWithHighPrecision(
                                   double.parse(widget.totalAmount),
-                                  totalRetrunAmmount,
+                                  totalReturnAmount,
                                 ).toStringAsFixed(2),
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
                                 "Due Amount",
-                                calculateFloatValueWithHighPrecition(
+                                calculateFloatValueWithHighPrecision(
                                         dueAmount, null)
                                     .toStringAsFixed(2),
                               ),
@@ -227,12 +227,14 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                       ],
                     ),
                   ),
-                  if (!(deliveryRemaningController.pageType.value == "Return" ||
-                      deliveryRemaningController.pageType.value ==
+                  if (!(deliveryRemainingController.pageType.value ==
+                          "Return" ||
+                      deliveryRemainingController.pageType.value ==
                           "Cash Collection Done"))
                     const Gap(15),
-                  if (!(deliveryRemaningController.pageType.value == "Return" ||
-                      deliveryRemaningController.pageType.value ==
+                  if (!(deliveryRemainingController.pageType.value ==
+                          "Return" ||
+                      deliveryRemainingController.pageType.value ==
                           "Cash Collection Done"))
                     const Text(
                       "Received amount",
@@ -241,24 +243,26 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                  if (!(deliveryRemaningController.pageType.value == "Return" ||
-                      deliveryRemaningController.pageType.value ==
+                  if (!(deliveryRemainingController.pageType.value ==
+                          "Return" ||
+                      deliveryRemainingController.pageType.value ==
                           "Cash Collection Done"))
                     const Gap(5),
-                  if (!(deliveryRemaningController.pageType.value == "Return" ||
-                      deliveryRemaningController.pageType.value ==
+                  if (!(deliveryRemainingController.pageType.value ==
+                          "Return" ||
+                      deliveryRemainingController.pageType.value ==
                           "Cash Collection Done"))
                     TextFormField(
                       keyboardType: TextInputType.number,
-                      controller: receivedAmmountController,
+                      controller: receivedAmountController,
                       validator: (value) {
                         value ??= "";
                         final x = double.tryParse(value);
                         if (x != null) {
                           final totalAmount =
-                              calculateFloatValueWithHighPrecition(
+                              calculateFloatValueWithHighPrecision(
                             double.parse(widget.totalAmount),
-                            totalRetrunAmmount,
+                            totalReturnAmount,
                           );
                           if (x > totalAmount) {
                             return "received amount can't beyond total amount";
@@ -269,12 +273,12 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                         }
                       },
                       onChanged: (_) {
-                        calculateDependOnReceviedAmmount();
+                        calculateDependOnReceivedAmount();
                       },
                       autovalidateMode: AutovalidateMode.always,
                       decoration: InputDecoration(
-                        hintText: "Receive ammount",
-                        labelText: "Receive ammount",
+                        hintText: "Receive amount",
+                        labelText: "Receive amount",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -425,10 +429,10 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                             padding: const EdgeInsets.all(8),
                             child: Column(
                               children: [
-                                if (!(deliveryRemaningController
+                                if (!(deliveryRemainingController
                                                 .pageType.value ==
                                             "Return" ||
-                                        deliveryRemaningController
+                                        deliveryRemainingController
                                                 .pageType.value ==
                                             "Cash Collection Done") &&
                                     (((productList[index].quantity ?? 0) -
@@ -442,10 +446,10 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                         AutovalidateMode.onUserInteraction,
                                     validator: (value) {
                                       if ((value ?? "") == "") return null;
-                                      int? retQuentaty =
+                                      int? retQuantity =
                                           int.tryParse(value ?? "");
-                                      if (retQuentaty != null) {
-                                        if (retQuentaty >
+                                      if (retQuantity != null) {
+                                        if (retQuantity >
                                             (productList[index]
                                                     .deliveryQuantity ??
                                                 0)) {
@@ -459,15 +463,15 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                     },
                                     onChanged: (value) {
                                       if (value.isEmpty) value = "0";
-                                      int? retQuentaty = int.tryParse(value);
-                                      if (retQuentaty != null) {
-                                        int? recQuentaty = int.tryParse(
+                                      int? retQuantity = int.tryParse(value);
+                                      if (retQuantity != null) {
+                                        int? recQuantity = int.tryParse(
                                             receiveTextEditingControllerList[
                                                     index]
                                                 .text);
-                                        recQuentaty ??= 0;
-                                        int totalQuentaty = recQuentaty;
-                                        if (totalQuentaty !=
+                                        recQuantity ??= 0;
+                                        int totalQuantity = recQuantity;
+                                        if (totalQuantity !=
                                             (productList[index].quantity ??
                                                 0)) {
                                           WidgetsBinding.instance
@@ -481,11 +485,11 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                             .addPostFrameCallback((_) {
                                           setState(() {
                                             returnAmountList[index] =
-                                                perProduct * retQuentaty;
+                                                perProduct * retQuantity;
                                             receiveAmountList[index] =
-                                                perProduct * (recQuentaty ?? 0);
+                                                perProduct * (recQuantity ?? 0);
                                           });
-                                          calculateDependOnReceviedAmmount();
+                                          calculateDependOnReceivedAmount();
                                         });
                                       } else {
                                         WidgetsBinding.instance
@@ -507,7 +511,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                     ),
                                   ),
                                 const Gap(5),
-                                if (deliveryRemaningController.pageType.value ==
+                                if (deliveryRemainingController
+                                        .pageType.value ==
                                     "Return")
                                   Text(
                                     "Return Qty. : ${(productList[index].quantity ?? 0).toInt()}",
@@ -517,7 +522,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                       color: Colors.red,
                                     ),
                                   ),
-                                // if (deliveryRemaningController.pageType.value ==
+                                // if (deliveryRemainingController.pageType.value ==
                                 //     "Cash Collection Done")
                                 //   Row(
                                 //     mainAxisAlignment:
@@ -541,10 +546,10 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                 //       ),
                                 //     ],
                                 //   ),
-                                //   if (deliveryRemaningController.pageType.value ==
+                                //   if (deliveryRemainingController.pageType.value ==
                                 //       "Cash Collection Done")
                                 //     const Divider(),
-                                //   if (deliveryRemaningController.pageType.value ==
+                                //   if (deliveryRemainingController.pageType.value ==
                                 //       "Cash Collection Done")
                                 //     Row(
                                 //       mainAxisAlignment:
@@ -568,16 +573,16 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                 //         ),
                                 //       ],
                                 //     ),
-                                //   if (deliveryRemaningController.pageType.value ==
+                                //   if (deliveryRemainingController.pageType.value ==
                                 //       "Cash Collection Done")
                                 //     Row(
                                 //       mainAxisAlignment:
                                 //           MainAxisAlignment.spaceBetween,
                                 //       children: [
-                                //         if (!(deliveryRemaningController
+                                //         if (!(deliveryRemainingController
                                 //                     .pageType.value ==
                                 //                 "Return" ||
-                                //             deliveryRemaningController
+                                //             deliveryRemainingController
                                 //                     .pageType.value ==
                                 //                 "Cash Collection Done"))
                                 //           Text(
@@ -586,10 +591,10 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                 //               fontWeight: FontWeight.w500,
                                 //             ),
                                 //           ),
-                                //         if (!(deliveryRemaningController
+                                //         if (!(deliveryRemainingController
                                 //                     .pageType.value ==
                                 //                 "Return" ||
-                                //             deliveryRemaningController
+                                //             deliveryRemainingController
                                 //                     .pageType.value ==
                                 //                 "Cash Collection Done"))
                                 //           Text(
@@ -626,7 +631,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                           child: ElevatedButton(
                             onPressed: () async {
                               await onCashCollectedButtonPressed(
-                                  context, totalRetrunAmmount);
+                                  context, totalReturnAmount);
                             },
                             child: const Text("Cash Collected"),
                           ),
@@ -658,13 +663,13 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
   }
 
   Future<void> onCashCollectedButtonPressed(
-      BuildContext context, double totalRetrunAmmount) async {
-    String receviedAmmount = receivedAmmountController.text;
+      BuildContext context, double totalReturnAmount) async {
+    String receivedAmount = receivedAmountController.text;
     bool isValidate = false;
-    final x = double.tryParse(receviedAmmount);
+    final x = double.tryParse(receivedAmount);
     if (x != null) {
-      final totalAmount = calculateFloatValueWithHighPrecition(
-          double.parse(widget.totalAmount), totalRetrunAmmount);
+      final totalAmount = calculateFloatValueWithHighPrecision(
+          double.parse(widget.totalAmount), totalReturnAmount);
       log(totalAmount.toString());
       if (x > totalAmount) {
         isValidate = false;
@@ -676,7 +681,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
     }
     if (isValidate == false) {
       Fluttertoast.showToast(
-        msg: "Received ammount is not valid",
+        msg: "Received amount is not valid",
       );
     }
 
@@ -685,7 +690,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
       loadingTextController.loadingText.value =
           'Accessing Your Location\nPlease wait...';
 
-      showCoustomPopUpLoadingDialog(context, isCuputino: true);
+      showCustomPopUpLoadingDialog(context, isCupertino: true);
       try {
         final position = await Geolocator.getCurrentPosition(
           locationSettings:
@@ -717,11 +722,11 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
           gatePassNo: widget.invoice.gatePassNo,
           partner: widget.invoice.partner,
           routeCode: widget.invoice.routeCode,
-          cashCollection: double.tryParse(receivedAmmountController.text),
+          cashCollection: double.tryParse(receivedAmountController.text),
           cashCollectionLatitude: position.latitude.toString(),
           cashCollectionLongitude: position.longitude.toString(),
           cashCollectionStatus: "Done",
-          deliverys: listOfDeliveryCash,
+          delivers: listOfDeliveryCash,
         );
 
         if (kDebugMode) {
@@ -752,28 +757,28 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
             try {
               final box = Hive.box('info');
               final url = Uri.parse(
-                "$base${(pageType == pagesState[0] || pageType == pagesState[1]) ? getDelivaryList : cashCollectionList}/${box.get('sap_id')}?type=${(pageType == pagesState[1] ? "Done" : "Remaining")}&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+                "$base${(pageType == pagesState[0] || pageType == pagesState[1]) ? getDeliveryList : cashCollectionList}/${box.get('sap_id')}?type=${(pageType == pagesState[1] ? "Done" : "Remaining")}&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
               );
 
               final response = await http.get(url);
 
               if (response.statusCode == 200) {
                 if (kDebugMode) {
-                  print("Got Delivery Remaning List");
+                  print("Got Delivery Remaining List");
                   print(response.body);
                 }
 
                 final controller = Get.put(
-                  DeliveryRemaningController(
-                    DeliveryRemaing.fromJson(response.body),
+                  DeliveryRemainingController(
+                    DeliveryRemaining.fromJson(response.body),
                   ),
                 );
-                controller.deliveryRemaing.value =
-                    DeliveryRemaing.fromJson(response.body);
-                controller.constDeliveryRemaing.value =
-                    DeliveryRemaing.fromJson(response.body);
-                controller.deliveryRemaing.value.result ??= [];
-                controller.constDeliveryRemaing.value.result ??= [];
+                controller.deliveryRemaining.value =
+                    DeliveryRemaining.fromJson(response.body);
+                controller.constDeliveryRemaining.value =
+                    DeliveryRemaining.fromJson(response.body);
+                controller.deliveryRemaining.value.result ??= [];
+                controller.constDeliveryRemaining.value.result ??= [];
               }
             } catch (e) {
               log(e.toString());
@@ -794,7 +799,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
         } else {
           loadingTextController.currentState.value = -1;
           loadingTextController.loadingText.value =
-              'Something went worng with ${response.statusCode}';
+              'Something went wrong with ${response.statusCode}';
         }
       } catch (e) {
         loadingTextController.currentState.value = -1;
@@ -811,8 +816,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
     fontWeight: FontWeight.bold,
   );
 
-  void calculateDependOnReceviedAmmount() {
-    String receivedText = receivedAmmountController.text;
+  void calculateDependOnReceivedAmount() {
+    String receivedText = receivedAmountController.text;
     if (receivedText.isEmpty) receivedText = "0";
     double? receivedAmount = double.tryParse(receivedText);
     if (receivedAmount != null) {
@@ -834,7 +839,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
     }
   }
 
-  double calculateFloatValueWithHighPrecition(double x, double? y) {
+  double calculateFloatValueWithHighPrecision(double x, double? y) {
     double res = x - (y ?? 0);
     // print(res);
     // if (res < 0) {

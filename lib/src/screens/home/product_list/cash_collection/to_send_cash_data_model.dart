@@ -8,7 +8,7 @@ class ToSendCashDataModel {
   String? cashCollectionLatitude;
   String? cashCollectionLongitude;
   String? cashCollectionStatus;
-  List<DeliveryCash> deliverys;
+  List<DeliveryCash> delivers;
   dynamic billingDate;
   String? partner;
   String? gatePassNo;
@@ -34,7 +34,7 @@ class ToSendCashDataModel {
     this.gatePassNo,
     this.daCode,
     this.routeCode,
-    required this.deliverys,
+    required this.delivers,
   });
 
   ToSendCashDataModel copyWith({
@@ -50,7 +50,7 @@ class ToSendCashDataModel {
     String? gatePassNo,
     String? daCode,
     String? routeCode,
-    List<DeliveryCash>? deliverys,
+    List<DeliveryCash>? delivers,
   }) =>
       ToSendCashDataModel(
         billingDocNo: billingDocNo ?? this.billingDocNo,
@@ -67,7 +67,7 @@ class ToSendCashDataModel {
         gatePassNo: gatePassNo ?? this.gatePassNo,
         daCode: daCode ?? this.daCode,
         routeCode: routeCode ?? this.routeCode,
-        deliverys: deliverys ?? this.deliverys,
+        delivers: delivers ?? this.delivers,
       );
 
   factory ToSendCashDataModel.fromJson(String str) =>
@@ -89,7 +89,7 @@ class ToSendCashDataModel {
         gatePassNo: json['gate_pass_no'],
         daCode: json["da_code"],
         routeCode: json["route_code"],
-        deliverys: List<DeliveryCash>.from(
+        delivers: List<DeliveryCash>.from(
             json["deliverys"].map((x) => DeliveryCash.fromMap(x))),
       );
 
@@ -106,9 +106,11 @@ class ToSendCashDataModel {
         "gate_pass_no": gatePassNo,
         "da_code": daCode,
         "route_code": routeCode,
-        "deliverys": List<dynamic>.from(deliverys.map((x) => x.toMap())),
+        "deliverys": List<dynamic>.from(delivers.map((x) => x.toMap())),
       };
 }
+
+//01521713619
 
 class DeliveryCash {
   int? returnQuantity;

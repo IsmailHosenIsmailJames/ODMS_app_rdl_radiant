@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
@@ -13,22 +14,28 @@ import '../../core/login/login_function.dart';
 import '../../theme/text_scaler_theme.dart';
 import '../auth/login/login_page.dart';
 
-class AttendencePage extends StatefulWidget {
-  const AttendencePage({super.key});
+class AttendanceEvening extends StatefulWidget {
+  const AttendanceEvening({super.key});
 
   @override
-  State<AttendencePage> createState() => _AttendencePageState();
+  State<AttendanceEvening> createState() => _AttendanceEveningState();
 }
 
-class _AttendencePageState extends State<AttendencePage> {
-  Map<String, dynamic> jsonUserdata = {};
+class _AttendanceEveningState extends State<AttendanceEvening> {
+  Map<String, dynamic> jsonUserData = {};
+  bool isEveningDoneToday = false;
   @override
   void initState() {
     final box = Hive.box('info');
-    jsonUserdata = Map<String, dynamic>.from(
+    jsonUserData = Map<String, dynamic>.from(
       jsonDecode(box.get('userData', defaultValue: '{}') as String) as Map,
     );
-    jsonUserdata = Map<String, dynamic>.from(jsonUserdata['result'] as Map);
+    jsonUserData = Map<String, dynamic>.from(jsonUserData['result'] as Map);
+    int lastEveningAttendanceDate = box.get('lastEveningAttendanceDate') ?? -1;
+    int todayDate = DateTime.now().day;
+    if (lastEveningAttendanceDate == todayDate) {
+      isEveningDoneToday = true;
+    }
     super.initState();
   }
 
@@ -45,7 +52,7 @@ class _AttendencePageState extends State<AttendencePage> {
             child: Column(
               children: [
                 const Text(
-                  'Good Morning',
+                  'Good Evening',
                   style: TextStyle(
                     fontWeight: FontWeight.w900,
                     fontSize: 40,
@@ -78,7 +85,7 @@ class _AttendencePageState extends State<AttendencePage> {
                             ),
                           ),
                           Text(
-                            jsonUserdata['sap_id'].toString(),
+                            ":  ${jsonUserData['sap_id']}",
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -103,7 +110,7 @@ class _AttendencePageState extends State<AttendencePage> {
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Text(
-                              jsonUserdata['full_name'].toString(),
+                              ":  ${jsonUserData['full_name']}",
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -127,7 +134,7 @@ class _AttendencePageState extends State<AttendencePage> {
                             ),
                           ),
                           Text(
-                            jsonUserdata['mobile_number'].toString(),
+                            ":  ${jsonUserData['mobile_number']}",
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -150,7 +157,7 @@ class _AttendencePageState extends State<AttendencePage> {
                             ),
                           ),
                           Text(
-                            jsonUserdata['user_type'].toString(),
+                            ":  ${jsonUserData['user_type']}",
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -161,6 +168,15 @@ class _AttendencePageState extends State<AttendencePage> {
                     ],
                   ),
                 ),
+                if (isEveningDoneToday)
+                  Text(
+                    "Your attendance for today is already done",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
                 Container(
                   margin: const EdgeInsets.all(20),
                   width: double.infinity,
@@ -173,63 +189,73 @@ class _AttendencePageState extends State<AttendencePage> {
                         ),
                       ),
                     ),
-                    onPressed: () async {
-                      setState(() {
-                        sendingData = true;
-                      });
-                      final box = Hive.box('info');
-                      final data = await box.get('userData') as String;
-                      final decodeData =
-                          Map<String, dynamic>.from(jsonDecode(data) as Map);
-                      final uri = Uri.parse(
-                        base + startWorkPath,
-                      );
-                      final request = http.MultipartRequest('POST', uri);
+                    onPressed: isEveningDoneToday
+                        ? null
+                        : () async {
+                            setState(() {
+                              sendingData = true;
+                            });
+                            final box = Hive.box('info');
+                            final data = await box.get('userData') as String;
+                            final decodeData = Map<String, dynamic>.from(
+                                jsonDecode(data) as Map);
+                            final uri = Uri.parse(
+                              // ignore: avoid_dynamic_calls
+                              '$base$endWorkPath/${decodeData['result']['sap_id']}',
+                            );
+                            final request = http.MultipartRequest('PUT', uri);
 
-                      request.fields['sap_id'] =
-                          // ignore: avoid_dynamic_calls
-                          decodeData['result']['sap_id'].toString();
+                            final locationData =
+                                await Geolocator.getCurrentPosition();
 
-                      final locationData =
-                          await Geolocator.getCurrentPosition();
+                            request.fields['end_latitude'] =
+                                locationData.latitude.toString();
 
-                      request.fields['start_latitude'] =
-                          locationData.latitude.toString();
+                            request.fields['end_longitude'] =
+                                locationData.longitude.toString();
+                            final response = await request.send();
 
-                      request.fields['start_longitude'] =
-                          locationData.longitude.toString();
-                      final response = await request.send();
-                      setState(() {
-                        sendingData = false;
-                      });
-                      if (response.statusCode == 200) {
-                        unawaited(Fluttertoast.showToast(msg: 'Successfull'));
-                        final userLoginDataCridential =
-                            Map<String, dynamic>.from(
-                          Hive.box('info').get(
-                            'userLoginCradintial',
-                            defaultValue: Map<String, dynamic>.from({}),
-                          ) as Map,
-                        );
-                        if (userLoginDataCridential.isNotEmpty) {
-                          unawaited(
-                            loginAndGetJsonResponse(userLoginDataCridential)
-                                .then(
-                              (value) async {
-                                await analyzeResponseLogin(
-                                  value,
-                                  userLoginDataCridential,
+                            if (response.statusCode == 200) {
+                              await box.put('lastEveningAttendanceDate',
+                                  DateTime.now().day);
+
+                              unawaited(
+                                  Fluttertoast.showToast(msg: 'Successful'));
+                              final userLoginDataCredential =
+                                  Map<String, dynamic>.from(
+                                Hive.box('info').get(
+                                  'userLoginCradintial',
+                                  defaultValue: Map<String, dynamic>.from({}),
+                                ) as Map,
+                              );
+
+                              if (userLoginDataCredential.isNotEmpty) {
+                                unawaited(
+                                  loginAndGetJsonResponse(
+                                          userLoginDataCredential)
+                                      .then(
+                                    (value) async {
+                                      await analyzeResponseLogin(
+                                        value,
+                                        userLoginDataCredential,
+                                      );
+                                    },
+                                  ),
                                 );
-                              },
-                            ),
-                          );
-                        }
-                      } else {
-                        unawaited(
-                          Fluttertoast.showToast(msg: 'Something went worng'),
-                        );
-                      }
-                    },
+                              }
+                              setState(() {
+                                sendingData = false;
+                              });
+                            } else {
+                              if (kDebugMode) {
+                                print(response.statusCode);
+                              }
+                              unawaited(
+                                Fluttertoast.showToast(
+                                    msg: 'Something went wrong'),
+                              );
+                            }
+                          },
                     icon: sendingData
                         ? null
                         : const Icon(
@@ -240,7 +266,7 @@ class _AttendencePageState extends State<AttendencePage> {
                             color: Colors.white,
                           )
                         : const Text(
-                            'Start Work',
+                            'Finish Work',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,

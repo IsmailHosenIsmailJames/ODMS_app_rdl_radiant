@@ -9,9 +9,9 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-import 'package:rdl_radiant/src/screens/attendence/attendence_evening.dart';
+import 'package:rdl_radiant/src/screens/attendance/attendance_evening.dart';
 import 'package:rdl_radiant/src/screens/auth/login/login_page.dart';
-import 'package:rdl_radiant/src/screens/coustomer_location/set_customer_location.dart';
+import 'package:rdl_radiant/src/screens/customer_location/set_customer_location.dart';
 
 import '../../../apis/apis.dart';
 import '../../../widgets/loading/loading_popup_widget.dart';
@@ -19,9 +19,9 @@ import '../../../widgets/loading/loading_text_controller.dart';
 import '../conveyance/controller/conveyance_data_controller.dart';
 import '../conveyance/conveyance_page.dart';
 import '../conveyance/model/conveyance_data_model.dart';
-import '../delivary_ramaining/controller/delivery_remaning_controller.dart';
-import '../delivary_ramaining/delivery_remaining_page.dart';
-import '../delivary_ramaining/models/deliver_remaing_model.dart';
+import '../delivery_remaining/controller/delivery_remaining_controller.dart';
+import '../delivery_remaining/delivery_remaining_page.dart';
+import '../delivery_remaining/models/deliver_remaining_model.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -61,7 +61,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
-                    letterSpacing: 40,
+                    letterSpacing: 45,
                   ),
                 ),
                 Text(
@@ -83,7 +83,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 }
 
                 Get.to(
-                  () => const AttendenceEvening(),
+                  () => const AttendanceEvening(),
                 );
               },
               child: const Row(
@@ -95,7 +95,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   ),
                   Gap(20),
                   Text(
-                    'Evening Attendence',
+                    'Evening Attendance',
                     style: TextStyle(
                       color: Colors.black,
                     ),
@@ -123,7 +123,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   ),
                   Gap(20),
                   Text(
-                    'Set Coustomer Location',
+                    'Set Customer Location',
                     style: TextStyle(
                       color: Colors.black,
                     ),
@@ -244,11 +244,11 @@ class _MyDrawerState extends State<MyDrawer> {
 
     loadingTextController.currentState.value = 0;
     loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
-    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+    showCustomPopUpLoadingDialog(context, isCupertino: true);
 
     final response = await get(url);
     if (kDebugMode) {
-      log("Got Delivery Remaning List");
+      log("Got Delivery Remaining List");
       log(response.statusCode.toString());
       log(response.body);
     }
@@ -257,17 +257,17 @@ class _MyDrawerState extends State<MyDrawer> {
       loadingTextController.currentState.value = 1;
       loadingTextController.loadingText.value = 'Successful';
 
-      final modelFormHTTPResponse = DeliveryRemaing.fromJson(response.body);
-      final patners = modelFormHTTPResponse.result!;
+      final modelFormHTTPResponse = DeliveryRemaining.fromJson(response.body);
+      final partners = modelFormHTTPResponse.result!;
       Map<String, List<Result>> mapForMarge = {};
-      for (var patner in patners) {
-        List<Result> previosList = mapForMarge[patner.partner] ?? [];
-        if (previosList.isNotEmpty) {
-          previosList[0].invoiceList!.addAll(patner.invoiceList!);
-          mapForMarge[patner.partner!] = previosList;
+      for (var partner in partners) {
+        List<Result> previousList = mapForMarge[partner.partner] ?? [];
+        if (previousList.isNotEmpty) {
+          previousList[0].invoiceList!.addAll(partner.invoiceList!);
+          mapForMarge[partner.partner!] = previousList;
         } else {
-          previosList.add(patner);
-          mapForMarge[patner.partner!] = previosList;
+          previousList.add(partner);
+          mapForMarge[partner.partner!] = previousList;
         }
       }
 
@@ -279,12 +279,12 @@ class _MyDrawerState extends State<MyDrawer> {
       );
 
       final controller = Get.put(
-        DeliveryRemaningController(modelFormHTTPResponse),
+        DeliveryRemainingController(modelFormHTTPResponse),
       );
-      controller.deliveryRemaing.value = modelFormHTTPResponse;
-      controller.constDeliveryRemaing.value = modelFormHTTPResponse;
-      controller.deliveryRemaing.value.result ??= [];
-      controller.constDeliveryRemaing.value.result ??= [];
+      controller.deliveryRemaining.value = modelFormHTTPResponse;
+      controller.constDeliveryRemaining.value = modelFormHTTPResponse;
+      controller.deliveryRemaining.value.result ??= [];
+      controller.constDeliveryRemaining.value.result ??= [];
       controller.pageType.value = 'Overdue';
       await Future.delayed(const Duration(milliseconds: 100));
       if (Navigator.canPop(context)) {
@@ -298,7 +298,7 @@ class _MyDrawerState extends State<MyDrawer> {
       );
     } else {
       loadingTextController.currentState.value = -1;
-      loadingTextController.loadingText.value = 'Something went worng';
+      loadingTextController.loadingText.value = 'Something went wrong';
     }
   }
 
@@ -310,7 +310,7 @@ class _MyDrawerState extends State<MyDrawer> {
 
     loadingTextController.currentState.value = 0;
     loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
-    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+    showCustomPopUpLoadingDialog(context, isCupertino: true);
 
     final response = await get(url);
     log(response.body);
@@ -330,7 +330,7 @@ class _MyDrawerState extends State<MyDrawer> {
         temList.add(SavePharmaceuticalsLocationData.fromMap(
             Map<String, dynamic>.from(tem[i])));
       }
-      conveyanceDataController.convenceData.value = temList.reversed.toList();
+      conveyanceDataController.convinceData.value = temList.reversed.toList();
 
       await Future.delayed(const Duration(milliseconds: 100));
       if (Navigator.canPop(context)) {
@@ -345,7 +345,7 @@ class _MyDrawerState extends State<MyDrawer> {
       );
     } else {
       loadingTextController.currentState.value = -1;
-      loadingTextController.loadingText.value = 'Something went worng';
+      loadingTextController.loadingText.value = 'Something went wrong';
     }
   }
 }

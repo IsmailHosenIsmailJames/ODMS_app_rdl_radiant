@@ -11,38 +11,38 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
-import 'package:rdl_radiant/src/screens/home/delivary_ramaining/controller/delivery_remaning_controller.dart';
-import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
+import 'package:rdl_radiant/src/screens/home/delivery_remaining/controller/delivery_remaining_controller.dart';
+import 'package:rdl_radiant/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
 import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
-import 'package:rdl_radiant/src/screens/home/page_sate_defination.dart';
+import 'package:rdl_radiant/src/screens/home/page_sate_definition.dart';
 import 'package:rdl_radiant/src/screens/home/product_list/models/delivery_data.dart';
 import 'package:http/http.dart' as http;
-import 'package:rdl_radiant/src/widgets/coomon_widgets_function.dart';
+import 'package:rdl_radiant/src/widgets/common_widgets_function.dart';
 
 import '../../../theme/text_scaler_theme.dart';
 import '../../../widgets/loading/loading_popup_widget.dart';
 import '../../../widgets/loading/loading_text_controller.dart';
 
-class ProdouctListPage extends StatefulWidget {
+class ProductListPage extends StatefulWidget {
   final DateTime? dateOfDelivery;
   final InvoiceList invoice;
-  final String invioceNo;
+  final String invoiceNo;
   final String totalAmount;
   final int index;
-  const ProdouctListPage({
+  const ProductListPage({
     super.key,
     required this.invoice,
-    required this.invioceNo,
+    required this.invoiceNo,
     required this.totalAmount,
     required this.index,
     this.dateOfDelivery,
   });
 
   @override
-  State<ProdouctListPage> createState() => _ProdouctListPageState();
+  State<ProductListPage> createState() => _ProductListPageState();
 }
 
-class _ProdouctListPageState extends State<ProdouctListPage> {
+class _ProductListPageState extends State<ProductListPage> {
   final invoiceListController = Get.put(InvoiceListController());
   final LoadingTextController loadingTextController = Get.find();
 
@@ -53,7 +53,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
   List<double> returnAmountList = [];
   final formKey = GlobalKey<FormState>();
 
-  final DeliveryRemaningController deliveryRemaningController = Get.find();
+  final DeliveryRemainingController deliveryRemainingController = Get.find();
 
   String pageType = '';
 
@@ -66,7 +66,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
       returnTextEditingControllerList.add(TextEditingController());
       returnAmountList.add(0);
     }
-    pageType = deliveryRemaningController.pageType.value;
+    pageType = deliveryRemainingController.pageType.value;
 
     super.initState();
   }
@@ -88,13 +88,13 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
         isDeliveryForToday = false;
       }
     }
-    double totalReceiveAmmount = 0;
+    double totalReceiveAmount = 0;
     for (var e in receiveAmountList) {
-      totalReceiveAmmount += e;
+      totalReceiveAmount += e;
     }
-    double totalRetrunAmmount = 0;
+    double totalReturnAmount = 0;
     for (var e in returnAmountList) {
-      totalRetrunAmmount += e;
+      totalReturnAmount += e;
     }
     return MediaQuery(
       data: MediaQuery.of(context)
@@ -197,7 +197,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                widget.invioceNo,
+                                widget.invoiceNo,
                                 style: topContainerTextStyle,
                               ),
                             ],
@@ -215,17 +215,17 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                           child: Column(
                             children: [
                               getRowWidgetForDetailsBox(
-                                "Coustomer Name",
+                                "Customer Name",
                                 widget.invoice.customerName ?? "",
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Coustomer Address",
+                                "Customer Address",
                                 widget.invoice.customerAddress ?? "",
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Coustomer Mobile",
+                                "Customer Mobile",
                                 widget.invoice.customerMobile ?? "",
                                 optionalWidgetsAtLast: SizedBox(
                                   height: 23,
@@ -407,17 +407,17 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                           validator: (value) {
                                             value ??= "";
                                             if (value.isEmpty) value = "0";
-                                            int? recQuentaty =
+                                            int? recQuantity =
                                                 int.tryParse(value);
-                                            if (recQuentaty != null) {
-                                              int? retQuentaty = int.tryParse(
+                                            if (recQuantity != null) {
+                                              int? retQuantity = int.tryParse(
                                                   returnTextEditingControllerList[
                                                           index]
                                                       .text);
-                                              retQuentaty ??= 0;
-                                              int totalQuentaty =
-                                                  recQuentaty + retQuentaty;
-                                              if (totalQuentaty !=
+                                              retQuantity ??= 0;
+                                              int totalQuantity =
+                                                  recQuantity + retQuantity;
+                                              if (totalQuantity !=
                                                   (productList[index]
                                                           .quantity ??
                                                       0)) {
@@ -430,7 +430,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                             }
                                           },
                                           onChanged: (value) {
-                                            newRecivedQtyTextFieldChange(
+                                            newReceivedQtyTextFieldChange(
                                               value,
                                               index,
                                               perProduct,
@@ -460,17 +460,17 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                                           validator: (value) {
                                             value ??= "";
                                             if (value.isEmpty) value = "0";
-                                            int? retQuentaty =
+                                            int? retQuantity =
                                                 int.tryParse(value);
-                                            if (retQuentaty != null) {
-                                              int? recQuentaty = int.tryParse(
+                                            if (retQuantity != null) {
+                                              int? recQuantity = int.tryParse(
                                                   receiveTextEditingControllerList[
                                                           index]
                                                       .text);
-                                              recQuentaty ??= 0;
-                                              int totalQuentaty =
-                                                  retQuentaty + recQuentaty;
-                                              if (totalQuentaty !=
+                                              recQuantity ??= 0;
+                                              int totalQuantity =
+                                                  retQuantity + recQuantity;
+                                              if (totalQuantity !=
                                                   (productList[index]
                                                           .quantity ??
                                                       0)) {
@@ -577,7 +577,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                           height: 40,
                           child: Center(
                             child: Text(
-                                "Total Rec.: ${totalReceiveAmmount.toStringAsFixed(2)}",
+                                "Total Rec.: ${totalReceiveAmount.toStringAsFixed(2)}",
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -596,7 +596,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
                           height: 40,
                           child: Center(
                             child: Text(
-                              "Total Ret.: ${totalRetrunAmmount.toStringAsFixed(2)}",
+                              "Total Ret.: ${totalReturnAmount.toStringAsFixed(2)}",
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -645,13 +645,13 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
     int realQty,
   ) {
     if (value.isEmpty) value = "0";
-    int? retQuentaty = int.tryParse(value);
-    if (retQuentaty != null) {
-      int? recQuentaty =
+    int? retQuantity = int.tryParse(value);
+    if (retQuantity != null) {
+      int? recQuantity =
           int.tryParse(receiveTextEditingControllerList[index].text);
-      recQuentaty ??= 0;
-      int totalQuentaty = retQuentaty + recQuentaty;
-      if (totalQuentaty != (productList[index].quantity ?? 0)) {
+      recQuantity ??= 0;
+      int totalQuantity = retQuantity + recQuantity;
+      if (totalQuantity != (productList[index].quantity ?? 0)) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
             receiveAmountList[index] = 0;
@@ -660,18 +660,18 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
       }
       WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
-          returnAmountList[index] = perProduct * retQuentaty;
-          receiveAmountList[index] = perProduct * (recQuentaty ?? 0);
+          returnAmountList[index] = perProduct * retQuantity;
+          receiveAmountList[index] = perProduct * (recQuantity ?? 0);
         });
       });
-      int autoReceviedQty = realQty - retQuentaty;
-      if (autoReceviedQty >= 0) {
-        if (recQuentaty != autoReceviedQty) {
+      int autoReceivedQty = realQty - retQuantity;
+      if (autoReceivedQty >= 0) {
+        if (recQuantity != autoReceivedQty) {
           receiveTextEditingControllerList[index].text =
-              autoReceviedQty.toString();
+              autoReceivedQty.toString();
           WidgetsBinding.instance.addPostFrameCallback((_) {
             setState(() {
-              receiveAmountList[index] = perProduct * autoReceviedQty;
+              receiveAmountList[index] = perProduct * autoReceivedQty;
             });
           });
         }
@@ -685,20 +685,20 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
     }
   }
 
-  void newRecivedQtyTextFieldChange(
+  void newReceivedQtyTextFieldChange(
     String value,
     int index,
     double perProduct,
     int realQty,
   ) {
     if (value.isEmpty) value = "0";
-    int? recQuentaty = int.tryParse(value);
-    if (recQuentaty != null) {
-      int? retQuentaty =
+    int? recQuantity = int.tryParse(value);
+    if (recQuantity != null) {
+      int? retQuantity =
           int.tryParse(returnTextEditingControllerList[index].text);
-      retQuentaty ??= 0;
-      int totalQuentaty = recQuentaty + retQuentaty;
-      if (totalQuentaty != (productList[index].quantity ?? 0)) {
+      retQuantity ??= 0;
+      int totalQuantity = recQuantity + retQuantity;
+      if (totalQuantity != (productList[index].quantity ?? 0)) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           setState(() {
             receiveAmountList[index] = 0;
@@ -707,13 +707,13 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
       }
       WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
-          returnAmountList[index] = perProduct * (retQuentaty ?? 0);
-          receiveAmountList[index] = perProduct * recQuentaty;
+          returnAmountList[index] = perProduct * (retQuantity ?? 0);
+          receiveAmountList[index] = perProduct * recQuantity;
         });
       });
-      int autoRetQty = realQty - recQuentaty;
+      int autoRetQty = realQty - recQuantity;
       if (autoRetQty >= 0) {
-        if (retQuentaty != autoRetQty) {
+        if (retQuantity != autoRetQty) {
           returnTextEditingControllerList[index].text = autoRetQty.toString();
           WidgetsBinding.instance.addPostFrameCallback((_) {
             setState(() {
@@ -737,7 +737,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
       loadingTextController.loadingText.value =
           'Accessing Your Location\nPlease wait...';
 
-      showCoustomPopUpLoadingDialog(context, isCuputino: true);
+      showCustomPopUpLoadingDialog(context, isCupertino: true);
 
       try {
         final position = await Geolocator.getCurrentPosition(
@@ -792,7 +792,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
           cashCollectionLatitude: null,
           cashCollectionLongitude: null,
           cashCollectionStatus: null,
-          deliverys: listOfDelivery,
+          delivers: listOfDelivery,
         );
         loadingTextController.loadingText.value =
             'Your Location Accessed\nSending data to server\nPlease wait...';
@@ -803,7 +803,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
           headers: {"Content-Type": "application/json"},
           body: deliveryData.toJson(),
         );
-        log("Successfull post : ${response.statusCode}");
+        log("Successfully post : ${response.statusCode}");
         log("Got response data :${response.body}");
 
         if (response.statusCode == 200) {
@@ -812,28 +812,28 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
             try {
               final box = Hive.box('info');
               final url = Uri.parse(
-                "$base${(pageType == pagesState[0] || pageType == pagesState[1]) ? getDelivaryList : cashCollectionList}/${box.get('sap_id')}?type=${(pageType == pagesState[1] ? "Done" : "Remaining")}&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+                "$base${(pageType == pagesState[0] || pageType == pagesState[1]) ? getDeliveryList : cashCollectionList}/${box.get('sap_id')}?type=${(pageType == pagesState[1] ? "Done" : "Remaining")}&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
               );
 
               final response = await http.get(url);
 
               if (response.statusCode == 200) {
                 if (kDebugMode) {
-                  print("Got Delivery Remaning List");
+                  print("Got Delivery Remaining List");
                   print(response.body);
                 }
 
                 final controller = Get.put(
-                  DeliveryRemaningController(
-                    DeliveryRemaing.fromJson(response.body),
+                  DeliveryRemainingController(
+                    DeliveryRemaining.fromJson(response.body),
                   ),
                 );
-                controller.deliveryRemaing.value =
-                    DeliveryRemaing.fromJson(response.body);
-                controller.constDeliveryRemaing.value =
-                    DeliveryRemaing.fromJson(response.body);
-                controller.deliveryRemaing.value.result ??= [];
-                controller.constDeliveryRemaing.value.result ??= [];
+                controller.deliveryRemaining.value =
+                    DeliveryRemaining.fromJson(response.body);
+                controller.constDeliveryRemaining.value =
+                    DeliveryRemaining.fromJson(response.body);
+                controller.deliveryRemaining.value.result ??= [];
+                controller.constDeliveryRemaining.value.result ??= [];
               }
             } catch (e) {
               log(e.toString());
@@ -855,7 +855,7 @@ class _ProdouctListPageState extends State<ProdouctListPage> {
         } else {
           loadingTextController.currentState.value = -1;
           loadingTextController.loadingText.value =
-              'Something went worng with ${response.statusCode}';
+              'Something went wrong with ${response.statusCode}';
         }
       } catch (e) {
         loadingTextController.currentState.value = -1;

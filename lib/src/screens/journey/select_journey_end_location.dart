@@ -103,11 +103,11 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
         generatePolylinesFormsPoints(value);
       },
     );
-    List<Placemark> placemarks = await placemarkFromCoordinates(
+    List<Placemark> placeMarks = await placemarkFromCoordinates(
       latlng.latitude,
       latlng.longitude,
     );
-    final listOfAddress = analyzePlackeMark(placemarks);
+    final listOfAddress = analyzePlaceMark(placeMarks);
     street = listOfAddress[0];
     name = listOfAddress[1];
     administrativeArea = listOfAddress[2];
@@ -237,7 +237,7 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
                   ),
                 );
               },
-              // if you want to add seperator between list items
+              // if you want to add separator between list items
               seperatedBuilder: const Divider(),
               // want to show close icon
               isCrossBtnShown: true,

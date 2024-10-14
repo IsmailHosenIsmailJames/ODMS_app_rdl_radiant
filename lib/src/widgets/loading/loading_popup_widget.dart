@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:rdl_radiant/src/widgets/loading/loading_text_controller.dart';
 
-void showCoustomPopUpLoadingDialog(BuildContext context,
-    {bool isCuputino = true}) {
+void showCustomPopUpLoadingDialog(BuildContext context,
+    {bool isCupertino = true}) {
   final Widget widget = Dialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     child: Padding(
@@ -96,7 +96,7 @@ void showCoustomPopUpLoadingDialog(BuildContext context,
     ),
   );
 
-  isCuputino == true
+  isCupertino == true
       ? showCupertinoDialog(
           context: context,
           builder: (context) => Scaffold(

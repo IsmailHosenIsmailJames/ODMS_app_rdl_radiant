@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:get/get_utils/src/extensions/double_extensions.dart';
-
 class DeliveryData {
   String? billingDocNo;
   String? billingDate;
@@ -20,7 +18,7 @@ class DeliveryData {
   String? cashCollectionLatitude;
   String? cashCollectionLongitude;
   String? cashCollectionStatus;
-  List<Delivery> deliverys;
+  List<Delivery> delivers;
 
   DeliveryData({
     this.billingDocNo,
@@ -40,7 +38,7 @@ class DeliveryData {
     this.cashCollectionLatitude,
     this.cashCollectionLongitude,
     this.cashCollectionStatus,
-    required this.deliverys,
+    required this.delivers,
   });
 
   DeliveryData copyWith({
@@ -61,7 +59,7 @@ class DeliveryData {
     String? cashCollectionLatitude,
     String? cashCollectionLongitude,
     String? cashCollectionStatus,
-    List<Delivery>? deliverys,
+    List<Delivery>? delivers,
   }) =>
       DeliveryData(
         billingDocNo: billingDocNo ?? this.billingDocNo,
@@ -83,7 +81,7 @@ class DeliveryData {
         cashCollectionLongitude:
             cashCollectionLongitude ?? this.cashCollectionLongitude,
         cashCollectionStatus: cashCollectionStatus ?? this.cashCollectionStatus,
-        deliverys: deliverys ?? this.deliverys,
+        delivers: delivers ?? this.delivers,
       );
 
   factory DeliveryData.fromJson(String str) =>
@@ -109,7 +107,7 @@ class DeliveryData {
         cashCollectionLatitude: json["cash_collection_latitude"],
         cashCollectionLongitude: json["cash_collection_longitude"],
         cashCollectionStatus: json["cash_collection_status"],
-        deliverys: List<Delivery>.from(
+        delivers: List<Delivery>.from(
             json["deliverys"].map((x) => Delivery.fromMap(x))),
       );
 
@@ -131,7 +129,7 @@ class DeliveryData {
         "cash_collection_latitude": cashCollectionLatitude,
         "cash_collection_longitude": cashCollectionLongitude,
         "cash_collection_status": cashCollectionStatus,
-        "deliverys": List<dynamic>.from(deliverys.map((x) => x.toMap())),
+        "deliverys": List<dynamic>.from(delivers.map((x) => x.toMap())),
       };
 }
 
@@ -213,11 +211,11 @@ class Delivery {
         "quantity": quantity,
         "tp": tp,
         "vat": vat,
-        "net_val": netVal?.toPrecision(2),
+        "net_val": netVal,
         "delivery_quantity": deliveryQuantity,
-        "delivery_net_val": deliveryNetVal?.toPrecision(2),
+        "delivery_net_val": deliveryNetVal,
         "return_quantity": returnQuantity,
-        "return_net_val": returnNetVal?.toPrecision(2),
+        "return_net_val": returnNetVal,
         "id": id,
       };
 }

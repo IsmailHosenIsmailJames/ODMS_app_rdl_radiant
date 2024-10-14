@@ -11,19 +11,19 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:rdl_radiant/src/apis/apis.dart';
-import 'package:rdl_radiant/src/screens/home/delivary_ramaining/models/deliver_remaing_model.dart';
+import 'package:rdl_radiant/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
 import 'package:rdl_radiant/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
-import 'package:rdl_radiant/src/screens/home/page_sate_defination.dart';
-import 'package:rdl_radiant/src/screens/home/product_list/prodouct_list_page.dart';
+import 'package:rdl_radiant/src/screens/home/page_sate_definition.dart';
+import 'package:rdl_radiant/src/screens/home/product_list/product_list_page.dart';
 import 'package:rdl_radiant/src/screens/home/product_list/cash_collection/product_list_cash_collection.dart';
 import 'package:rdl_radiant/src/screens/maps/map_view.dart';
 import 'package:simple_icons/simple_icons.dart';
 
 import '../../../theme/text_scaler_theme.dart';
-import '../../../widgets/coomon_widgets_function.dart';
+import '../../../widgets/common_widgets_function.dart';
 import '../../../widgets/loading/loading_popup_widget.dart';
 import '../../../widgets/loading/loading_text_controller.dart';
-import '../delivary_ramaining/controller/delivery_remaning_controller.dart';
+import '../delivery_remaining/controller/delivery_remaining_controller.dart';
 import 'controller/overdue_collect_controller.dart';
 
 class InvoiceListPage extends StatefulWidget {
@@ -42,7 +42,7 @@ class InvoiceListPage extends StatefulWidget {
 
 class _InvoiceListPageState extends State<InvoiceListPage> {
   final invoiceListController = Get.put(InvoiceListController());
-  final DeliveryRemaningController deliveryRemaningController = Get.find();
+  final DeliveryRemainingController deliveryRemainingController = Get.find();
   final LoadingTextController loadingTextController = Get.find();
   late final routeName = invoiceListController.invoiceList[0].routeName ?? "";
   late final daName = invoiceListController.invoiceList[0].daName ?? "";
@@ -53,8 +53,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
       invoiceListController.invoiceList[0].customerAddress ?? "";
 
   String pageType = '';
-  late double due =
-      invoiceListController.invoiceList[0].previousDueAmmount ?? 0;
+  late double due = invoiceListController.invoiceList[0].previousDueAmount ?? 0;
   late final customerMobile =
       invoiceListController.invoiceList[0].customerMobile ?? "";
   late final gatePassNo = invoiceListController.invoiceList[0].gatePassNo ?? "";
@@ -63,7 +62,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
 
   @override
   void initState() {
-    pageType = deliveryRemaningController.pageType.value;
+    pageType = deliveryRemainingController.pageType.value;
     totalAmount = widget.totalAmount;
     super.initState();
   }
@@ -81,8 +80,8 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
           .copyWith(textScaler: TextScaler.linear(textScalerValue)),
       child: Scaffold(
         appBar: AppBar(
-          title: deliveryRemaningController.pageType.value != ""
-              ? Text("${deliveryRemaningController.pageType.value} Details")
+          title: deliveryRemainingController.pageType.value != ""
+              ? Text("${deliveryRemainingController.pageType.value} Details")
               : const Text("Delivery Details"),
         ),
         floatingActionButton: FloatingActionButton(
@@ -155,27 +154,27 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                       ),
                       divider,
                       getRowWidgetForDetailsBox(
-                        "Coustomer Name",
+                        "Customer Name",
                         customerName,
                       ),
                       divider,
                       getRowWidgetForDetailsBox(
-                        "Coustomer Address",
+                        "Customer Address",
                         customerAddress,
                       ),
                       // divider,
                       // getRowWidgetForDetailsBox(
-                      //   "Coustomer lat.",
+                      //   "Customer lat.",
                       //   invoiceListController.invoiceList[0].latitude.toString(),
                       // ),
                       // divider,
                       // getRowWidgetForDetailsBox(
-                      //   "Coustomer lon.",
+                      //   "Customer lon.",
                       //   invoiceListController.invoiceList[0].longitude.toString(),
                       // ),
                       divider,
                       getRowWidgetForDetailsBox(
-                        "Coustomer Mobile",
+                        "Customer Mobile",
                         customerMobile,
                         optionalWidgetsAtLast: SizedBox(
                           height: 23,
@@ -215,10 +214,9 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                           due.toStringAsFixed(2),
                           optionalWidgetsAtLast: Row(
                             children: [
-                              const Gap(20),
                               SizedBox(
                                 height: 25,
-                                width: 90,
+                                width: 100,
                                 child: ElevatedButton(
                                   onPressed: due == 0
                                       ? null
@@ -252,7 +250,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                     int returnQty = 0;
                     double returnAmount = 0;
                     int deliveryQty = 0;
-                    double deliveryAmmount = 0;
+                    double deliveryAmount = 0;
                     for (final ProductList productList
                         in invoiceList[index].productList ?? []) {
                       amount +=
@@ -261,7 +259,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                       returnAmount += (productList.returnNetVal ?? 0);
                       deliveryQty +=
                           (productList.deliveryQuantity ?? 0).toInt();
-                      deliveryAmmount += (productList.deliveryNetVal ?? 0);
+                      deliveryAmount += (productList.deliveryNetVal ?? 0);
                     }
 
                     return GestureDetector(
@@ -273,7 +271,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                             ? await Get.to(
                                 () => ProductListCashCollection(
                                   invoice: invoiceList[index],
-                                  invioceNo:
+                                  invoiceNo:
                                       (invoiceList[index].billingDocNo ?? 0)
                                           .toString(),
                                   totalAmount:
@@ -282,9 +280,9 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                 ),
                               )
                             : await Get.to(
-                                () => ProdouctListPage(
+                                () => ProductListPage(
                                   invoice: invoiceList[index],
-                                  invioceNo:
+                                  invoiceNo:
                                       (invoiceList[index].billingDocNo ?? 0)
                                           .toString(),
                                   totalAmount: pageType == pagesState[5]
@@ -545,7 +543,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                                 SizedBox(
                                                   width: width / 3.5,
                                                   child: Text(
-                                                    deliveryAmmount
+                                                    deliveryAmount
                                                         .toStringAsFixed(2),
                                                     style: style.copyWith(
                                                       fontWeight:
@@ -627,12 +625,12 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
   Future<void> onPreviousDueCollectButtonPressed(BuildContext context) async {
     // Backup Current Data
     final invoiceList = invoiceListController.invoiceList.value.toList();
-    final String? patnerPrev = invoiceListController.invoiceList[0].partner;
+    final String? partnerPrev = invoiceListController.invoiceList[0].partner;
 
-    final constDeliveryRemaing =
-        deliveryRemaningController.constDeliveryRemaing.value.toMap();
-    final pageTypePrev = deliveryRemaningController.pageType.value.toString();
-    final x = deliveryRemaningController.x.toMap();
+    final constDeliveryRemaining =
+        deliveryRemainingController.constDeliveryRemaining.value.toMap();
+    final pageTypePrev = deliveryRemainingController.pageType.value.toString();
+    final x = deliveryRemainingController.x.toMap();
 
     //Call api for due list
     final box = Hive.box('info');
@@ -642,7 +640,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
 
     loadingTextController.currentState.value = 0;
     loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
-    showCoustomPopUpLoadingDialog(context, isCuputino: true);
+    showCustomPopUpLoadingDialog(context, isCupertino: true);
 
     final response = await get(url);
 
@@ -656,17 +654,17 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
       loadingTextController.currentState.value = 1;
       loadingTextController.loadingText.value = 'Successful';
 
-      final modelFormHTTPResponse = DeliveryRemaing.fromJson(response.body);
-      final patners = modelFormHTTPResponse.result!;
+      final modelFormHTTPResponse = DeliveryRemaining.fromJson(response.body);
+      final partners = modelFormHTTPResponse.result!;
       Map<String, List<Result>> mapForMarge = {};
-      for (var patner in patners) {
-        List<Result> previosList = mapForMarge[patner.partner] ?? [];
-        if (previosList.isNotEmpty) {
-          previosList[0].invoiceList!.addAll(patner.invoiceList!);
-          mapForMarge[patner.partner!] = previosList;
+      for (var partner in partners) {
+        List<Result> previousList = mapForMarge[partner.partner] ?? [];
+        if (previousList.isNotEmpty) {
+          previousList[0].invoiceList!.addAll(partner.invoiceList!);
+          mapForMarge[partner.partner!] = previousList;
         } else {
-          previosList.add(patner);
-          mapForMarge[patner.partner!] = previosList;
+          previousList.add(partner);
+          mapForMarge[partner.partner!] = previousList;
         }
       }
 
@@ -678,22 +676,22 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
       );
 
       final controller = Get.put(
-        DeliveryRemaningController(modelFormHTTPResponse),
+        DeliveryRemainingController(modelFormHTTPResponse),
       );
-      controller.deliveryRemaing.value = modelFormHTTPResponse;
-      controller.constDeliveryRemaing.value = modelFormHTTPResponse;
-      controller.deliveryRemaing.value.result ??= [];
-      controller.constDeliveryRemaing.value.result ??= [];
+      controller.deliveryRemaining.value = modelFormHTTPResponse;
+      controller.constDeliveryRemaining.value = modelFormHTTPResponse;
+      controller.deliveryRemaining.value.result ??= [];
+      controller.constDeliveryRemaining.value.result ??= [];
       controller.pageType.value = 'Overdue';
       await Future.delayed(const Duration(milliseconds: 100));
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
       }
-      //  Go to invoice direcly
-      final results = controller.constDeliveryRemaing.value.result!;
+      //  Go to invoice directly
+      final results = controller.constDeliveryRemaining.value.result!;
       Result? result;
       for (var r in results) {
-        if (r.partner == patnerPrev) {
+        if (r.partner == partnerPrev) {
           result = r;
         }
       }
@@ -714,16 +712,16 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
       // back
     } else {
       loadingTextController.currentState.value = -1;
-      loadingTextController.loadingText.value = 'Something went worng';
+      loadingTextController.loadingText.value = 'Something went wrong';
     }
 
-    //Back backuped data again
+    //Back data again
     invoiceListController.invoiceList.value = invoiceList;
 
-    deliveryRemaningController.constDeliveryRemaing.value =
-        DeliveryRemaing.fromMap(constDeliveryRemaing);
-    deliveryRemaningController.pageType.value = pageTypePrev;
-    deliveryRemaningController.x = DeliveryRemaing.fromMap(x);
+    deliveryRemainingController.constDeliveryRemaining.value =
+        DeliveryRemaining.fromMap(constDeliveryRemaining);
+    deliveryRemainingController.pageType.value = pageTypePrev;
+    deliveryRemainingController.x = DeliveryRemaining.fromMap(x);
   }
 
   void callDueCollectionApi(
@@ -794,20 +792,18 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                 const Gap(10),
                 Row(
                   children: [
-                    const Text(
+                    Text(
                       "Previous due:",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const Gap(10),
                     Obx(
                       () => Text(
                         dueController.previousDue.toString(),
-                        style: const TextStyle(
-                          fontSize: 16,
-                        ),
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     )
                   ],
@@ -815,20 +811,18 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                 const Gap(5),
                 Row(
                   children: [
-                    const Text(
-                      "Due after cash collection:",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Text(
+                      "Due after collection:",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const Gap(10),
                     Obx(
                       () => Text(
-                        dueController.currentDue.toString(),
-                        style: const TextStyle(
-                          fontSize: 16,
-                        ),
+                        dueController.currentDue.toStringAsFixed(2),
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
                     )
                   ],
@@ -848,8 +842,8 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                             loadingTextController.loadingText.value =
                                 'Accessing Your Location\nPlease wait...';
 
-                            showCoustomPopUpLoadingDialog(context,
-                                isCuputino: true);
+                            showCustomPopUpLoadingDialog(context,
+                                isCupertino: true);
                             try {
                               final position =
                                   await Geolocator.getCurrentPosition(
@@ -901,20 +895,20 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                       }
 
                                       final controller = Get.put(
-                                        DeliveryRemaningController(
-                                          DeliveryRemaing.fromJson(
+                                        DeliveryRemainingController(
+                                          DeliveryRemaining.fromJson(
                                               response.body),
                                         ),
                                       );
-                                      controller.deliveryRemaing.value =
-                                          DeliveryRemaing.fromJson(
+                                      controller.deliveryRemaining.value =
+                                          DeliveryRemaining.fromJson(
                                               response.body);
-                                      controller.constDeliveryRemaing.value =
-                                          DeliveryRemaing.fromJson(
+                                      controller.constDeliveryRemaining.value =
+                                          DeliveryRemaining.fromJson(
                                               response.body);
-                                      controller
-                                          .deliveryRemaing.value.result ??= [];
-                                      controller.constDeliveryRemaing.value
+                                      controller.deliveryRemaining.value
+                                          .result ??= [];
+                                      controller.constDeliveryRemaining.value
                                           .result ??= [];
                                     }
                                   } catch (e) {

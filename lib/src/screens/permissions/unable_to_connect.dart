@@ -67,7 +67,7 @@ class _UnableToConnectState extends State<UnableToConnect> {
           ),
           const Gap(10),
           Text(
-            'Your internet connection is too solow to\nconnect with server. We must need stable internet\nconnection for running this app with essential features.\nPlease check your internet connection',
+            'Your internet connection is too slow to\nconnect with server. We must need stable internet\nconnection for running this app with essential features.\nPlease check your internet connection',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,

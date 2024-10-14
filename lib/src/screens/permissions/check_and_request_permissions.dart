@@ -9,20 +9,20 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:simple_icons/simple_icons.dart';
 
-import '../attendence/attendence_page.dart';
+import '../attendance/attendance_page.dart';
 import '../home/home_page.dart';
 
-class CheakAndRequestPermissions extends StatefulWidget {
-  const CheakAndRequestPermissions({super.key});
+class CheckAndRequestPermissions extends StatefulWidget {
+  const CheckAndRequestPermissions({super.key});
 
   @override
-  State<CheakAndRequestPermissions> createState() =>
-      _CheakAndRequestPermissionsState();
+  State<CheckAndRequestPermissions> createState() =>
+      _CheckAndRequestPermissionsState();
 }
 
-class _CheakAndRequestPermissionsState
-    extends State<CheakAndRequestPermissions> {
-  String? accestStatusText;
+class _CheckAndRequestPermissionsState
+    extends State<CheckAndRequestPermissions> {
+  String? accessStatusText;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +87,7 @@ class _CheakAndRequestPermissionsState
                     toastLength: Toast.LENGTH_LONG,
                   ),
                 );
-                final userLoginDataCridential = Map<String, dynamic>.from(
+                final userLoginDataCredential = Map<String, dynamic>.from(
                   jsonDecode(
                     Hive.box('info').get(
                       'userData',
@@ -95,7 +95,7 @@ class _CheakAndRequestPermissionsState
                     ) as String,
                   ) as Map,
                 );
-                if ((userLoginDataCridential['is_start_work'] ?? false) ==
+                if ((userLoginDataCredential['is_start_work'] ?? false) ==
                     true) {
                   unawaited(
                     Get.offAll(
@@ -105,7 +105,7 @@ class _CheakAndRequestPermissionsState
                 } else {
                   unawaited(
                     Get.offAll(
-                      () => const AttendencePage(),
+                      () => const AttendancePage(),
                     ),
                   );
                 }
@@ -117,7 +117,7 @@ class _CheakAndRequestPermissionsState
                   ),
                 );
                 setState(() {
-                  accestStatusText = 'You denied location access';
+                  accessStatusText = 'You denied location access';
                 });
               } else if (status == LocationPermission.deniedForever) {
                 unawaited(
@@ -127,17 +127,17 @@ class _CheakAndRequestPermissionsState
                   ),
                 );
                 setState(() {
-                  accestStatusText = 'You permanently denied location acces';
+                  accessStatusText = 'You permanently denied location access';
                 });
               } else {
                 unawaited(
                   Fluttertoast.showToast(
-                    msg: 'Something Went Worng!',
+                    msg: 'Something Went Wrong!',
                     toastLength: Toast.LENGTH_LONG,
                   ),
                 );
                 setState(() {
-                  accestStatusText = 'Something Went Worng!';
+                  accessStatusText = 'Something Went Wrong!';
                 });
               }
             },
@@ -147,8 +147,8 @@ class _CheakAndRequestPermissionsState
             ),
           ),
           const Gap(30),
-          Text(accestStatusText ?? ''),
-          if (accestStatusText != null)
+          Text(accessStatusText ?? ''),
+          if (accessStatusText != null)
             Text(
               'Go to app settings and allow all the time location access',
               style: TextStyle(

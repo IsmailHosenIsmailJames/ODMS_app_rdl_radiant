@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:rdl_radiant/src/core/registation/registataion.dart';
+import 'package:rdl_radiant/src/core/registration/registration.dart';
 import 'package:rdl_radiant/src/screens/auth/login/login_page.dart';
 
 import '../../../theme/textfield_theme.dart';
@@ -189,7 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: TextFormField(
                           validator: (value) {
                             if ((value ?? '') != newPasswordController.text) {
-                              return 'Password did not mached';
+                              return 'Password did not matched';
                             } else {
                               return null;
                             }
@@ -296,7 +296,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 );
                               }
 
-                              await registationAndGetJsonResponse(
+                              await registrationAndGetJsonResponse(
                                 {
                                   'sap_id':
                                       int.parse(sapCodeController.text.trim()),
