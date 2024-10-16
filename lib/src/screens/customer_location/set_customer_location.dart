@@ -54,9 +54,14 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
       } else if (searchPartner != null) {
         queryParams += "?partner=$searchPartner";
       }
-      log("$base$getCustomerList/${Hive.box("info").get("sap_id")}$queryParams");
+      setState(() {
+        isLoadingMore = true;
+      });
       http.Response response = await http.get(Uri.parse(
           "$base$getCustomerList/${Hive.box("info").get("sap_id")}$queryParams"));
+      setState(() {
+        isLoadingMore = false;
+      });
       // removed
       // ${page == null ? "" : "?page=$page"}${searchName == null ? "" : "&name1=$searchName"}${searchPartner == null ? "" : "&partner=$searchPartner"}${limit == null ? "" : "&limit=$limit"}
       customerListModel = customerListModel ?? [];

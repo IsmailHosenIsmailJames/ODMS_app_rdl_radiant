@@ -1,5 +1,6 @@
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 class SummeryPageWebview extends StatefulWidget {
   const SummeryPageWebview({super.key});
@@ -18,7 +19,8 @@ class _SummeryPageWebviewState extends State<SummeryPageWebview> {
       body: InAppWebView(
         initialUrlRequest: URLRequest(
           url: WebUri.uri(
-            Uri.parse('https://www.google.com'),
+            Uri.parse(
+                'http://172.16.16.149:6042/api/v1/web_view/summary/${Hive.box("info").get("sap_id")}'),
           ),
         ),
       ),
