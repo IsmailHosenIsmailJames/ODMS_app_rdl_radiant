@@ -27,61 +27,37 @@ class SetCustomerLocation extends StatefulWidget {
 class _SetCustomerLocationState extends State<SetCustomerLocation> {
   ScrollController scrollController = ScrollController();
   bool isLoadingMore = false;
-  int page = 1;
   String? searchName;
   String? searchPartner;
-  int? limit;
 
   @override
   void initState() {
-    scrollController.addListener(
-      () {
-        final maxScroll = scrollController.position.maxScrollExtent;
-        final currentScroll = scrollController.position.pixels;
-
-        if (currentScroll == maxScroll) {
-          loadMoreData();
-        }
-      },
-    );
     loadListOfCustomer(
-      page: page,
       searchName: searchName,
-      limit: limit,
       searchPartner: searchPartner,
     );
     super.initState();
   }
 
-  loadMoreData() async {
-    if (isLoadingMore == false) {
-      log("Loading More...");
-      setState(() {
-        isLoadingMore = true;
-      });
-      page++;
-      await loadListOfCustomer(
-        page: page,
-        searchName: searchName,
-        searchPartner: searchPartner,
-        limit: limit,
-      );
-      setState(() {
-        isLoadingMore = false;
-      });
-    }
-  }
-
   List<CustomerListModel>? customerListModel;
 
-  Future<void> loadListOfCustomer(
-      {int? page,
-      String? searchName,
-      String? searchPartner,
-      int? limit}) async {
+  Future<void> loadListOfCustomer({
+    String? searchName,
+    String? searchPartner,
+  }) async {
     try {
+      String queryParams = "";
+      if (searchName != null && searchPartner != null) {
+        queryParams += "?name1=$searchName &partner=$searchPartner";
+      } else if (searchName != null) {
+        queryParams += "?name1=$searchName";
+      } else if (searchPartner != null) {
+        queryParams += "?partner=$searchPartner";
+      }
       http.Response response = await http.get(Uri.parse(
-          "$base$getCustomerList/${Hive.box("info").get("sap_id")}${page == null ? "" : "?page=$page"}${searchName == null ? "" : "&name1=$searchName"}${searchPartner == null ? "" : "&partner=$searchPartner"}${limit == null ? "" : "&limit=$limit"}"));
+          "$base$getCustomerList/${Hive.box("info").get("sap_id")}$queryParams"));
+      // removed
+      // ${page == null ? "" : "?page=$page"}${searchName == null ? "" : "&name1=$searchName"}${searchPartner == null ? "" : "&partner=$searchPartner"}${limit == null ? "" : "&limit=$limit"}
       customerListModel = customerListModel ?? [];
       if (response.statusCode == 200) {
         final decodedData = jsonDecode(response.body);
@@ -244,7 +220,7 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
                                 onPressed: () {
                                   Get.to(
                                     () => CustomerDetailsPage(
-                                        paternerID: current.partner.toString()),
+                                        partnerID: current.partner.toString()),
                                   );
                                 },
                                 icon: const Icon(
@@ -272,21 +248,17 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
   Future<void> onSearch(String value) async {
     value = value.trim();
     if (value.isNotEmpty && int.tryParse(value) != null) {
-      page = 1;
       setState(() {
         searchPartner = value;
         searchName = null;
         customerListModel = [];
       });
-      await loadMoreData();
     } else if (value.isNotEmpty) {
-      page = 1;
       setState(() {
         searchPartner = null;
         searchName = value.toLowerCase();
         customerListModel = [];
       });
-      await loadMoreData();
     }
   }
 }

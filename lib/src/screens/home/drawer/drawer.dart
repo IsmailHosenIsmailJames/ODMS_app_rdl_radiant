@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/screens/attendance/attendance_evening.dart';
 import 'package:rdl_radiant/src/screens/auth/login/login_page.dart';
 import 'package:rdl_radiant/src/screens/customer_location/set_customer_location.dart';
+import 'package:rdl_radiant/src/screens/summery/summery_page_webview.dart';
 
 import '../../../apis/apis.dart';
 import '../../../widgets/loading/loading_popup_widget.dart';
@@ -132,6 +133,7 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
             ),
           ),
+
           SizedBox(
             child: TextButton(
               onPressed: callOverDueList,
@@ -152,6 +154,34 @@ class _MyDrawerState extends State<MyDrawer> {
                   const Gap(19),
                   const Text(
                     'Overdue',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(
+            child: TextButton(
+              onPressed: () async {
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+                Get.to(
+                  () => const SummeryPageWebview(),
+                );
+              },
+              child: const Row(
+                children: [
+                  Gap(20),
+                  Icon(
+                    Icons.report_outlined,
+                    color: Colors.black,
+                  ),
+                  Gap(20),
+                  Text(
+                    'Reports',
                     style: TextStyle(
                       color: Colors.black,
                     ),

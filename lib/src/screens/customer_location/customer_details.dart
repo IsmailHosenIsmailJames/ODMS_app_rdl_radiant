@@ -22,8 +22,8 @@ import '../../widgets/loading/loading_text_controller.dart';
 import '../home/conveyance/conveyance_page.dart';
 
 class CustomerDetailsPage extends StatefulWidget {
-  final String paternerID;
-  const CustomerDetailsPage({super.key, required this.paternerID});
+  final String partnerID;
+  const CustomerDetailsPage({super.key, required this.partnerID});
 
   @override
   State<CustomerDetailsPage> createState() => _CustomerDetailsPageState();
@@ -40,9 +40,9 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
   bool isUnsuccessful = false;
 
   Future<void> getData() async {
-    String paternerID = widget.paternerID;
+    String partnerID = widget.partnerID;
     http.Response response = await http
-        .get(Uri.parse("$base$getCustomerDetailsByPartnerID/$paternerID"));
+        .get(Uri.parse("$base$getCustomerDetailsByPartnerID/$partnerID"));
     if (response.statusCode == 200) {
       Map decodedData = jsonDecode(response.body);
       if (decodedData['success'] == true) {
@@ -285,7 +285,7 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           'work_area_t': box.get('sap_id').toString(),
-          "customer_id": widget.paternerID,
+          "customer_id": widget.partnerID,
           "latitude": position.latitude,
           "longitude": position.longitude,
         }));

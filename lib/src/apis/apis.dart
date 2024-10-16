@@ -10,7 +10,7 @@ String getDeliveryList = '/api/$version/delivery/v2/list';
 String saveDeliveryList = '/api/$version/delivery/save';
 String cashCollectionList = '/api/$version/cash_collection/v2/list';
 String cashCollectionSave = '/api/$version/cash_collection/save';
-String getCustomerList = '/api/$version/customer_location/list';
+String getCustomerList = '/api/$version/customer_location/v2/list';
 String getCustomerDetailsByPartnerID =
     '/api/$version/customer_location/details';
 String setCustomerLatLon =
