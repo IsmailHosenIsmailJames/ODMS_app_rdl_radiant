@@ -176,7 +176,7 @@ class _MyDrawerState extends State<MyDrawer> {
                 children: [
                   Gap(20),
                   Icon(
-                    Icons.report_outlined,
+                    Icons.summarize_outlined,
                     color: Colors.black,
                   ),
                   Gap(20),
