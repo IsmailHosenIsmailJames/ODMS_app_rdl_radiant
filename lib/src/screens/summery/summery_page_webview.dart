@@ -1,6 +1,6 @@
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SummeryPageWebview extends StatefulWidget {
   const SummeryPageWebview({super.key});
@@ -17,10 +17,14 @@ class _SummeryPageWebviewState extends State<SummeryPageWebview> {
         title: Text("Reports"),
       ),
       body: InAppWebView(
+        onDownloadStartRequest: (controller, downloadStartRequest) async {
+          await launchUrl(downloadStartRequest.url,
+              mode: LaunchMode.externalApplication);
+        },
         initialUrlRequest: URLRequest(
           url: WebUri.uri(
             Uri.parse(
-                'http://172.16.16.149:6042/api/v1/web_view/summary/${Hive.box("info").get("sap_id")}'),
+                'https://github.com/IsmailHosenIsmailJames/ODMS_app_rdl_radiant/releases/tag/v1.5.2'),
           ),
         ),
       ),

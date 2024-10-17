@@ -327,7 +327,7 @@ class _HomePageState extends State<HomePage> {
               width: 50,
               child: iconWidget,
             ),
-            const Gap(20),
+            const Gap(10),
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
