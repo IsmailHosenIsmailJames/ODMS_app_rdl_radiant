@@ -299,6 +299,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_activity_recognition:
+    dependency: "direct main"
+    description:
+      path: flutter_activity_recognition
+      relative: true
+    source: path
+    version: "4.0.0"
   flutter_animate:
     dependency: "direct main"
     description:

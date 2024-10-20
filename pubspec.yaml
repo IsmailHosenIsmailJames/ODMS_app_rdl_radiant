@@ -46,6 +46,8 @@ dependencies:
   socket_io_client: ^3.0.0
   url_launcher: ^6.2.5
   webview_flutter: ^4.9.0
+  flutter_activity_recognition:
+    path: ./flutter_activity_recognition
 
 dev_dependencies:
   leancode_lint: ^14.1.0

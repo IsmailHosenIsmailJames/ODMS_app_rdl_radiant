@@ -17,6 +17,7 @@ import 'package:rdl_radiant/src/screens/summery/summery_page_webview.dart';
 import '../../../apis/apis.dart';
 import '../../../widgets/loading/loading_popup_widget.dart';
 import '../../../widgets/loading/loading_text_controller.dart';
+import '../../activity_recognition/activity_recognition.dart';
 import '../conveyance/controller/conveyance_data_controller.dart';
 import '../conveyance/conveyance_page.dart';
 import '../conveyance/model/conveyance_data_model.dart';
@@ -97,6 +98,36 @@ class _MyDrawerState extends State<MyDrawer> {
                   Gap(20),
                   Text(
                     'Evening Attendance',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const Gap(10),
+          SizedBox(
+            child: TextButton(
+              onPressed: () {
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+
+                Get.to(
+                  () => const ActivityRecognition(),
+                );
+              },
+              child: const Row(
+                children: [
+                  Gap(20),
+                  Icon(
+                    Icons.directions_walk,
+                    color: Colors.black,
+                  ),
+                  Gap(20),
+                  Text(
+                    'Activity Recognition',
                     style: TextStyle(
                       color: Colors.black,
                     ),
