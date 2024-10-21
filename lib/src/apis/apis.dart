@@ -21,3 +21,4 @@ String conveyanceEnd = "/api/$version/conveyance/end";
 String conveyanceTransportMode = "/api/$version/conveyance/transport_modes";
 String getOverdueList = "/api/$version/cash_collection/overdue/list";
 String collectOverdue = "/api/$version/cash_collection/overdue";
+String reportsAPI = "/$version/web_view/reports";
