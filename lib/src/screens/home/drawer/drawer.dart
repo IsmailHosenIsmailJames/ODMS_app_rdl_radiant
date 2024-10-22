@@ -12,13 +12,12 @@ import 'package:intl/intl.dart';
 import 'package:rdl_radiant/src/screens/attendance/attendance_evening.dart';
 import 'package:rdl_radiant/src/screens/auth/login/login_page.dart';
 import 'package:rdl_radiant/src/screens/customer_location/set_customer_location.dart';
-import 'package:rdl_radiant/src/screens/summery/summery_page_webview.dart';
 import 'package:rdl_radiant/src/screens/visit%20customer/visits_customer_page.dart';
 
 import '../../../apis/apis.dart';
 import '../../../widgets/loading/loading_popup_widget.dart';
 import '../../../widgets/loading/loading_text_controller.dart';
-import '../../activity_recognition/activity_recognition.dart';
+import '../../reports/reports_page_webview.dart';
 import '../conveyance/controller/conveyance_data_controller.dart';
 import '../conveyance/conveyance_page.dart';
 import '../conveyance/model/conveyance_data_model.dart';
@@ -108,35 +107,35 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
           ),
           const Gap(10),
-          SizedBox(
-            child: TextButton(
-              onPressed: () {
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                }
+          // SizedBox(
+          //   child: TextButton(
+          //     onPressed: () {
+          //       if (Navigator.canPop(context)) {
+          //         Navigator.pop(context);
+          //       }
 
-                Get.to(
-                  () => const ActivityRecognition(),
-                );
-              },
-              child: const Row(
-                children: [
-                  Gap(20),
-                  Icon(
-                    Icons.directions_walk,
-                    color: Colors.black,
-                  ),
-                  Gap(20),
-                  Text(
-                    'Activity Recognition',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          //       Get.to(
+          //         () => const ActivityRecognition(),
+          //       );
+          //     },
+          //     child: const Row(
+          //       children: [
+          //         Gap(20),
+          //         Icon(
+          //           Icons.directions_walk,
+          //           color: Colors.black,
+          //         ),
+          //         Gap(20),
+          //         Text(
+          //           'Activity Recognition',
+          //           style: TextStyle(
+          //             color: Colors.black,
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
           SizedBox(
             child: TextButton(
               onPressed: () async {
@@ -237,7 +236,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   Navigator.pop(context);
                 }
                 Get.to(
-                  () => const SummeryPageWebview(),
+                  () => const ReportsPageWebview(),
                 );
               },
               child: const Row(

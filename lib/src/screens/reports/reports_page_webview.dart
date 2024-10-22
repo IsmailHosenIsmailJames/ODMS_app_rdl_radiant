@@ -1,15 +1,17 @@
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:rdl_radiant/src/apis/apis.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SummeryPageWebview extends StatefulWidget {
-  const SummeryPageWebview({super.key});
+class ReportsPageWebview extends StatefulWidget {
+  const ReportsPageWebview({super.key});
 
   @override
-  State<SummeryPageWebview> createState() => _SummeryPageWebviewState();
+  State<ReportsPageWebview> createState() => _ReportsPageWebviewState();
 }
 
-class _SummeryPageWebviewState extends State<SummeryPageWebview> {
+class _ReportsPageWebviewState extends State<ReportsPageWebview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +26,8 @@ class _SummeryPageWebviewState extends State<SummeryPageWebview> {
         initialUrlRequest: URLRequest(
           url: WebUri.uri(
             Uri.parse(
-                'https://github.com/IsmailHosenIsmailJames/ODMS_app_rdl_radiant/releases/tag/v1.5.2'),
+              '$base$reportsAPI/${Hive.box("info").get("sap_id")}',
+            ),
           ),
         ),
       ),
