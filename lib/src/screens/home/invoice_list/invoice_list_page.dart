@@ -320,7 +320,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                   Row(
                                     children: [
                                       const Text(
-                                        "Billing Doc No:",
+                                        "Invoice No:",
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,

@@ -71,6 +71,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
 
     dueAmount = double.parse(widget.totalAmount);
     pageType = deliveryRemainingController.pageType.value;
+    receivedAmountController.text = dueAmount.toString();
     super.initState();
   }
 

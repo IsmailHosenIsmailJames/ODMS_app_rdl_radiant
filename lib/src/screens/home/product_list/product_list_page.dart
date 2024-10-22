@@ -262,8 +262,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                 pageType == pagesState[5]
                                     ? "Total Due Amount"
                                     : "Total Amount",
-                                double.parse(widget.totalAmount)
-                                    .toStringAsFixed(2),
+                                totalReceiveAmount.toStringAsFixed(2),
                               ),
                             ],
                           ),
