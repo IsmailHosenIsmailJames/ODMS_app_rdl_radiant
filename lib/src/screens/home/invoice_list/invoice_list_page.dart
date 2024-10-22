@@ -84,28 +84,31 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
               ? Text("${deliveryRemainingController.pageType.value} Details")
               : const Text("Delivery Details"),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            Get.to(
-              () => const MyMapView(
-                lat: 23.7363,
-                lng: 90.3925,
-              ),
-            );
-          },
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.grey.shade800,
-              ),
-              borderRadius: BorderRadius.circular(100),
-            ),
-            child: const Icon(
-              SimpleIcons.googlemaps,
-            ),
-          ),
-        ),
+        floatingActionButton: widget.result.customerLatitude != null &&
+                widget.result.customerLongitude != null
+            ? FloatingActionButton(
+                onPressed: () async {
+                  Get.to(
+                    () => MyMapView(
+                      lat: widget.result.customerLatitude,
+                      lng: widget.result.customerLongitude,
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey.shade800,
+                    ),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: const Icon(
+                    SimpleIcons.googlemaps,
+                  ),
+                ),
+              )
+            : null,
         body: ListView(padding: const EdgeInsets.all(10), children: [
           Container(
             decoration: BoxDecoration(
@@ -318,6 +321,8 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                               child: Column(
                                 children: [
                                   Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       const Text(
                                         "Invoice No:",
@@ -332,12 +337,21 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                             .toString(),
                                         style: style,
                                       ),
+                                      Text(
+                                        " (${invoiceList[index].producerCompany ?? ""})",
+                                        style: TextStyle(
+                                          color: Colors.grey.shade700,
+                                        ),
+                                      ),
                                       const Spacer(),
                                       Text(
                                         invoiceList[index].deliveryStatus ?? "",
-                                        style: style.copyWith(
-                                          color: Colors.grey.shade600,
-                                        ),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.copyWith(
+                                              color: Colors.grey.shade600,
+                                            ),
                                       )
                                     ],
                                   ),

@@ -49,8 +49,8 @@ class Result {
   String? customerName;
   String? customerAddress;
   String? customerMobile;
-  dynamic latitude;
-  dynamic longitude;
+  dynamic customerLatitude;
+  dynamic customerLongitude;
   String? gatePassNo;
   List<InvoiceList>? invoiceList;
 
@@ -64,8 +64,8 @@ class Result {
     this.customerName,
     this.customerAddress,
     this.customerMobile,
-    this.latitude,
-    this.longitude,
+    this.customerLatitude,
+    this.customerLongitude,
     this.gatePassNo,
     this.invoiceList,
   });
@@ -80,8 +80,8 @@ class Result {
     String? customerName,
     String? customerAddress,
     String? customerMobile,
-    dynamic latitude,
-    dynamic longitude,
+    dynamic customerLatitude,
+    dynamic customerLongitude,
     String? gatePassNo,
     List<InvoiceList>? invoiceList,
   }) =>
@@ -95,8 +95,8 @@ class Result {
         customerName: customerName ?? this.customerName,
         customerAddress: customerAddress ?? this.customerAddress,
         customerMobile: customerMobile ?? this.customerMobile,
-        latitude: latitude ?? this.latitude,
-        longitude: longitude ?? this.longitude,
+        customerLatitude: customerLatitude ?? this.customerLatitude,
+        customerLongitude: customerLongitude ?? this.customerLongitude,
         gatePassNo: gatePassNo ?? this.gatePassNo,
         invoiceList: invoiceList ?? this.invoiceList,
       );
@@ -117,8 +117,8 @@ class Result {
         customerName: json["customer_name"],
         customerAddress: json["customer_address"],
         customerMobile: json["customer_mobile"],
-        latitude: json["latitude"],
-        longitude: json["longitude"],
+        customerLatitude: json["customer_latitude"],
+        customerLongitude: json["customer_longitude"],
         gatePassNo: json["gate_pass_no"],
         invoiceList: json["invoice_list"] == null
             ? []
@@ -137,8 +137,8 @@ class Result {
         "customer_name": customerName,
         "customer_address": customerAddress,
         "customer_mobile": customerMobile,
-        "latitude": latitude,
-        "longitude": longitude,
+        "customer_latitude": customerLatitude,
+        "customer_longitude": customerLongitude,
         "gate_pass_no": gatePassNo,
         "invoice_list": invoiceList == null
             ? []
@@ -149,6 +149,7 @@ class Result {
 class InvoiceList {
   dynamic id;
   String? billingDocNo;
+  String? producerCompany;
   DateTime? billingDate;
   String? routeCode;
   String? routeName;
@@ -158,8 +159,8 @@ class InvoiceList {
   String? customerName;
   String? customerAddress;
   String? customerMobile;
-  dynamic latitude;
-  dynamic longitude;
+  dynamic customerLatitude;
+  dynamic customerLongitude;
   String? deliveryStatus;
   double? cashCollection;
   String? cashCollectionStatus;
@@ -182,8 +183,8 @@ class InvoiceList {
     this.customerName,
     this.customerAddress,
     this.customerMobile,
-    this.latitude,
-    this.longitude,
+    this.customerLatitude,
+    this.customerLongitude,
     this.deliveryStatus,
     this.cashCollection,
     this.cashCollectionStatus,
@@ -193,11 +194,13 @@ class InvoiceList {
     this.previousDueAmount,
     this.transportType,
     this.productList,
+    this.producerCompany,
   });
 
   InvoiceList copyWith({
     dynamic id,
     String? billingDocNo,
+    String? producerCompany,
     DateTime? billingDate,
     String? routeCode,
     String? routeName,
@@ -207,8 +210,8 @@ class InvoiceList {
     String? customerName,
     String? customerAddress,
     String? customerMobile,
-    dynamic latitude,
-    dynamic longitude,
+    dynamic customerLatitude,
+    dynamic customerLongitude,
     String? deliveryStatus,
     double? cashCollection,
     String? cashCollectionStatus,
@@ -231,8 +234,8 @@ class InvoiceList {
         customerName: customerName ?? this.customerName,
         customerAddress: customerAddress ?? this.customerAddress,
         customerMobile: customerMobile ?? this.customerMobile,
-        latitude: latitude ?? this.latitude,
-        longitude: longitude ?? this.longitude,
+        customerLatitude: customerLatitude ?? this.customerLatitude,
+        customerLongitude: customerLongitude ?? this.customerLongitude,
         deliveryStatus: deliveryStatus ?? this.deliveryStatus,
         cashCollection: cashCollection ?? this.cashCollection,
         cashCollectionStatus: cashCollectionStatus ?? this.cashCollectionStatus,
@@ -242,6 +245,7 @@ class InvoiceList {
         transportType: transportType ?? this.transportType,
         productList: productList ?? this.productList,
         previousDueAmount: previousDueAmount ?? this.previousDueAmount,
+        producerCompany: producerCompany ?? this.producerCompany,
       );
 
   factory InvoiceList.fromJson(String str) =>
@@ -250,34 +254,34 @@ class InvoiceList {
   String toJson() => json.encode(toMap());
 
   factory InvoiceList.fromMap(Map<String, dynamic> json) => InvoiceList(
-        id: json["id"],
-        billingDocNo: json["billing_doc_no"],
-        billingDate: json["billing_date"] == null
-            ? null
-            : DateTime.parse(json["billing_date"]),
-        routeCode: json["route_code"],
-        routeName: json["route_name"],
-        daCode: double.parse("${json['da_code'] ?? 0}"),
-        daName: json["da_name"],
-        partner: json["partner"],
-        customerName: json["customer_name"],
-        customerAddress: json["customer_address"],
-        customerMobile: json["customer_mobile"],
-        latitude: json["latitude"],
-        longitude: json["longitude"],
-        deliveryStatus: json["delivery_status"],
-        cashCollection: double.parse("${json['cash_collection'] ?? 0}"),
-        cashCollectionStatus: json["cash_collection_status"],
-        gatePassNo: json["gate_pass_no"],
-        vehicleNo: json["vehicle_no"],
-        dueAmount: json["due_amount"],
-        previousDueAmount: json["previous_due_amount"],
-        transportType: json["transport_type"],
-        productList: json["product_list"] == null
-            ? []
-            : List<ProductList>.from(
-                json["product_list"]!.map((x) => ProductList.fromMap(x))),
-      );
+      id: json["id"],
+      billingDocNo: json["billing_doc_no"],
+      billingDate: json["billing_date"] == null
+          ? null
+          : DateTime.parse(json["billing_date"]),
+      routeCode: json["route_code"],
+      routeName: json["route_name"],
+      daCode: double.parse("${json['da_code'] ?? 0}"),
+      daName: json["da_name"],
+      partner: json["partner"],
+      customerName: json["customer_name"],
+      customerAddress: json["customer_address"],
+      customerMobile: json["customer_mobile"],
+      customerLatitude: json["customer_latitude"],
+      customerLongitude: json["customer_longitude"],
+      deliveryStatus: json["delivery_status"],
+      cashCollection: double.parse("${json['cash_collection'] ?? 0}"),
+      cashCollectionStatus: json["cash_collection_status"],
+      gatePassNo: json["gate_pass_no"],
+      vehicleNo: json["vehicle_no"],
+      dueAmount: json["due_amount"],
+      previousDueAmount: json["previous_due_amount"],
+      transportType: json["transport_type"],
+      productList: json["product_list"] == null
+          ? []
+          : List<ProductList>.from(
+              json["product_list"]!.map((x) => ProductList.fromMap(x))),
+      producerCompany: json['producer_company']);
 
   Map<String, dynamic> toMap() => {
         "id": id,
@@ -292,8 +296,8 @@ class InvoiceList {
         "customer_name": customerName,
         "customer_address": customerAddress,
         "customer_mobile": customerMobile,
-        "latitude": latitude,
-        "longitude": longitude,
+        "customer_latitude": customerLatitude,
+        "customer_longitude": customerLongitude,
         "delivery_status": deliveryStatus,
         "cash_collection": cashCollection,
         "cash_collection_status": cashCollectionStatus,
@@ -305,6 +309,7 @@ class InvoiceList {
         "product_list": productList == null
             ? []
             : List<dynamic>.from(productList!.map((x) => x.toMap())),
+        "producer_company": producerCompany,
       };
 }
 

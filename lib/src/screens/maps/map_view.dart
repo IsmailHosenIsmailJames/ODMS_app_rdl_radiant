@@ -26,6 +26,8 @@ class MyMapView extends StatefulWidget {
 
 class _MyMapViewState extends State<MyMapView> {
   LatLng? myLatLng;
+  bool isDisposed = false;
+
   @override
   void initState() {
     super.initState();
@@ -37,13 +39,15 @@ class _MyMapViewState extends State<MyMapView> {
       ),
     ).listen(
       (event) {
-        setState(() {
-          myLatLng = LatLng(event.latitude, event.longitude);
-        });
+        if (!isDisposed) {
+          setState(() {
+            myLatLng = LatLng(event.latitude, event.longitude);
+          });
 
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          cameraPositionUpdater(LatLng(event.latitude, event.longitude));
-        });
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            cameraPositionUpdater(LatLng(event.latitude, event.longitude));
+          });
+        }
       },
     );
 
@@ -68,6 +72,7 @@ class _MyMapViewState extends State<MyMapView> {
 
   @override
   void dispose() {
+    isDisposed = true;
     super.dispose();
   }
 
@@ -76,12 +81,12 @@ class _MyMapViewState extends State<MyMapView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Maps"),
-        actions: const [
-          Text(
-            "Lat Lon is not available.\nShowing demo data.",
-            style: TextStyle(color: Colors.redAccent),
-          ),
-        ],
+        // actions: const [
+        //   Text(
+        //     "Lat Lon is not available.\nShowing demo data.",
+        //     style: TextStyle(color: Colors.redAccent),
+        //   ),
+        // ],
       ),
       body: Stack(
         children: [
@@ -236,9 +241,7 @@ class _MyMapViewState extends State<MyMapView> {
         }
       }
     } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
+      log(e.toString());
     }
     return polyLinePointsList;
   }
