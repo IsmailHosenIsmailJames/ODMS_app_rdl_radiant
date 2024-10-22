@@ -13,6 +13,7 @@ import 'package:rdl_radiant/src/screens/attendance/attendance_evening.dart';
 import 'package:rdl_radiant/src/screens/auth/login/login_page.dart';
 import 'package:rdl_radiant/src/screens/customer_location/set_customer_location.dart';
 import 'package:rdl_radiant/src/screens/summery/summery_page_webview.dart';
+import 'package:rdl_radiant/src/screens/visit%20customer/visits_customer_page.dart';
 
 import '../../../apis/apis.dart';
 import '../../../widgets/loading/loading_popup_widget.dart';
@@ -156,6 +157,42 @@ class _MyDrawerState extends State<MyDrawer> {
                   Gap(20),
                   Text(
                     'Set Customer Location',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          SizedBox(
+            child: TextButton(
+              onPressed: () async {
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+                Get.to(
+                  () => const VisitsCustomerPage(),
+                );
+              },
+              child: Row(
+                children: [
+                  Gap(20),
+                  Container(
+                    height: 35,
+                    width: 25,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      image: const DecorationImage(
+                        image: AssetImage("assets/visit.png"),
+                        fit: BoxFit.scaleDown,
+                      ),
+                    ),
+                  ),
+                  Gap(20),
+                  Text(
+                    'Visit Customer',
                     style: TextStyle(
                       color: Colors.black,
                     ),
