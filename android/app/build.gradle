@@ -34,7 +34,7 @@ android {
 
     defaultConfig {
         applicationId = "com.impalaintech.odms"
-        minSdk = 23
+        minSdk = 21
         targetSdk = 35
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
