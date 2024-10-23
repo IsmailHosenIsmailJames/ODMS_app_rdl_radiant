@@ -22,6 +22,7 @@ import 'package:rdl_radiant/src/screens/home/delivery_remaining/models/deliver_r
 import 'package:rdl_radiant/src/screens/home/drawer/drawer.dart';
 import 'package:rdl_radiant/src/widgets/loading/loading_popup_widget.dart';
 import 'package:rdl_radiant/src/widgets/loading/loading_text_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/background/background_setup.dart';
 import 'delivery_remaining/controller/delivery_remaining_controller.dart';
@@ -284,6 +285,10 @@ class _HomePageState extends State<HomePage> {
       var data = Map<String, dynamic>.from(
         jsonDecode(response.body) as Map,
       );
+      final SharedPreferences info = await SharedPreferences.getInstance();
+      await info.setInt("time_interval", data["result"][0]["time_interval"]);
+      await info.setInt("minimum_distance", data["result"][0]["distance"]);
+
       if (data['success'] == true) {
         dashboardController.dashboardData.value = DashBoardModel.fromMap(data);
       } else {

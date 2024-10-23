@@ -93,6 +93,7 @@ class SocketManager {
     required double accuracy,
     required double bearing,
     required double speed,
+    String? activity,
   }) async {
     final instance = await SharedPreferences.getInstance();
     var decodeData = Map<String, dynamic>.from(
@@ -106,6 +107,7 @@ class SocketManager {
       'accuracy': accuracy,
       'bearing': bearing,
       'speed': speed,
+      'activity': activity,
     };
 
     final jsonUserDetails = <String, dynamic>{

@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
@@ -36,9 +38,16 @@ class _CheckLocationServiceState extends State<CheckLocationService> {
 
   void nextStep() async {
     final locationAlwaysStatus = await Geolocator.checkPermission();
+    ActivityPermission permission =
+        await FlutterActivityRecognition.instance.checkPermission();
 
-    if (locationAlwaysStatus == LocationPermission.whileInUse ||
-        locationAlwaysStatus == LocationPermission.always) {
+    final notificationPermissionStatus =
+        await FlutterForegroundTask.checkNotificationPermission();
+
+    if ((locationAlwaysStatus == LocationPermission.whileInUse ||
+            locationAlwaysStatus == LocationPermission.always) &&
+        permission == ActivityPermission.GRANTED &&
+        notificationPermissionStatus != NotificationPermission.granted) {
       if ((widget.responseMapData['is_start_work'] ?? false) == true) {
         unawaited(
           Get.offAll(

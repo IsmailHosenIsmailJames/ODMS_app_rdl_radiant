@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
@@ -74,16 +76,36 @@ class _CheckAndRequestPermissionsState
                 return;
               }
 
-              var status = await Geolocator.checkPermission();
+              var locationPermissionStatus = await Geolocator.checkPermission();
 
-              if (status == LocationPermission.denied) {
-                status = await Geolocator.requestPermission();
+              if (locationPermissionStatus == LocationPermission.denied) {
+                locationPermissionStatus = await Geolocator.requestPermission();
               }
-              if (status == LocationPermission.whileInUse ||
-                  status == LocationPermission.always) {
+
+              var notificationPermissionStatus =
+                  await FlutterForegroundTask.checkNotificationPermission();
+              if (notificationPermissionStatus !=
+                  NotificationPermission.granted) {
+                notificationPermissionStatus =
+                    await FlutterForegroundTask.requestNotificationPermission();
+              }
+
+              ActivityPermission activityPermission =
+                  await FlutterActivityRecognition.instance.checkPermission();
+
+              if (activityPermission != ActivityPermission.GRANTED) {
+                activityPermission = await FlutterActivityRecognition.instance
+                    .requestPermission();
+              }
+
+              if ((locationPermissionStatus == LocationPermission.whileInUse ||
+                      locationPermissionStatus == LocationPermission.always) &&
+                  notificationPermissionStatus ==
+                      NotificationPermission.granted &&
+                  activityPermission == ActivityPermission.GRANTED) {
                 unawaited(
                   Fluttertoast.showToast(
-                    msg: 'You did allow location access',
+                    msg: 'You did allow location & activity access',
                     toastLength: Toast.LENGTH_LONG,
                   ),
                 );
@@ -109,25 +131,43 @@ class _CheckAndRequestPermissionsState
                     ),
                   );
                 }
-              } else if (status == LocationPermission.denied) {
+              } else if (notificationPermissionStatus ==
+                      NotificationPermission.denied ||
+                  notificationPermissionStatus ==
+                      NotificationPermission.permanently_denied) {
                 unawaited(
                   Fluttertoast.showToast(
-                    msg: 'You denied location access',
+                    msg: 'You denied notification access',
                     toastLength: Toast.LENGTH_LONG,
                   ),
                 );
                 setState(() {
-                  accessStatusText = 'You denied location access';
+                  accessStatusText = 'You denied notification access';
                 });
-              } else if (status == LocationPermission.deniedForever) {
+              } else if (locationPermissionStatus ==
+                      LocationPermission.denied ||
+                  activityPermission != ActivityPermission.GRANTED) {
                 unawaited(
                   Fluttertoast.showToast(
-                    msg: 'You permanently denied location access',
+                    msg: 'You denied location or activity access',
                     toastLength: Toast.LENGTH_LONG,
                   ),
                 );
                 setState(() {
-                  accessStatusText = 'You permanently denied location access';
+                  accessStatusText = 'You denied location or activity access';
+                });
+              } else if (locationPermissionStatus ==
+                      LocationPermission.deniedForever ||
+                  activityPermission != ActivityPermission.GRANTED) {
+                unawaited(
+                  Fluttertoast.showToast(
+                    msg: 'You permanently denied location or activity access',
+                    toastLength: Toast.LENGTH_LONG,
+                  ),
+                );
+                setState(() {
+                  accessStatusText =
+                      'You permanently denied location or activity access';
                 });
               } else {
                 unawaited(
@@ -149,11 +189,14 @@ class _CheckAndRequestPermissionsState
           const Gap(30),
           Text(accessStatusText ?? ''),
           if (accessStatusText != null)
-            Text(
-              'Go to app settings and allow all the time location access',
-              style: TextStyle(
-                color: Colors.grey.shade800,
-                fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Go to app settings and allow all the time location access',
+                style: TextStyle(
+                  color: Colors.grey.shade800,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
         ],

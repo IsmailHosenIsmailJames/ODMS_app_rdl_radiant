@@ -2,6 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'background_task.dart';
 
@@ -17,6 +18,10 @@ Future<void> requestPermissions() async {
 }
 
 Future<void> initService() async {
+  final SharedPreferences info = await SharedPreferences.getInstance();
+  final timeInterval = info.getInt("time_interval");
+  // final minimumDistance = info.getInt("minimum_distance");
+
   FlutterForegroundTask.init(
     androidNotificationOptions: AndroidNotificationOptions(
       channelId: 'foreground_service',
@@ -35,7 +40,7 @@ Future<void> initService() async {
       autoRunOnMyPackageReplaced: true,
       allowWakeLock: true,
       allowWifiLock: true,
-      eventAction: ForegroundTaskEventAction.repeat(60000), // 60000 = 1 minute
+      eventAction: ForegroundTaskEventAction.repeat(timeInterval ?? 30000),
     ),
   );
 }
