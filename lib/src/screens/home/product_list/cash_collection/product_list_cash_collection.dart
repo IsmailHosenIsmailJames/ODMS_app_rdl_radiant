@@ -490,7 +490,26 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                             receiveAmountList[index] =
                                                 perProduct * (recQuantity ?? 0);
                                           });
+
                                           calculateDependOnReceivedAmount();
+                                        });
+                                        WidgetsBinding.instance
+                                            .addPostFrameCallback((_) {
+                                          double returnAmountTem = 0;
+                                          for (int i = 0;
+                                              i < returnAmountList.length;
+                                              i++) {
+                                            returnAmountTem +=
+                                                returnAmountList[i];
+                                          }
+                                          setState(() {
+                                            totalReturnAmount = returnAmountTem;
+                                            dueAmount = double.parse(
+                                                    widget.totalAmount) -
+                                                totalReturnAmount;
+                                            receivedAmountController.text =
+                                                dueAmount.toStringAsFixed(2);
+                                          });
                                         });
                                       } else {
                                         WidgetsBinding.instance
@@ -660,7 +679,10 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
       returnAmountList[index] = (current.deliveryQuantity ?? 0) * perProduct;
       receiveAmountList[index] = 0;
     }
-    setState(() {});
+    setState(() {
+      dueAmount = 0;
+      receivedAmountController.text = 0.toString();
+    });
   }
 
   Future<void> onCashCollectedButtonPressed(
