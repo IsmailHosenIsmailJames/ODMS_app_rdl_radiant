@@ -7,7 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:rdl_radiant/src/apis/apis.dart';
+import 'package:odms/src/apis/apis.dart';
 
 import '../../core/login/login_function.dart';
 import '../../theme/text_scaler_theme.dart';

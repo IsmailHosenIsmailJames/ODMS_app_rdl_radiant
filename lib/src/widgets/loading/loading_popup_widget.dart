@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:rdl_radiant/src/widgets/loading/loading_text_controller.dart';
+import 'package:odms/src/widgets/loading/loading_text_controller.dart';
 
 void showCustomPopUpLoadingDialog(BuildContext context,
     {bool isCupertino = true}) {

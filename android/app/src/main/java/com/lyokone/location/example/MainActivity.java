@@ -1,4 +1,4 @@
-package com.ismail.rdl_radiant;
+package com.impalaintech.odms;
 
 import io.flutter.embedding.android.FlutterActivity;
 

@@ -11,9 +11,9 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:rdl_radiant/src/apis/apis.dart';
-import 'package:rdl_radiant/src/screens/customer_location/model/customer_details_model.dart';
-import 'package:rdl_radiant/src/screens/visit%20customer/model/visits_data_to_api.dart';
+import 'package:odms/src/apis/apis.dart';
+import 'package:odms/src/screens/customer_location/model/customer_details_model.dart';
+import 'package:odms/src/screens/visit%20customer/model/visits_data_to_api.dart';
 
 import '../../theme/text_scaler_theme.dart';
 import '../../widgets/common_widgets_function.dart';

@@ -12,8 +12,8 @@ import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/place_type.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:rdl_radiant/src/screens/home/conveyance/conveyance_page.dart';
-import 'package:rdl_radiant/src/screens/maps/keys/google_maps_api_key.dart';
+import 'package:odms/src/screens/home/conveyance/conveyance_page.dart';
+import 'package:odms/src/screens/maps/keys/google_maps_api_key.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SelectJourneyEndLocation extends StatefulWidget {

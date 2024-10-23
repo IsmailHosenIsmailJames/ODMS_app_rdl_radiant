@@ -9,8 +9,8 @@ import 'package:flutter_activity_recognition/flutter_activity_recognition.dart'
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:rdl_radiant/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
-import 'package:rdl_radiant/src/core/background/socket_manager/socket_manager.dart';
+import 'package:odms/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
+import 'package:odms/src/core/background/socket_manager/socket_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @pragma('vm:entry-point')

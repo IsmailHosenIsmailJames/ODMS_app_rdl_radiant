@@ -12,10 +12,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:rdl_radiant/src/core/login/login_function.dart';
-import 'package:rdl_radiant/src/screens/attendance/attendance_page.dart';
-import 'package:rdl_radiant/src/screens/home/home_page.dart';
-import 'package:rdl_radiant/src/screens/permissions/unable_to_connect.dart';
+import 'package:odms/src/core/login/login_function.dart';
+import 'package:odms/src/screens/attendance/attendance_page.dart';
+import 'package:odms/src/screens/home/home_page.dart';
+import 'package:odms/src/screens/permissions/unable_to_connect.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../theme/textfield_theme.dart';

@@ -30,10 +30,10 @@ project.getTasks().withType(JavaCompile) {
 
 android {
     compileSdk = 34
-    namespace = "com.ismail.rdl_radiant"
+    namespace = "com.impalaintech.odms"
 
     defaultConfig {
-        applicationId = "com.ismail.rdl_radiant"
+        applicationId = "com.impalaintech.odms"
         minSdk = 21
         targetSdk = 35
         versionCode = flutterVersionCode.toInteger()

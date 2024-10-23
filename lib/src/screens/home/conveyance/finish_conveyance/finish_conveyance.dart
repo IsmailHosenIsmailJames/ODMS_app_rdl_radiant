@@ -16,10 +16,10 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:rdl_radiant/src/apis/apis.dart';
-import 'package:rdl_radiant/src/screens/home/conveyance/controller/conveyance_data_controller.dart';
-import 'package:rdl_radiant/src/screens/home/conveyance/conveyance_page.dart';
-import 'package:rdl_radiant/src/screens/maps/keys/google_maps_api_key.dart';
+import 'package:odms/src/apis/apis.dart';
+import 'package:odms/src/screens/home/conveyance/controller/conveyance_data_controller.dart';
+import 'package:odms/src/screens/home/conveyance/conveyance_page.dart';
+import 'package:odms/src/screens/maps/keys/google_maps_api_key.dart';
 
 import '../../../../theme/text_scaler_theme.dart';
 import '../../../../widgets/loading/loading_popup_widget.dart';

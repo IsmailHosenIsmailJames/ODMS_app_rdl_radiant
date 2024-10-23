@@ -67,5 +67,5 @@ Requirements:
 - Provide a clean, responsive layout for the dashboard.
 -
 
-**Full Changelog**: https://github.com/IsmailHosenIsmailJames/ODMS_app_rdl_radiant/commits/1.1.0+1
+**Full Changelog**: https://github.com/IsmailHosenIsmailJames/ODMS_app_odms/commits/1.1.0+1
 

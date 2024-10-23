@@ -1,7 +1,7 @@
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:rdl_radiant/src/apis/apis.dart';
+import 'package:odms/src/apis/apis.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ReportsPageWebview extends StatefulWidget {

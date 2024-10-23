@@ -9,10 +9,10 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-import 'package:rdl_radiant/src/screens/attendance/attendance_evening.dart';
-import 'package:rdl_radiant/src/screens/auth/login/login_page.dart';
-import 'package:rdl_radiant/src/screens/customer_location/set_customer_location.dart';
-import 'package:rdl_radiant/src/screens/visit%20customer/visits_customer_page.dart';
+import 'package:odms/src/screens/attendance/attendance_evening.dart';
+import 'package:odms/src/screens/auth/login/login_page.dart';
+import 'package:odms/src/screens/customer_location/set_customer_location.dart';
+import 'package:odms/src/screens/visit%20customer/visits_customer_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../apis/apis.dart';

@@ -8,8 +8,8 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:rdl_radiant/src/screens/permissions/internet_connection_off_notify.dart';
-import 'package:rdl_radiant/src/widgets/loading/loading_text_controller.dart';
+import 'package:odms/src/screens/permissions/internet_connection_off_notify.dart';
+import 'package:odms/src/widgets/loading/loading_text_controller.dart';
 
 import 'src/core/login/login_function.dart';
 import 'src/screens/auth/login/login_page.dart';

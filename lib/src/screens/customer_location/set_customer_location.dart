@@ -9,9 +9,9 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:rdl_radiant/src/apis/apis.dart';
-import 'package:rdl_radiant/src/screens/customer_location/customer_details.dart';
-import 'package:rdl_radiant/src/screens/customer_location/model/customer_list_model.dart';
+import 'package:odms/src/apis/apis.dart';
+import 'package:odms/src/screens/customer_location/customer_details.dart';
+import 'package:odms/src/screens/customer_location/model/customer_list_model.dart';
 import 'package:http/http.dart' as http;
 
 import '../../theme/text_scaler_theme.dart';

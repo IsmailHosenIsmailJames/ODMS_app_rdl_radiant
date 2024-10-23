@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:rdl_radiant/src/apis/sockets.dart';
+import 'package:odms/src/apis/sockets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 

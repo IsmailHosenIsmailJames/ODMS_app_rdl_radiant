@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:rdl_radiant/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
+import 'package:odms/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
 
 class DeliveryRemainingController extends GetxController {
   RxString pageType = "".obs;
