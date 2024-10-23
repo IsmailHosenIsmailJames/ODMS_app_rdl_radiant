@@ -13,6 +13,7 @@ import 'package:rdl_radiant/src/screens/attendance/attendance_evening.dart';
 import 'package:rdl_radiant/src/screens/auth/login/login_page.dart';
 import 'package:rdl_radiant/src/screens/customer_location/set_customer_location.dart';
 import 'package:rdl_radiant/src/screens/visit%20customer/visits_customer_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../apis/apis.dart';
 import '../../../widgets/loading/loading_popup_widget.dart';
@@ -278,26 +279,6 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
             ),
           ),
-          // SizedBox(
-          //   child: TextButton(
-          //     onPressed: () async {
-          //       if (Navigator.canPop(context)) {
-          //         Navigator.pop(context);
-          //       }
-          //       Get.to(
-          //         () => const SelectJourneyEndLocation(),
-          //       );
-          //     },
-          //     child: const Row(
-          //       children: [
-          //         Gap(20),
-          //         Icon(Icons.drive_eta),
-          //         Gap(20),
-          //         Text('Start Journey'),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           SizedBox(
             child: TextButton(
               onPressed: () async {
@@ -328,6 +309,21 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
             ),
           ),
+          Spacer(),
+          GestureDetector(
+            onTap: () {
+              launchUrl(
+                Uri.parse("https://impalaintech.com/"),
+                mode: LaunchMode.externalApplication,
+              );
+            },
+            child: Text(
+              "Developed by © Impala Intech Limited. All Rights Reserved",
+              style: TextStyle(fontSize: 9, color: Colors.grey[600]),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Gap(10),
         ],
       ),
     );
