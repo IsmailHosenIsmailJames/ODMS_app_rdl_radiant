@@ -11,7 +11,7 @@ import '../functions/compare_version.dart';
 import '../functions/get_app_info.dart';
 import '../model/latest_app_info.dart';
 
-void inAppUpdateAndroid(BuildContext context) async {
+Future<void> inAppUpdateAndroid(BuildContext context) async {
   final inAppUpdateController = Get.put(InAppUpdateController());
   LatestAppInfoAPIModel latestAppInfo = await getInfoFormAPI();
   String? lastVersion = latestAppInfo.version;

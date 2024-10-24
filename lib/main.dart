@@ -11,8 +11,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:odms/src/screens/permissions/internet_connection_off_notify.dart';
 import 'package:odms/src/widgets/loading/loading_text_controller.dart';
 
+import 'src/core/in_app_update/in_app_android_update/in_app_update_android.dart';
 import 'src/core/login/login_function.dart';
 import 'src/screens/auth/login/login_page.dart';
+
+bool isUpdateChecked = false;
 
 Future<void> main() async {
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -52,6 +55,10 @@ class MyApp extends StatelessWidget {
         if (connectivityResult.contains(ConnectivityResult.mobile) ||
             connectivityResult.contains(ConnectivityResult.ethernet) ||
             connectivityResult.contains(ConnectivityResult.wifi)) {
+          isUpdateChecked = false;
+          while (!isUpdateChecked) {
+            await Future.delayed(Duration(milliseconds: 100));
+          }
           final userLoginDataCredential = Map<String, dynamic>.from(
             Hive.box('info').get(
               'userLoginCradintial',
@@ -94,6 +101,7 @@ class InitPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    inAppUpdateAndroid(context);
     return const Scaffold(
       body: Center(
         child: CupertinoActivityIndicator(

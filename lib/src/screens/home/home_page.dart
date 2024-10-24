@@ -25,7 +25,6 @@ import 'package:odms/src/widgets/loading/loading_text_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/background/background_setup.dart';
-import '../../core/in_app_update/in_app_android_update/in_app_update_android.dart';
 import 'delivery_remaining/controller/delivery_remaining_controller.dart';
 
 class HomePage extends StatefulWidget {
@@ -62,7 +61,6 @@ class _HomePageState extends State<HomePage> {
     });
 
     getDashBoardData();
-    inAppUpdateAndroid(context);
     super.initState();
   }
 
