@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:odms/main.dart';
 import 'package:odms/src/core/in_app_update/controller/in_app_update_controller.dart';
 import 'package:odms/src/core/in_app_update/model/latest_app_info.dart';
 import 'package:open_file/open_file.dart';
@@ -135,6 +136,7 @@ class _PopupWidgetState extends State<PopupWidget> {
                             widget.latestAppInfoAPIModel.forceToUpdate == true
                                 ? null
                                 : () {
+                                    isUpdateChecked = true;
                                     Navigator.pop(context);
                                   },
                         child: Text("Not Now"),
