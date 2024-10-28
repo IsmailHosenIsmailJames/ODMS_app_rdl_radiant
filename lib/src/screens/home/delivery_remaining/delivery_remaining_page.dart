@@ -104,9 +104,13 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
               child: deliveryRemainingController
                       .deliveryRemaining.value.result!.isEmpty
                   ? Center(
-                      child: Text(
-                        "There is no delivery available on this date : ${dateTime.toIso8601String().split('T')[0]}",
-                        style: Theme.of(context).textTheme.bodyMedium,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          "No $pageType on ${dateTime.toIso8601String().split('T')[0]}",
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
                       ),
                     )
                   : Obx(

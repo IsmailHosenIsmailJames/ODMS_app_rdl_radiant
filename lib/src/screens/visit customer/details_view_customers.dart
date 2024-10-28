@@ -345,7 +345,7 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                                 ),
                                 actions: [
                                   SizedBox(
-                                    width: 100,
+                                    width: 120,
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Colors.grey.shade300,
@@ -358,7 +358,7 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 100,
+                                    width: 120,
                                     child: ElevatedButton(
                                       onPressed: () {
                                         final box = Hive.box('info');

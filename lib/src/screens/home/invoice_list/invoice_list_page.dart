@@ -747,7 +747,8 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
     dueController.previousDue.value = invoiceList[index].dueAmount ?? 0;
     dueController.currentDue.value = invoiceList[index].dueAmount ?? 0;
 
-    TextEditingController textEditingController = TextEditingController();
+    TextEditingController textEditingController =
+        TextEditingController(text: dueController.previousDue.toString());
     showDialog(
       context: context,
       builder: (context) {

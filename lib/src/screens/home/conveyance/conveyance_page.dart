@@ -31,6 +31,8 @@ class _ConveyancePageState extends State<ConveyancePage> {
   final conveyanceDataController = Get.put(ConveyanceDataController());
   final LoadingTextController loadingTextController = Get.find();
   final dateTime = DateTime.now();
+  ScrollController scrollControllerV = ScrollController();
+  ScrollController scrollControllerH = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -101,205 +103,265 @@ class _ConveyancePageState extends State<ConveyancePage> {
               color: Colors.grey.shade700,
             );
             TextStyle textStyleForContent = const TextStyle(fontSize: 13);
-            double deviceWidth = MediaQuery.of(context).size.width;
             return controller.isSummary.value
-                ? Column(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade400,
-                              blurRadius: 15,
-                            ),
-                          ],
-                          color: Colors.blue.shade100,
-                        ),
-                        height: 30,
-                        child: Row(
-                          children: [
-                            Container(
-                              alignment: Alignment.center,
-                              width: deviceWidth * (1 / 9),
-                              child: Text(
-                                "SL. No.",
-                                style: textStyleForHeader,
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.center,
-                              width: deviceWidth * (1 / 4),
-                              child: Text(
-                                "From",
-                                style: textStyleForHeader,
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.center,
-                              width: deviceWidth * (1 / 4),
-                              child: Text(
-                                "To",
-                                style: textStyleForHeader,
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.center,
-                              width: deviceWidth * (1 / 4.5),
-                              child: Text(
-                                "Transport Mode",
-                                style: textStyleForHeader,
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.center,
-                              width: deviceWidth * (1 / 7),
-                              child: Text(
-                                "Cost",
-                                style: textStyleForHeader,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                          child: ListView.builder(
-                        itemCount: controller.convinceData.length,
-                        itemBuilder: (context, index) {
-                          var current = controller.convinceData[index];
-                          return Container(
-                            color: index % 2 == 0
-                                ? Colors.white
-                                : Colors.grey.shade200,
-                            child: Row(
-                              children: [
-                                Container(
-                                  alignment: Alignment.center,
-                                  width: deviceWidth * (1 / 9),
-                                  child: Text(
-                                    "${index + 1}",
-                                    style: textStyleForHeader,
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.only(
-                                      left: 1, right: 1, top: 2, bottom: 2),
-                                  alignment: Alignment.center,
-                                  width: deviceWidth * (1 / 4),
-                                  child: FutureBuilder(
-                                    future: placemarkFromCoordinates(
-                                      double.parse(
-                                          current.startJourneyLatitude!),
-                                      double.parse(
-                                          current.startJourneyLongitude!),
-                                    ),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        log(snapshot.data![0].toString());
-                                        String street = "";
-                                        for (var x in snapshot.data!) {
-                                          if (!(street
-                                                  .contains(x.street ?? "")) &&
-                                              'Unnamed Road' != x.street) {
-                                            street += x.street ?? "";
-                                            street += ", ";
-                                          }
-                                        }
-                                        return Text(
-                                          street,
-                                          style: textStyleForContent,
-                                        );
-                                      } else {
-                                        return const SizedBox();
-                                      }
-                                    },
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(2),
-                                  alignment: Alignment.center,
-                                  width: deviceWidth * (1 / 4),
-                                  child: (current.endJourneyLatitude != null &&
-                                          current.startJourneyLongitude != null)
-                                      ? FutureBuilder(
-                                          future: placemarkFromCoordinates(
-                                            double.parse(
-                                                current.startJourneyLatitude!),
-                                            double.parse(
-                                                current.startJourneyLongitude!),
-                                          ),
-                                          builder: (context, snapshot) {
-                                            if (snapshot.hasData) {
-                                              log(snapshot.data![0].toString());
-                                              String street = "";
-                                              for (var x in snapshot.data!) {
-                                                if (!(street.contains(
-                                                        x.street ?? "")) &&
-                                                    'Unnamed Road' !=
-                                                        x.street) {
-                                                  street += x.street ?? "";
-                                                  street += ", ";
-                                                }
-                                              }
-                                              return Text(
-                                                street,
-                                                style: textStyleForContent,
-                                              );
-                                            } else {
-                                              return const SizedBox();
-                                            }
-                                          },
-                                        )
-                                      : const Text(
-                                          "Live",
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  width: deviceWidth * (1 / 4.5),
-                                  padding: const EdgeInsets.all(2),
-                                  child: current.transportMode != null
-                                      ? Text(
-                                          current.transportMode
-                                              .toString()
-                                              .replaceAll('[', '')
-                                              .replaceAll(']', '')
-                                              .replaceAll('"', '')
-                                              .replaceAll(',', ', '),
-                                          style: textStyleForContent,
-                                        )
-                                      : const Text(
-                                          "Live",
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                ),
-                                current.transportCost != null
-                                    ? Container(
-                                        alignment: Alignment.center,
-                                        width: deviceWidth * (1 / 7),
-                                        child: Text(
-                                          current.transportCost
-                                              .toString()
-                                              .split('.')[0],
-                                          style: textStyleForHeader,
-                                        ),
-                                      )
-                                    : const Text(
-                                        "Live",
-                                        style: TextStyle(
-                                          color: Colors.red,
+                ? Scrollbar(
+                    controller: scrollControllerH,
+                    thickness: 5,
+                    radius: Radius.circular(5),
+                    thumbVisibility: true,
+                    trackVisibility: true,
+                    child: ListView(
+                      controller: scrollControllerV,
+                      children: [
+                        Scrollbar(
+                          controller: scrollControllerH,
+                          thickness: 5,
+                          radius: Radius.circular(5),
+                          thumbVisibility: true,
+                          trackVisibility: true,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            controller: scrollControllerH,
+                            child: Column(
+                                children: <Widget>[
+                                      Container(
+                                        color: Colors.blue.shade100,
+                                        height: 30,
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              alignment: Alignment.center,
+                                              width: 50,
+                                              child: Text(
+                                                "SL. No.",
+                                                style: textStyleForHeader,
+                                              ),
+                                            ),
+                                            Container(
+                                              alignment: Alignment.center,
+                                              width: 180,
+                                              color: Colors.orange.shade100
+                                                  .withOpacity(0.2),
+                                              child: Text(
+                                                "From",
+                                                style: textStyleForHeader,
+                                              ),
+                                            ),
+                                            Container(
+                                              alignment: Alignment.center,
+                                              width: 180,
+                                              child: Text(
+                                                "To",
+                                                style: textStyleForHeader,
+                                              ),
+                                            ),
+                                            Container(
+                                              alignment: Alignment.center,
+                                              width: 100,
+                                              child: Text(
+                                                "Transport Mode",
+                                                style: textStyleForHeader,
+                                              ),
+                                            ),
+                                            Container(
+                                              alignment: Alignment.center,
+                                              width: 100,
+                                              child: Text(
+                                                "Cost",
+                                                style: textStyleForHeader,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                              ],
-                            ),
-                          );
-                        },
-                      ))
-                    ],
+                                    ] +
+                                    List<Widget>.generate(
+                                        controller.convinceData.length,
+                                        (index) {
+                                      var current =
+                                          controller.convinceData[index];
+                                      return Container(
+                                        color: index % 2 == 0
+                                            ? Colors.white
+                                            : Colors.grey.shade200,
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              alignment: Alignment.center,
+                                              width: 50,
+                                              child: Text(
+                                                "${index + 1}",
+                                                style: textStyleForHeader,
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4,
+                                                  right: 4,
+                                                  top: 2,
+                                                  bottom: 2),
+                                              color: Colors.orange.shade100
+                                                  .withOpacity(0.2),
+                                              alignment: Alignment.center,
+                                              width: 180,
+                                              child: FutureBuilder(
+                                                future:
+                                                    placemarkFromCoordinates(
+                                                  double.parse(current
+                                                      .startJourneyLatitude!),
+                                                  double.parse(current
+                                                      .startJourneyLongitude!),
+                                                ),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.hasData) {
+                                                    log(snapshot.data![0]
+                                                        .toString());
+                                                    String street = "";
+                                                    for (var x
+                                                        in snapshot.data!) {
+                                                      if (!(street.contains(
+                                                              x.street ??
+                                                                  "")) &&
+                                                          'Unnamed Road' !=
+                                                              x.street) {
+                                                        street +=
+                                                            x.street ?? "";
+                                                        street += ", ";
+                                                      }
+                                                    }
+                                                    return Text(
+                                                      street,
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style:
+                                                          textStyleForContent,
+                                                    );
+                                                  } else {
+                                                    return const SizedBox();
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                            Container(
+                                              padding: const EdgeInsets.only(
+                                                left: 4,
+                                                right: 4,
+                                                bottom: 2,
+                                                top: 2,
+                                              ),
+                                              color: Colors.blue.shade100
+                                                  .withOpacity(0.2),
+                                              alignment: Alignment.center,
+                                              width: 180,
+                                              child: (current.endJourneyLatitude !=
+                                                          null &&
+                                                      current.startJourneyLongitude !=
+                                                          null)
+                                                  ? FutureBuilder(
+                                                      future:
+                                                          placemarkFromCoordinates(
+                                                        double.parse(current
+                                                            .startJourneyLatitude!),
+                                                        double.parse(current
+                                                            .startJourneyLongitude!),
+                                                      ),
+                                                      builder:
+                                                          (context, snapshot) {
+                                                        if (snapshot.hasData) {
+                                                          log(snapshot.data![0]
+                                                              .toString());
+                                                          String street = "";
+                                                          for (var x in snapshot
+                                                              .data!) {
+                                                            if (!(street.contains(
+                                                                    x.street ??
+                                                                        "")) &&
+                                                                'Unnamed Road' !=
+                                                                    x.street) {
+                                                              street +=
+                                                                  x.street ??
+                                                                      "";
+                                                              street += ", ";
+                                                            }
+                                                          }
+                                                          return Text(
+                                                            street,
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style:
+                                                                textStyleForContent,
+                                                          );
+                                                        } else {
+                                                          return const SizedBox();
+                                                        }
+                                                      },
+                                                    )
+                                                  : const Text(
+                                                      "Live",
+                                                      style: TextStyle(
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                            ),
+                                            Container(
+                                              alignment: Alignment.center,
+                                              width: 100,
+                                              padding: const EdgeInsets.only(
+                                                left: 4,
+                                                right: 10,
+                                                bottom: 2,
+                                                top: 2,
+                                              ),
+                                              child: current.transportMode !=
+                                                      null
+                                                  ? Text(
+                                                      current.transportMode
+                                                          .toString()
+                                                          .replaceAll('[', '')
+                                                          .replaceAll(']', '')
+                                                          .replaceAll('"', '')
+                                                          .replaceAll(
+                                                              ',', ', '),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                      style:
+                                                          textStyleForContent,
+                                                    )
+                                                  : const Text(
+                                                      "Live",
+                                                      style: TextStyle(
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                            ),
+                                            current.transportCost != null
+                                                ? Container(
+                                                    alignment: Alignment.center,
+                                                    width: 100,
+                                                    child: Text(
+                                                      current.transportCost
+                                                          .toString()
+                                                          .split('.')[0],
+                                                      style: textStyleForHeader,
+                                                    ),
+                                                  )
+                                                : SizedBox(
+                                                    width: 100,
+                                                    child: const Text(
+                                                      "Live",
+                                                      style: TextStyle(
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                  ),
+                                          ],
+                                        ),
+                                      );
+                                    })),
+                          ),
+                        ),
+                      ],
+                    ),
                   )
                 : Column(
                     children: [
@@ -510,6 +572,10 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                   if (!isLive)
                                     if (current.endJourneyLatitude != null &&
                                         current.endJourneyLongitude != null)
+                                      Gap(10),
+                                  if (!isLive)
+                                    if (current.endJourneyLatitude != null &&
+                                        current.endJourneyLongitude != null)
                                       Row(
                                         children: [
                                           const Text(
@@ -595,12 +661,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
 
             showCustomPopUpLoadingDialog(context, isCupertino: true);
 
-            Position position = await Geolocator.getCurrentPosition(
-                locationSettings: AndroidSettings(
-              accuracy: LocationAccuracy.best,
-              forceLocationManager: true,
-              distanceFilter: 10,
-            ));
+            Position position = await Geolocator.getCurrentPosition();
             List<Placemark> placeMarks = await placemarkFromCoordinates(
               position.latitude,
               position.longitude,
@@ -614,12 +675,18 @@ class _ConveyancePageState extends State<ConveyancePage> {
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
+                insetPadding: EdgeInsets.all(8),
+                contentPadding: EdgeInsets.all(10),
+                titlePadding: EdgeInsets.all(10),
+                buttonPadding: EdgeInsets.all(10),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10)),
                 title: const Text("Are you sure?"),
                 content: getAddressWidget(placeMarkImportantData,
                     LatLng(position.latitude, position.longitude)),
                 actions: [
                   SizedBox(
-                    width: 100,
+                    width: 120,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.grey.shade300,
@@ -632,7 +699,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                     ),
                   ),
                   SizedBox(
-                    width: 100,
+                    width: 120,
                     child: ElevatedButton(
                       onPressed: () {
                         final box = Hive.box('info');
@@ -847,8 +914,7 @@ Widget getAddressWidget(
   String subLocality = placeMarkImportantData[6];
   return Container(
     width: double.infinity,
-    padding: const EdgeInsets.all(10),
-    margin: const EdgeInsets.all(6),
+    padding: const EdgeInsets.all(7),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(10),
       color: Colors.white.withOpacity(0.8),

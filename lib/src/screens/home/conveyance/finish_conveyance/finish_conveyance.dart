@@ -54,11 +54,7 @@ class _MyMapViewState extends State<FinishConveyance> {
           double.parse(widget.conveyanceData.startJourneyLongitude!));
     });
 
-    Geolocator.getCurrentPosition(
-        locationSettings: AndroidSettings(
-      accuracy: LocationAccuracy.best,
-      forceLocationManager: true,
-    )).then(
+    Geolocator.getCurrentPosition().then(
       (value) async {
         setState(() {
           destination = LatLng(value.latitude, value.longitude);
@@ -333,6 +329,7 @@ class _MyMapViewState extends State<FinishConveyance> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          insetPadding: EdgeInsets.all(10),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
