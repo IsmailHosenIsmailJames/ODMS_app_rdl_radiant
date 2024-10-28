@@ -88,10 +88,13 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                 widget.result.customerLongitude != null
             ? FloatingActionButton(
                 onPressed: () async {
+                  log("Lat:${widget.result.customerLatitude} ");
+                  log("Lat:${widget.result.customerLongitude} ");
                   Get.to(
                     () => MyMapView(
                       lat: widget.result.customerLatitude,
                       lng: widget.result.customerLongitude,
+                      customerName: customerName,
                     ),
                   );
                 },

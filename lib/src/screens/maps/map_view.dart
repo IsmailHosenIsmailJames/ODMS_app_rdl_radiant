@@ -14,10 +14,12 @@ import 'package:odms/src/screens/maps/keys/google_maps_api_key.dart';
 class MyMapView extends StatefulWidget {
   final double lat;
   final double lng;
+  final String customerName;
   const MyMapView({
     super.key,
     required this.lat,
     required this.lng,
+    required this.customerName,
   });
 
   @override
@@ -31,6 +33,16 @@ class _MyMapViewState extends State<MyMapView> {
   @override
   void initState() {
     super.initState();
+    addMarkers(
+      "customer_location",
+      LatLng(widget.lat, widget.lng),
+      colorValue: BitmapDescriptor.hueGreen,
+      infoWindow: InfoWindow(
+        title: widget.customerName,
+        snippet: widget.customerName,
+      ),
+    );
+
     Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
         accuracy: LocationAccuracy.bestForNavigation,
@@ -40,13 +52,15 @@ class _MyMapViewState extends State<MyMapView> {
     ).listen(
       (event) {
         if (!isDisposed) {
-          setState(() {
-            myLatLng = LatLng(event.latitude, event.longitude);
-          });
-
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            cameraPositionUpdater(LatLng(event.latitude, event.longitude));
-          });
+          myLatLng = LatLng(event.latitude, event.longitude);
+          addMarkers(
+            "my_location",
+            myLatLng!,
+            colorValue: BitmapDescriptor.hueRed,
+            infoWindow: InfoWindow(
+              title: "Your Location",
+            ),
+          );
         }
       },
     );
@@ -96,25 +110,12 @@ class _MyMapViewState extends State<MyMapView> {
                 widget.lat,
                 widget.lng,
               ),
-              tilt: 59.440717697143555,
+              tilt: 90,
               zoom: 10,
             ),
             markers: markers.values.toSet(),
             onMapCreated: (controller) {
               googleMapController.complete(controller);
-              addMarkers(
-                "Dhaka Medical",
-                LatLng(widget.lat, widget.lng),
-                infoWindow:
-                    const InfoWindow(title: "Dhaka Medical Hospital, Dhaka"),
-              );
-              if (myLatLng != null) {
-                addMarkers(
-                  'My Location',
-                  myLatLng!,
-                  infoWindow: const InfoWindow(title: "My Location"),
-                );
-              }
             },
             polylines: Set<Polyline>.of(polynlies.values),
           ),
@@ -203,9 +204,15 @@ class _MyMapViewState extends State<MyMapView> {
   }
 
   addMarkers(String id, LatLng position,
-      {InfoWindow infoWindow = InfoWindow.noText}) async {
+      {InfoWindow infoWindow = InfoWindow.noText, double? colorValue}) async {
     markers[id] = Marker(
-        markerId: MarkerId(id), position: position, infoWindow: infoWindow);
+      markerId: MarkerId(id),
+      position: position,
+      infoWindow: infoWindow,
+      icon: BitmapDescriptor.defaultMarkerWithHue(
+        colorValue ?? BitmapDescriptor.hueGreen,
+      ),
+    );
 
     setState(() {});
   }

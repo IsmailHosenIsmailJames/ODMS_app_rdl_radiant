@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bottom_picker/bottom_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -76,6 +78,9 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                 height: 50,
                 child: CupertinoSearchTextField(
                   onChanged: (value) {
+                    log(deliveryRemainingController
+                        .constDeliveryRemaining.value.result!.length
+                        .toString());
                     List<Result> filter = [];
                     for (Result element in deliveryRemainingController
                         .constDeliveryRemaining.value.result!) {
@@ -86,9 +91,11 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                         filter.add(element);
                       }
                     }
-                    deliveryRemainingController.deliveryRemaining.value.result =
-                        filter;
-                    setState(() {});
+
+                    setState(() {
+                      deliveryRemainingController
+                          .deliveryRemaining.value.result = filter;
+                    });
                   },
                 ),
               ),
@@ -287,8 +294,10 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () async {
+        final tem =
+            deliveryRemainingController.constDeliveryRemaining.value.toMap();
         deliveryRemainingController.deliveryRemaining.value =
-            deliveryRemainingController.constDeliveryRemaining.value;
+            DeliveryRemaining.fromMap(tem);
         final invoiceListController = Get.put(InvoiceListController());
         invoiceListController.invoiceList.value =
             result.invoiceList ?? <InvoiceList>[];
@@ -299,6 +308,8 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                   ? dueAmount.toString()
                   : amount.toString(),
             ));
+        deliveryRemainingController.constDeliveryRemaining.value =
+            DeliveryRemaining.fromMap(tem);
       },
       child: Container(
         margin: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
