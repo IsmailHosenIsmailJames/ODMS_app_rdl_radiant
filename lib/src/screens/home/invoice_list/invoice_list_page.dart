@@ -471,7 +471,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                           decoration: BoxDecoration(
                                             color:
                                                 Colors.purple.withOpacity(0.2),
-                                            borderRadius: !(returnQty == 0 ||
+                                            borderRadius: !(returnQty == 0 &&
                                                     deliveryQty == 0)
                                                 ? null
                                                 : const BorderRadius.only(
