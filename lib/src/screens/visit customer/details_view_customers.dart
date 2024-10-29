@@ -422,7 +422,7 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
         partner: customerDetailsModel.partner,
         visitType: visitType,
         visitLatitude: position.latitude.toPrecision(6),
-        visitLongitude: position.latitude.toPrecision(6),
+        visitLongitude: position.longitude.toPrecision(6),
         comment: comment,
       ).toJson(),
     );
