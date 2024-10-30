@@ -642,7 +642,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                 ) +
                 <Widget>[
                   if (!(pageType == pagesState[1])) const Gap(30),
-                  if (!((pageType == pagesState[1])))
+                  if ((!(pageType == pagesState[1])) &&
+                      pageType != pagesState[3])
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
