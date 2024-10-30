@@ -186,13 +186,13 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                                 getRowWidgetForDetailsBox(
                                     "Latitude",
                                     (customerDetailsModel?.latitude ??
-                                            "Not Data Found")
+                                            "No Data Found")
                                         .toString()),
                                 dividerWhite,
                                 getRowWidgetForDetailsBox(
                                     "Longitude",
                                     (customerDetailsModel?.longitude ??
-                                            "Not Data Found")
+                                            "No Data Found")
                                         .toString()),
                               ],
                             ),
@@ -277,7 +277,9 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                   Gap(5),
                   TextFormField(
                     controller: commentsController,
-                    decoration: InputDecoration(border: OutlineInputBorder()),
+                    decoration: InputDecoration(border: OutlineInputBorder(),
+                    hintText: "type your comment here..."
+                    ),
                   ),
                   Gap(15),
                   SizedBox(
