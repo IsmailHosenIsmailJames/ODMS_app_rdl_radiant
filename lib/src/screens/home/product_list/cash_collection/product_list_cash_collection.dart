@@ -234,14 +234,14 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                     ),
                   ),
                   if (!(deliveryRemainingController.pageType.value ==
-                          "Return" ||
+                          pagesState[4] ||
                       deliveryRemainingController.pageType.value ==
-                          "Cash Collection Done"))
+                          pagesState[3]))
                     const Gap(15),
                   if (!(deliveryRemainingController.pageType.value ==
-                          "Return" ||
+                          pagesState[4] ||
                       deliveryRemainingController.pageType.value ==
-                          "Cash Collection Done"))
+                          pagesState[3]))
                     const Text(
                       "Received amount",
                       style: TextStyle(
@@ -250,14 +250,14 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                       ),
                     ),
                   if (!(deliveryRemainingController.pageType.value ==
-                          "Return" ||
+                          pagesState[4] ||
                       deliveryRemainingController.pageType.value ==
-                          "Cash Collection Done"))
+                          pagesState[3]))
                     const Gap(5),
                   if (!(deliveryRemainingController.pageType.value ==
-                          "Return" ||
+                          pagesState[4] ||
                       deliveryRemainingController.pageType.value ==
-                          "Cash Collection Done"))
+                          pagesState[3]))
                     TextFormField(
                       keyboardType: TextInputType.number,
                       controller: receivedAmountController,
@@ -407,27 +407,27 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                     height: 1,
                                     color: Colors.white,
                                   ),
-                                if ((productList[index].returnQuantity ?? 0) >
-                                    0)
-                                  Row(
-                                    children: [
-                                      Text(
-                                        "Return : ",
-                                        style:
-                                            style.copyWith(color: Colors.red),
-                                      ),
-                                      const Gap(5),
-                                      Text(
-                                        (productList[index].returnQuantity ?? 0)
-                                            .toString(),
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                //   if ((productList[index].returnQuantity ?? 0) >
+                                //       0)
+                                //     Row(
+                                //       children: [
+                                //         Text(
+                                //           "Return : ",
+                                //           style:
+                                //               style.copyWith(color: Colors.red),
+                                //         ),
+                                //         const Gap(5),
+                                //         Text(
+                                //           (productList[index].returnQuantity ?? 0)
+                                //               .toString(),
+                                //           style: const TextStyle(
+                                //             fontSize: 16,
+                                //             fontWeight: FontWeight.w500,
+                                //             color: Colors.red,
+                                //           ),
+                                //         ),
+                                //       ],
+                                //     ),
                               ],
                             ),
                           ),
@@ -437,10 +437,10 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               children: [
                                 if (!(deliveryRemainingController
                                                 .pageType.value ==
-                                            "Return" ||
+                                            pagesState[4] ||
                                         deliveryRemainingController
                                                 .pageType.value ==
-                                            "Cash Collection Done") &&
+                                            pagesState[3]) &&
                                     (((productList[index].quantity ?? 0) -
                                             (productList[index]
                                                     .returnQuantity ??
@@ -540,7 +540,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                 const Gap(5),
                                 if (deliveryRemainingController
                                         .pageType.value ==
-                                    "Return")
+                                    pagesState[4])
                                   Text(
                                     "Return Qty. : ${(productList[index].quantity ?? 0).toInt()}",
                                     style: const TextStyle(
@@ -643,7 +643,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                 <Widget>[
                   if (!(pageType == pagesState[1])) const Gap(30),
                   if ((!(pageType == pagesState[1])) &&
-                      pageType != pagesState[3])
+                      pageType != pagesState[3] &&
+                      pageType != pagesState[4])
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

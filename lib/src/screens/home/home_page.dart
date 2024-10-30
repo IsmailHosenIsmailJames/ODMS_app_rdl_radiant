@@ -26,6 +26,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/background/background_setup.dart';
 import 'delivery_remaining/controller/delivery_remaining_controller.dart';
+import 'page_sate_definition.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -610,7 +611,7 @@ class _HomePageState extends State<HomePage> {
           DeliveryRemaining.fromJson(response.body);
       controller.deliveryRemaining.value.result ??= [];
       controller.constDeliveryRemaining.value.result ??= [];
-      controller.pageType.value = 'Returned';
+      controller.pageType.value = pagesState[4];
       await Future.delayed(const Duration(milliseconds: 100));
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
