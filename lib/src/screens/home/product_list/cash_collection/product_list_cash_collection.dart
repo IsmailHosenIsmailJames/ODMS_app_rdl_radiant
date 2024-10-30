@@ -71,7 +71,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
 
     dueAmount = double.parse(widget.totalAmount);
     pageType = deliveryRemainingController.pageType.value;
-    receivedAmountController.text = dueAmount.toString();
+    receivedAmountController.text = dueAmount.toPrecision(2).toStringAsFixed(2);
+    dueAmount = 0;
     super.initState();
   }
 
@@ -200,12 +201,15 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               getRowWidgetForDetailsBox(
                                 "Total Amount",
                                 double.parse(widget.totalAmount)
+                                    .toPrecision(2)
                                     .toStringAsFixed(2),
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
                                 "Return Amount",
-                                totalReturnAmount.toStringAsFixed(2),
+                                totalReturnAmount
+                                    .toPrecision(2)
+                                    .toStringAsFixed(2),
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
@@ -213,13 +217,14 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                 calculateFloatValueWithHighPrecision(
                                   double.parse(widget.totalAmount),
                                   totalReturnAmount,
-                                ).toStringAsFixed(2),
+                                ).toPrecision(2).toStringAsFixed(2),
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
                                 "Due Amount",
                                 calculateFloatValueWithHighPrecision(
                                         dueAmount, null)
+                                    .toPrecision(2)
                                     .toStringAsFixed(2),
                               ),
                             ],
@@ -508,7 +513,9 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                                     widget.totalAmount) -
                                                 totalReturnAmount;
                                             receivedAmountController.text =
-                                                dueAmount.toStringAsFixed(2);
+                                                dueAmount
+                                                    .toPrecision(2)
+                                                    .toStringAsFixed(2);
                                           });
                                         });
                                       } else {

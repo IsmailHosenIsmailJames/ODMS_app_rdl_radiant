@@ -262,7 +262,9 @@ class _ProductListPageState extends State<ProductListPage> {
                                 pageType == pagesState[5]
                                     ? "Total Due Amount"
                                     : "Total Amount",
-                                totalReceiveAmount.toStringAsFixed(2),
+                                totalReceiveAmount
+                                    .toPrecision(2)
+                                    .toStringAsFixed(2),
                               ),
                             ],
                           ),
@@ -354,6 +356,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                     const Gap(5),
                                     Text(
                                       (productList[index].quantity ?? 0)
+                                          .toPrecision(2)
                                           .toString(),
                                       style: TextStyle(
                                         fontSize: 16,
@@ -370,6 +373,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                     Text(
                                       ((productList[index].vat ?? 0) +
                                               (productList[index].netVal ?? 0))
+                                          .toPrecision(2)
                                           .toStringAsFixed(2),
                                       style: TextStyle(
                                         fontSize: 16,
@@ -532,13 +536,13 @@ class _ProductListPageState extends State<ProductListPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Rec. Amount :  ${receiveAmountList[index].toStringAsFixed(2)}",
+                                        "Rec. Amount :  ${receiveAmountList[index].toPrecision(2).toStringAsFixed(2)}",
                                         style: style.copyWith(
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                       Text(
-                                        "Ret. Amount :  ${returnAmountList[index].toStringAsFixed(2)}",
+                                        "Ret. Amount :  ${returnAmountList[index].toPrecision(2).toStringAsFixed(2)}",
                                         style: style.copyWith(
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -552,13 +556,13 @@ class _ProductListPageState extends State<ProductListPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Rec. Amount :  ${(productList[index].deliveryNetVal ?? 0).toStringAsFixed(2)}",
+                                        "Rec. Amount :  ${(productList[index].deliveryNetVal ?? 0).toPrecision(2).toStringAsFixed(2)}",
                                         style: style.copyWith(
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                       Text(
-                                        "Ret. Amount :  ${(productList[index].returnNetVal ?? 0).toStringAsFixed(2)}",
+                                        "Ret. Amount :  ${(productList[index].returnNetVal ?? 0).toPrecision(2).toStringAsFixed(2)}",
                                         style: style.copyWith(
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -594,7 +598,7 @@ class _ProductListPageState extends State<ProductListPage> {
                           height: 40,
                           child: Center(
                             child: Text(
-                                "Total Rec.: ${totalReceiveAmount.toStringAsFixed(2)}",
+                                "Total Rec.: ${totalReceiveAmount.toPrecision(2).toStringAsFixed(2)}",
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -613,7 +617,7 @@ class _ProductListPageState extends State<ProductListPage> {
                           height: 40,
                           child: Center(
                             child: Text(
-                              "Total Ret.: ${totalReturnAmount.toStringAsFixed(2)}",
+                              "Total Ret.: ${totalReturnAmount.toPrecision(2).toStringAsFixed(2)}",
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
