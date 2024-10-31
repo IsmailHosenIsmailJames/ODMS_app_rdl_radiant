@@ -407,27 +407,29 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                     height: 1,
                                     color: Colors.white,
                                   ),
-                                //   if ((productList[index].returnQuantity ?? 0) >
-                                //       0)
-                                //     Row(
-                                //       children: [
-                                //         Text(
-                                //           "Return : ",
-                                //           style:
-                                //               style.copyWith(color: Colors.red),
-                                //         ),
-                                //         const Gap(5),
-                                //         Text(
-                                //           (productList[index].returnQuantity ?? 0)
-                                //               .toString(),
-                                //           style: const TextStyle(
-                                //             fontSize: 16,
-                                //             fontWeight: FontWeight.w500,
-                                //             color: Colors.red,
-                                //           ),
-                                //         ),
-                                //       ],
-                                //     ),
+                                if (((productList[index].returnQuantity ?? 0) >
+                                        0) &&
+                                    (pageType == pagesState[2] ||
+                                        pageType == pagesState[3]))
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Return : ",
+                                        style:
+                                            style.copyWith(color: Colors.red),
+                                      ),
+                                      const Gap(5),
+                                      Text(
+                                        (productList[index].returnQuantity ?? 0)
+                                            .toString(),
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                               ],
                             ),
                           ),
