@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:clipboard/clipboard.dart';
 import 'package:dio/dio.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -41,19 +42,21 @@ class _PopupWidgetState extends State<PopupWidget> {
   bool isDownloaded = false;
   bool isGranted = false;
   bool isDownloading = false;
+  bool isExpanded = false;
   @override
   Widget build(BuildContext context) {
     return Dialog(
       insetPadding: EdgeInsets.all(15),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Container(
-        height: 200,
+        // height: 200,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Colors.blue.shade900,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
               padding: const EdgeInsets.all(15.0),
@@ -106,7 +109,7 @@ class _PopupWidgetState extends State<PopupWidget> {
               ),
             ),
             Container(
-              height: 145,
+              // height: 145,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(10),
@@ -114,7 +117,7 @@ class _PopupWidgetState extends State<PopupWidget> {
                 ),
                 color: Colors.white,
               ),
-              padding: EdgeInsets.only(top: 15, left: 15, right: 15),
+              padding: EdgeInsets.only(top: 15, left: 15, right: 15, bottom: 5),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,7 +130,89 @@ class _PopupWidgetState extends State<PopupWidget> {
                       "You have to update to latest version anyway",
                       style: TextStyle(fontSize: 10, color: Colors.red),
                     ),
-                  Gap(20),
+                  Gap(10),
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      setState(() {
+                        isExpanded = !isExpanded;
+                      });
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          "Having trouble with the update?",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        Icon(
+                          isExpanded
+                              ? Icons.arrow_drop_up
+                              : Icons.arrow_drop_down_sharp,
+                          color: Colors.grey.shade600,
+                        )
+                      ],
+                    ),
+                  ),
+                  if (isExpanded)
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: EdgeInsets.all(5),
+                      child: Column(
+                        children: [
+                          SelectableText(
+                            "Try a fresh install. Uninstall the current version, then download and install the latest one. Copy the link and download apk file.",
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 11,
+                            ),
+                          ),
+                          Gap(8),
+                          SelectableText(
+                            "URL:  ${widget.apkDownloadLink}",
+                            style: TextStyle(
+                              fontSize: 11,
+                            ),
+                          ),
+                          Gap(8),
+                          SizedBox(
+                            height: 25,
+                            width: double.infinity,
+                            child: ElevatedButton.icon(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                shadowColor: Colors.transparent,
+                              ),
+                              onPressed: () {
+                                FlutterClipboard.copy(widget.apkDownloadLink)
+                                    .then(
+                                  (value) {
+                                    Fluttertoast.showToast(msg: "Copied");
+                                  },
+                                );
+                              },
+                              label: Text(
+                                "Copy",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                              icon: Icon(
+                                Icons.copy,
+                                size: 16,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  Gap(5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
