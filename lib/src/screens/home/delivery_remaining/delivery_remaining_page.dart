@@ -295,6 +295,15 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
     required String date,
     required Result result,
   }) {
+    double returnAmount = 0;
+    final productList = result.invoiceList?[0].productList ?? [];
+    for (int i = 0; i < productList.length; i++) {
+      returnAmount += productList[i].returnNetVal ?? 0;
+    }
+    double deliveredAmount = amount - returnAmount;
+    double invoiceDueAmount =
+        deliveredAmount - (result.invoiceList?[0].cashCollection ?? 0);
+
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () async {
@@ -430,10 +439,8 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                                 style: style,
                               ),
                               Text(
-                                (amount -
-                                        (result.invoiceList?[0]
-                                                .cashCollection ??
-                                            0))
+                                invoiceDueAmount
+                                    .toPrecision(2)
                                     .toStringAsFixed(2),
                                 style: style,
                               ),
