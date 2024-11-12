@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-Widget getRowWidgetForDetailsBox(String column1, String? column2,
-    {Widget? optionalWidgetsAtLast}) {
+Widget getRowWidgetForDetailsBox(
+  String column1,
+  String? column2, {
+  Widget? optionalWidgetsAtLast,
+  bool removeGap = false,
+  bool isScrollView = false,
+}) {
   return Row(
     children: [
       Expanded(
@@ -29,11 +34,24 @@ Widget getRowWidgetForDetailsBox(String column1, String? column2,
           child: optionalWidgetsAtLast != null
               ? Row(
                   children: [
-                    Text(
-                      column2 ?? "",
-                      style: topContainerTextStyleForDetailsBox,
-                    ),
-                    const Gap(20),
+                    isScrollView
+                        ? Expanded(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(
+                                column2 ?? "",
+                                style:
+                                    topContainerTextStyleForDetailsBox.copyWith(
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                          )
+                        : Text(
+                            column2 ?? "",
+                            style: topContainerTextStyleForDetailsBox,
+                          ),
+                    if (!removeGap && !isScrollView) const Gap(20),
                     optionalWidgetsAtLast
                   ],
                 )

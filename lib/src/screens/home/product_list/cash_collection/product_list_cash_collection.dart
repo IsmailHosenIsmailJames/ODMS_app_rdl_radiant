@@ -56,6 +56,12 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
   final DeliveryRemainingController deliveryRemainingController = Get.find();
 
   String pageType = '';
+
+  int? returnReasonValue;
+
+  double totalQty = 0;
+  double totalRetQty = 0;
+
   @override
   void initState() {
     for (ProductList product in (widget.invoice.productList ?? [])) {
@@ -67,6 +73,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
       receiveAmountList.add(0);
       returnTextEditingControllerList.add(TextEditingController());
       returnAmountList.add(0);
+      totalQty += productList[i].deliveryQuantity ?? 0;
     }
 
     dueAmount = double.parse(widget.totalAmount);
@@ -87,6 +94,12 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
     for (var e in returnAmountList) {
       totalReturnAmount += e;
     }
+
+    totalRetQty = 0;
+    for (var e in returnTextEditingControllerList) {
+      totalRetQty += e.text.isEmpty ? 0 : double.tryParse(e.text) ?? 0;
+    }
+
     return MediaQuery(
       data: MediaQuery.of(context)
           .copyWith(textScaler: TextScaler.linear(textScalerValue)),
@@ -551,89 +564,6 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                       color: Colors.red,
                                     ),
                                   ),
-                                // if (deliveryRemainingController.pageType.value ==
-                                //     "Cash Collection Done")
-                                //   Row(
-                                //     mainAxisAlignment:
-                                //         MainAxisAlignment.spaceBetween,
-                                //     children: [
-                                //       Text(
-                                //         "Received Qty. : ${(productList[index].deliveryQuantity ?? 0).toInt()}",
-                                //         style: TextStyle(
-                                //           fontSize: 16,
-                                //           fontWeight: FontWeight.bold,
-                                //           color: Colors.green.shade900,
-                                //         ),
-                                //       ),
-                                //       Text(
-                                //         "Received Amount. : ${(productList[index].deliveryNetVal ?? 0) * (productList[index].deliveryQuantity ?? 0)}",
-                                //         style: TextStyle(
-                                //           fontSize: 16,
-                                //           fontWeight: FontWeight.bold,
-                                //           color: Colors.green.shade900,
-                                //         ),
-                                //       ),
-                                //     ],
-                                //   ),
-                                //   if (deliveryRemainingController.pageType.value ==
-                                //       "Cash Collection Done")
-                                //     const Divider(),
-                                //   if (deliveryRemainingController.pageType.value ==
-                                //       "Cash Collection Done")
-                                //     Row(
-                                //       mainAxisAlignment:
-                                //           MainAxisAlignment.spaceBetween,
-                                //       children: [
-                                //         Text(
-                                //           "Return Qty. : ${(productList[index].returnQuantity ?? 0).toInt()}",
-                                //           style: TextStyle(
-                                //             fontSize: 16,
-                                //             fontWeight: FontWeight.bold,
-                                //             color: Colors.red.shade800,
-                                //           ),
-                                //         ),
-                                //         Text(
-                                //           "Return Amount. : ${(productList[index].returnNetVal ?? 0) * (productList[index].returnQuantity ?? 0)}",
-                                //           style: TextStyle(
-                                //             fontSize: 16,
-                                //             fontWeight: FontWeight.bold,
-                                //             color: Colors.red.shade800,
-                                //           ),
-                                //         ),
-                                //       ],
-                                //     ),
-                                //   if (deliveryRemainingController.pageType.value ==
-                                //       "Cash Collection Done")
-                                //     Row(
-                                //       mainAxisAlignment:
-                                //           MainAxisAlignment.spaceBetween,
-                                //       children: [
-                                //         if (!(deliveryRemainingController
-                                //                     .pageType.value ==
-                                //                 "Return" ||
-                                //             deliveryRemainingController
-                                //                     .pageType.value ==
-                                //                 "Cash Collection Done"))
-                                //           Text(
-                                //             "Rec. Amount :  ${receiveAmountList[index].toStringAsFixed(2)}",
-                                //             style: style.copyWith(
-                                //               fontWeight: FontWeight.w500,
-                                //             ),
-                                //           ),
-                                //         if (!(deliveryRemainingController
-                                //                     .pageType.value ==
-                                //                 "Return" ||
-                                //             deliveryRemainingController
-                                //                     .pageType.value ==
-                                //                 "Cash Collection Done"))
-                                //           Text(
-                                //             "Ret. Amount :  ${returnAmountList[index].toStringAsFixed(2)}",
-                                //             style: style.copyWith(
-                                //               fontWeight: FontWeight.w500,
-                                //             ),
-                                //           ),
-                                //       ],
-                                //     ),
                               ],
                             ),
                           ),
@@ -643,7 +573,23 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                   },
                 ) +
                 <Widget>[
-                  if (!(pageType == pagesState[1])) const Gap(30),
+                  if (pageType == pagesState[2] && totalRetQty > 0)
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: FutureBuilder(
+                        future: http.get(Uri.parse(base + returnReason)),
+                        builder: (context, snapshot) {
+                          if (snapshot.data != null &&
+                              snapshot.data!.statusCode == 200) {
+                            return returnReasonWidget(snapshot, context);
+                          } else {
+                            return SizedBox();
+                          }
+                        },
+                      ),
+                    ),
+                  if (!(pageType == pagesState[1])) const Gap(20),
                   if ((!(pageType == pagesState[1])) &&
                       pageType != pagesState[3] &&
                       pageType != pagesState[4])
@@ -669,9 +615,132 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                         ),
                       ],
                     ),
+                  Gap(20),
                 ],
           ),
         ),
+      ),
+    );
+  }
+
+  void onChoiceReturnReason(List<dynamic> data, BuildContext context) {
+    double height = (data.length * 30 + 50);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          insetPadding: EdgeInsets.all(20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              10,
+            ),
+          ),
+          child: Container(
+            margin: EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: 20,
+            ),
+            height: height > 400 ? 400 : height,
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Text(
+                "Select One",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Gap(10),
+              Divider(
+                height: 2,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(bottom: 20),
+                  child: Column(
+                    children: List<Widget>.generate(
+                      data.length,
+                      (index) {
+                        return GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            setState(() {
+                              returnReasonValue = data[index]['code'];
+                            });
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            margin: EdgeInsets.only(top: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  data[index]['reason'],
+                                ),
+                                Spacer(),
+                                if (returnReasonValue == data[index]['code'])
+                                  Icon(
+                                    Icons.done_rounded,
+                                    color: Colors.green,
+                                  )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              )
+            ]),
+          ),
+        );
+      },
+    );
+  }
+
+  OutlinedButton returnReasonWidget(
+      AsyncSnapshot<http.Response> snapshot, BuildContext context) {
+    List data = List.from(jsonDecode(snapshot.data!.body));
+    String? returnReasonText;
+    for (int i = 0; i < data.length; i++) {
+      if (data[i]['code'] == returnReasonValue) {
+        returnReasonText = data[i]['reason'];
+      }
+    }
+    return OutlinedButton(
+      onPressed: () {
+        onChoiceReturnReason(data, context);
+      },
+      child: Row(
+        children: [
+          returnReasonText == null
+              ? Text(
+                  "Select Return Reason",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade600,
+                  ),
+                )
+              : Text(
+                  returnReasonText,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+          Spacer(),
+          Icon(
+            Icons.arrow_drop_down,
+            color: Colors.grey.shade600,
+          )
+        ],
       ),
     );
   }
@@ -690,9 +759,11 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
       returnAmountList[index] = (current.deliveryQuantity ?? 0) * perProduct;
       receiveAmountList[index] = 0;
     }
-    setState(() {
-      dueAmount = 0;
-      receivedAmountController.text = 0.toString();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        dueAmount = 0;
+        receivedAmountController.text = 0.toString();
+      });
     });
   }
 
@@ -719,7 +790,9 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
       );
     }
 
-    if (formKey.currentState!.validate() && isValidate) {
+    if (formKey.currentState!.validate() &&
+        isValidate &&
+        (returnReasonValue != null || totalRetQty == 0)) {
       loadingTextController.currentState.value = 0;
       loadingTextController.loadingText.value =
           'Accessing Your Location\nPlease wait...';
@@ -763,10 +836,15 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
           delivers: listOfDeliveryCash,
         );
 
-        if (kDebugMode) {
-          log("Sending to api: ");
-          log(toSendCashDataModel.toJson());
-        }
+        Map body = toSendCashDataModel.toMap();
+        body.addAll(<String, dynamic>{
+          "return_type":
+              totalRetQty > 0 ? (totalQty == totalRetQty ? "f" : "p") : null,
+          "return_reason": returnReasonValue,
+        });
+
+        log("Sending to api: ${jsonEncode(body)}");
+
         loadingTextController.loadingText.value =
             'Your Location Accessed\nSending data to server\nPlease wait...';
 
@@ -774,16 +852,12 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
         final response = await http.put(
           uri,
           headers: {"Content-Type": "application/json"},
-          body: toSendCashDataModel.toJson(),
+          body: jsonEncode(body),
         );
-        if (kDebugMode) {
-          log("$base$cashCollectionSave/${widget.invoice.id}");
-          log("received form api: ");
-          log(response.body);
-        }
-        if (kDebugMode) {
-          log(response.statusCode.toString());
-        }
+        log("$base$cashCollectionSave/${widget.invoice.id}");
+        log("received form api: ");
+        log(response.body);
+        log(response.statusCode.toString());
 
         if (response.statusCode == 200) {
           final decoded = Map<String, dynamic>.from(jsonDecode(response.body));
@@ -839,6 +913,10 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
         loadingTextController.currentState.value = -1;
         loadingTextController.loadingText.value =
             'Unable to access your location';
+      }
+    } else {
+      if (!(returnReasonValue != null || totalRetQty == 0)) {
+        Fluttertoast.showToast(msg: "Please select return reason");
       }
     }
   }

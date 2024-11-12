@@ -57,6 +57,11 @@ class _ProductListPageState extends State<ProductListPage> {
 
   String pageType = '';
 
+  int? returnReasonValue;
+
+  double totalQty = 0;
+  double totalRetQty = 0;
+
   @override
   void initState() {
     productList = widget.invoice.productList ?? [];
@@ -65,6 +70,7 @@ class _ProductListPageState extends State<ProductListPage> {
       receiveAmountList.add(0);
       returnTextEditingControllerList.add(TextEditingController());
       returnAmountList.add(0);
+      totalQty += productList[i].quantity ?? 0;
     }
     pageType = deliveryRemainingController.pageType.value;
 
@@ -96,6 +102,12 @@ class _ProductListPageState extends State<ProductListPage> {
     for (var e in returnAmountList) {
       totalReturnAmount += e;
     }
+
+    totalRetQty = 0;
+    for (var e in returnTextEditingControllerList) {
+      totalRetQty += e.text.isEmpty ? 0 : double.tryParse(e.text) ?? 0;
+    }
+
     return MediaQuery(
       data: MediaQuery.of(context)
           .copyWith(textScaler: TextScaler.linear(textScalerValue)),
@@ -140,7 +152,9 @@ class _ProductListPageState extends State<ProductListPage> {
                                   (current.quantity ?? 0) * perProduct;
                               returnAmountList[index] = 0;
                             }
-                            setState(() {});
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              setState(() {});
+                            });
                           },
                         ),
                         PopupMenuItem(
@@ -172,7 +186,9 @@ class _ProductListPageState extends State<ProductListPage> {
                                   (current.quantity ?? 0) * perProduct;
                               receiveAmountList[index] = 0;
                             }
-                            setState(() {});
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              setState(() {});
+                            });
                           },
                         ),
                       ],
@@ -627,7 +643,23 @@ class _ProductListPageState extends State<ProductListPage> {
                         ),
                       ],
                     ),
-                  if (!(pageType == pagesState[1])) const Gap(30),
+                  if (pageType == pagesState[0] && totalRetQty > 0)
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: FutureBuilder(
+                        future: http.get(Uri.parse(base + returnReason)),
+                        builder: (context, snapshot) {
+                          if (snapshot.data != null &&
+                              snapshot.data!.statusCode == 200) {
+                            return returnReasonWidget(snapshot, context);
+                          } else {
+                            return SizedBox();
+                          }
+                        },
+                      ),
+                    ),
+                  if (!(pageType == pagesState[1])) const Gap(20),
                   if (!(pageType == pagesState[1]) &&
                       isDeliveryForToday &&
                       pageType != pagesState[5])
@@ -652,10 +684,133 @@ class _ProductListPageState extends State<ProductListPage> {
                         ),
                       ],
                     ),
+                  Gap(20),
                 ],
           ),
         ),
       ),
+    );
+  }
+
+  OutlinedButton returnReasonWidget(
+      AsyncSnapshot<http.Response> snapshot, BuildContext context) {
+    List data = List.from(jsonDecode(snapshot.data!.body));
+    String? returnReasonText;
+    for (int i = 0; i < data.length; i++) {
+      if (data[i]['code'] == returnReasonValue) {
+        returnReasonText = data[i]['reason'];
+      }
+    }
+    return OutlinedButton(
+      onPressed: () {
+        onChoiceReturnReason(data, context);
+      },
+      child: Row(
+        children: [
+          returnReasonText == null
+              ? Text(
+                  "Select Return Reason",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade600,
+                  ),
+                )
+              : Text(
+                  returnReasonText,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+          Spacer(),
+          Icon(
+            Icons.arrow_drop_down,
+            color: Colors.grey.shade600,
+          )
+        ],
+      ),
+    );
+  }
+
+  void onChoiceReturnReason(List<dynamic> data, BuildContext context) {
+    double height = (data.length * 30 + 50);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          insetPadding: EdgeInsets.all(20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              10,
+            ),
+          ),
+          child: Container(
+            margin: EdgeInsets.only(
+              left: 10,
+              right: 10,
+              top: 20,
+            ),
+            height: height > 400 ? 400 : height,
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Text(
+                "Select One",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Gap(10),
+              Divider(
+                height: 2,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.only(bottom: 20),
+                  child: Column(
+                    children: List<Widget>.generate(
+                      data.length,
+                      (index) {
+                        return GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            setState(() {
+                              returnReasonValue = data[index]['code'];
+                            });
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            margin: EdgeInsets.only(top: 5),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  data[index]['reason'],
+                                ),
+                                Spacer(),
+                                if (returnReasonValue == data[index]['code'])
+                                  Icon(
+                                    Icons.done_rounded,
+                                    color: Colors.green,
+                                  )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              )
+            ]),
+          ),
+        );
+      },
     );
   }
 
@@ -753,7 +908,8 @@ class _ProductListPageState extends State<ProductListPage> {
   }
 
   Future<void> onDeliveredButtonPressed(BuildContext context) async {
-    if (formKey.currentState!.validate()) {
+    if (formKey.currentState!.validate() &&
+        (returnReasonValue != null || totalRetQty == 0)) {
       loadingTextController.currentState.value = 0;
       loadingTextController.loadingText.value =
           'Accessing Your Location\nPlease wait...';
@@ -818,11 +974,20 @@ class _ProductListPageState extends State<ProductListPage> {
         loadingTextController.loadingText.value =
             'Your Location Accessed\nSending data to server\nPlease wait...';
         final uri = Uri.parse(base + saveDeliveryList);
-        log("Attempting to post ${deliveryData.toJson()}");
+
+        Map body = deliveryData.toMap();
+        body.addAll(<String, dynamic>{
+          "return_type":
+              totalRetQty > 0 ? (totalQty == totalRetQty ? "f" : "p") : null,
+          "return_reason": returnReasonValue,
+        });
+
+        log("Modified Body :${jsonEncode(body)}");
+
         final response = await http.post(
           uri,
           headers: {"Content-Type": "application/json"},
-          body: deliveryData.toJson(),
+          body: jsonEncode(body),
         );
         log("Successfully post : ${response.statusCode}");
         log("Got response data :${response.body}");
@@ -882,6 +1047,10 @@ class _ProductListPageState extends State<ProductListPage> {
         loadingTextController.currentState.value = -1;
         loadingTextController.loadingText.value =
             'Unable to access your location';
+      }
+    } else {
+      if (!(returnReasonValue != null || totalRetQty == 0)) {
+        Fluttertoast.showToast(msg: "Please select return reason");
       }
     }
   }
