@@ -856,114 +856,8 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                           if (doubleValue > dueController.previousDue.value) {
                             return;
                           } else {
-                            loadingTextController.currentState.value = 0;
-                            loadingTextController.loadingText.value =
-                                'Accessing Your Location\nPlease wait...';
-
-                            showCustomPopUpLoadingDialog(context,
-                                isCupertino: true);
-                            try {
-                              final position =
-                                  await Geolocator.getCurrentPosition(
-                                locationSettings: AndroidSettings(
-                                    timeLimit: const Duration(seconds: 30)),
-                              );
-                              String encodedDataToSend = jsonEncode({
-                                "billing_doc_no":
-                                    invoiceList[index].billingDocNo ?? "",
-                                "cash_collection":
-                                    dueController.collectAmount.value,
-                                "da_code":
-                                    Hive.box('info').get("sap_id") as int,
-                                "cash_collection_latitude": position.latitude,
-                                "cash_collection_longitude": position.longitude,
-                              });
-                              if (kDebugMode) {
-                                log("Sending to api: ");
-
-                                log(encodedDataToSend);
-                              }
-                              loadingTextController.loadingText.value =
-                                  'Your Location Accessed\nSending data to server\nPlease wait...';
-
-                              final response = await put(
-                                Uri.parse(
-                                  base + collectOverdue,
-                                ),
-                                body: encodedDataToSend,
-                                headers: {
-                                  "content-type": "application/json",
-                                },
-                              );
-                              if (response.statusCode == 200) {
-                                final decoded = Map<String, dynamic>.from(
-                                    jsonDecode(response.body));
-                                if (decoded['success'] == true) {
-                                  try {
-                                    final box = Hive.box('info');
-                                    final url = Uri.parse(
-                                        "$base$getOverdueList/${box.get('sap_id')}");
-
-                                    final response = await get(url);
-
-                                    if (response.statusCode == 200) {
-                                      if (kDebugMode) {
-                                        print("Got Due List");
-                                        print(response.body);
-                                      }
-
-                                      final controller = Get.put(
-                                        DeliveryRemainingController(
-                                          DeliveryRemaining.fromJson(
-                                              response.body),
-                                        ),
-                                      );
-                                      controller.deliveryRemaining.value =
-                                          DeliveryRemaining.fromJson(
-                                              response.body);
-                                      controller.constDeliveryRemaining.value =
-                                          DeliveryRemaining.fromJson(
-                                              response.body);
-                                      controller.deliveryRemaining.value
-                                          .result ??= [];
-                                      controller.constDeliveryRemaining.value
-                                          .result ??= [];
-                                    }
-                                  } catch (e) {
-                                    log(e.toString());
-                                  }
-                                  loadingTextController.currentState.value = 0;
-                                  loadingTextController.loadingText.value =
-                                      'Successful';
-                                  double due = dueController.previousDue.value -
-                                      dueController.collectAmount.value;
-                                  if (due == 0) {
-                                    invoiceListController.invoiceList.removeAt(
-                                      index,
-                                    );
-                                  } else {
-                                    setState(() {
-                                      totalAmount = due.toString();
-                                      invoiceList[index].dueAmount = due;
-                                    });
-                                  }
-                                  if (Navigator.canPop(context)) {
-                                    Navigator.pop(context);
-                                  }
-                                  if (Navigator.canPop(context)) {
-                                    Navigator.pop(context);
-                                  }
-                                } else {
-                                  loadingTextController.currentState.value = -1;
-                                  loadingTextController.loadingText.value =
-                                      decoded['message'];
-                                }
-                              }
-                            } catch (e) {
-                              loadingTextController.currentState.value = -1;
-                              loadingTextController.loadingText.value =
-                                  'Unable to access your location';
-                            }
+                            await onDueCashCollection(context, invoiceList,
+                                index, doubleValue, dueController);
                             return;
                           }
                         }
@@ -977,6 +871,124 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
         );
       },
     );
+  }
+
+  Future<void> onDueCashCollection(
+      BuildContext context,
+      List<InvoiceList> invoiceList,
+      int index,
+      double doubleValue,
+      OverdueCollectController dueController) async {
+    loadingTextController.currentState.value = 0;
+    loadingTextController.loadingText.value =
+        'Accessing Your Location\nPlease wait...';
+
+    showCustomPopUpLoadingDialog(context, isCupertino: true);
+    try {
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings:
+            AndroidSettings(timeLimit: const Duration(seconds: 30)),
+      );
+      String encodedDataToSend = jsonEncode({
+        "billing_doc_no": invoiceList[index].billingDocNo ?? "",
+        "cash_collection": doubleValue,
+        "da_code": Hive.box('info').get("sap_id") as int,
+        "cash_collection_latitude": position.latitude,
+        "cash_collection_longitude": position.longitude,
+      });
+      if (kDebugMode) {
+        log("Sending to api: ");
+
+        log(encodedDataToSend);
+      }
+      loadingTextController.loadingText.value =
+          'Your Location Accessed\nSending data to server\nPlease wait...';
+
+      final response = await put(
+        Uri.parse(
+          base + collectOverdue,
+        ),
+        body: encodedDataToSend,
+        headers: {
+          "content-type": "application/json",
+        },
+      );
+      if (response.statusCode == 200) {
+        final decoded = Map<String, dynamic>.from(jsonDecode(response.body));
+        if (decoded['success'] == true) {
+          try {
+            final box = Hive.box('info');
+            final url = Uri.parse("$base$getOverdueList/${box.get('sap_id')}");
+
+            final response = await get(url);
+
+            if (response.statusCode == 200) {
+              if (kDebugMode) {
+                print("Got Due List");
+                print(response.body);
+              }
+
+              final controller = Get.put(
+                DeliveryRemainingController(
+                  DeliveryRemaining.fromJson(response.body),
+                ),
+              );
+              controller.deliveryRemaining.value =
+                  DeliveryRemaining.fromJson(response.body);
+              controller.constDeliveryRemaining.value =
+                  DeliveryRemaining.fromJson(response.body);
+              controller.deliveryRemaining.value.result ??= [];
+              controller.constDeliveryRemaining.value.result ??= [];
+              // Extract partner invoice list
+              String? partner = widget.result.partner;
+              bool isFound = false;
+              if (partner != null) {
+                final result = controller.deliveryRemaining.value.result ??= [];
+                for (var r in result) {
+                  if (r.partner == partner) {
+                    isFound = true;
+                    invoiceListController.invoiceList.value =
+                        r.invoiceList ?? <InvoiceList>[];
+                  }
+                }
+                if (!isFound) {
+                  invoiceListController.invoiceList.value = <InvoiceList>[];
+                }
+              }
+            }
+          } catch (e) {
+            log(e.toString());
+          }
+          loadingTextController.currentState.value = 0;
+          loadingTextController.loadingText.value = 'Successful';
+          double due = dueController.previousDue.value -
+              dueController.collectAmount.value;
+          if (due == 0) {
+            invoiceListController.invoiceList.removeAt(
+              index,
+            );
+          } else {
+            setState(() {
+              totalAmount = due.toString();
+              invoiceList[index].dueAmount = due;
+            });
+          }
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+          if (Navigator.canPop(context)) {
+            Navigator.pop(context);
+          }
+        } else {
+          loadingTextController.currentState.value = -1;
+          loadingTextController.loadingText.value = decoded['message'];
+        }
+      }
+    } catch (e) {
+      loadingTextController.currentState.value = -1;
+      loadingTextController.loadingText.value =
+          'Unable to access your location';
+    }
   }
 
   TextStyle style = const TextStyle(fontSize: 17, fontWeight: FontWeight.bold);
