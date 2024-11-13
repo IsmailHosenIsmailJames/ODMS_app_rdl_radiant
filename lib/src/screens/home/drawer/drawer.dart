@@ -13,6 +13,7 @@ import 'package:odms/src/screens/attendance/attendance_evening.dart';
 import 'package:odms/src/screens/auth/login/login_page.dart';
 import 'package:odms/src/screens/customer_location/set_customer_location.dart';
 import 'package:odms/src/screens/visit%20customer/visits_customer_page.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../apis/apis.dart';
@@ -58,6 +59,19 @@ class _MyDrawerState extends State<MyDrawer> {
                     "assets/app_logo_big.png",
                     fit: BoxFit.fitWidth,
                   ),
+                ),
+                FutureBuilder(
+                  future: PackageInfo.fromPlatform(),
+                  builder: (context, snapshot) {
+                    final v = snapshot.data?.version ?? "";
+                    return Text(
+                      v.isEmpty ? "" : 'v$v',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey.shade600,
+                      ),
+                    );
+                  },
                 ),
                 const Text(
                   "ODMS",
