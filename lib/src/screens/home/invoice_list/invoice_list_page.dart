@@ -732,7 +732,20 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
       loadingTextController.loadingText.value = 'Something went wrong';
     }
 
+    // calculate Due
+    double nowDue = 0;
+    for (var invoice in invoiceListController.invoiceList.value) {
+      nowDue += invoice.dueAmount ?? 0;
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        due = nowDue;
+      });
+    });
+
     //Back data again
+    deliveryRemainingController.pageType.value = pageTypePrev;
     invoiceListController.invoiceList.value = invoiceList;
 
     deliveryRemainingController.constDeliveryRemaining.value =
