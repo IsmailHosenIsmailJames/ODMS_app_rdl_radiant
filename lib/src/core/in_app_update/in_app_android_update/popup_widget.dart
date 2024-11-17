@@ -201,11 +201,13 @@ class _PopupWidgetState extends State<PopupWidget> {
                                 "Copy",
                                 style: TextStyle(
                                   fontSize: 12,
+                                  color: Colors.black,
                                 ),
                               ),
                               icon: Icon(
                                 Icons.copy,
                                 size: 16,
+                                color: Colors.black,
                               ),
                             ),
                           ),
