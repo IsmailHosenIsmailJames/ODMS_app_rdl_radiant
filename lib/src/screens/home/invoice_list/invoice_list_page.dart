@@ -5,16 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:http/http.dart';
 import 'package:odms/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
 import 'package:odms/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
 import 'package:odms/src/screens/home/page_sate_definition.dart';
 import 'package:odms/src/screens/home/product_list/product_list_page.dart';
 import 'package:odms/src/screens/home/product_list/cash_collection/product_list_cash_collection.dart';
 import 'package:odms/src/screens/maps/map_view.dart';
+import 'package:odms/src/screens/overdue/controller.dart';
+import 'package:odms/src/screens/overdue/overdue_invoice_list.dart';
 import 'package:simple_icons/simple_icons.dart';
 
+import '../../../apis/apis.dart';
 import '../../../theme/text_scaler_theme.dart';
 import '../../../widgets/common_widgets_function.dart';
+import '../../../widgets/loading/loading_popup_widget.dart';
 import '../../../widgets/loading/loading_text_controller.dart';
 import '../delivery_remaining/controller/delivery_remaining_controller.dart';
 
@@ -217,9 +223,8 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                 onPressed: due == 0
                                     ? null
                                     : () async {
-                                        // Backup Current Data
-                                        // TODO
-                                        log("TO DO Task");
+                                        onPreviousDueCollectButtonPressed(
+                                            context);
                                       },
                                 child: const Text("Collect"),
                               ),
@@ -546,6 +551,106 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
         ]),
       ),
     );
+  }
+
+  Future<void> onPreviousDueCollectButtonPressed(BuildContext context) async {
+    final String? partnerPrev = invoiceListController.invoiceList[0].partner;
+    OverdueInvoiceListController overdueInvoiceListController =
+        Get.put(OverdueInvoiceListController());
+
+    //Call api for due list
+    final box = Hive.box('info');
+    final url = Uri.parse(
+      "$base$getOverdueList/${box.get('sap_id')}",
+    );
+
+    loadingTextController.currentState.value = 0;
+    loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
+    showCustomPopUpLoadingDialog(context, isCupertino: true);
+
+    final response = await get(url);
+
+    log("Got Overdue List");
+    log(response.statusCode.toString());
+    log(response.body);
+
+    if (response.statusCode == 200) {
+      loadingTextController.currentState.value = 1;
+      loadingTextController.loadingText.value = 'Successful';
+
+      final modelFormHTTPResponse = DeliveryRemaining.fromJson(response.body);
+      final partners = modelFormHTTPResponse.result!;
+      Map<String, List<Result>> mapForMarge = {};
+      for (var partner in partners) {
+        List<Result> previousList = mapForMarge[partner.partner] ?? [];
+        if (previousList.isNotEmpty) {
+          previousList[0].invoiceList!.addAll(partner.invoiceList!);
+          mapForMarge[partner.partner!] = previousList;
+        } else {
+          previousList.add(partner);
+          mapForMarge[partner.partner!] = previousList;
+        }
+      }
+
+      modelFormHTTPResponse.result = [];
+      mapForMarge.forEach(
+        (key, value) {
+          modelFormHTTPResponse.result!.add(value[0]);
+        },
+      );
+
+      final controller = Get.put(
+        OverdueCollectController(modelFormHTTPResponse),
+      );
+
+      controller.overdueRemaining.value = modelFormHTTPResponse;
+      controller.constOverdueRemaining.value = modelFormHTTPResponse;
+      controller.overdueRemaining.value.result ??= [];
+      controller.constOverdueRemaining.value.result ??= [];
+      await Future.delayed(const Duration(milliseconds: 100));
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      //  Go to invoice directly
+      final results = controller.constOverdueRemaining.value.result!;
+      Result? result;
+      for (var r in results) {
+        if (r.partner == partnerPrev && r.invoiceList?.isEmpty == false) {
+          result = r;
+        }
+      }
+
+      if (result != null) {
+        overdueInvoiceListController.invoiceList.value =
+            result.invoiceList ?? <InvoiceList>[];
+        await showModalBottomSheet(
+          scrollControlDisabledMaxHeightRatio: 0.8,
+          context: context,
+          builder: (context) => OverdueInvoiceList(
+            dateTime: widget.dateTime,
+            result: result!,
+            totalAmount: due.toString(),
+          ),
+        );
+      }
+
+      // back
+    } else {
+      loadingTextController.currentState.value = -1;
+      loadingTextController.loadingText.value = 'Something went wrong';
+    }
+
+    // calculate Due
+    double nowDue = 0;
+    for (var invoice in overdueInvoiceListController.invoiceList.value) {
+      nowDue += invoice.dueAmount ?? 0;
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        due = nowDue;
+      });
+    });
   }
 
   TextStyle style = const TextStyle(fontSize: 17, fontWeight: FontWeight.bold);

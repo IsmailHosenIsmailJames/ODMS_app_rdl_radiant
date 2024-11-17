@@ -58,11 +58,15 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
   late final gatePassNo =
       overdueInvoiceListController.invoiceList[0].gatePassNo ?? "";
 
-  late String totalAmount;
+  double totalAmount = 0;
 
   @override
   void initState() {
-    totalAmount = widget.totalAmount;
+    widget.result.invoiceList?.forEach(
+      (element) {
+        totalAmount += element.dueAmount ?? 0;
+      },
+    );
     super.initState();
   }
 
@@ -73,7 +77,6 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
     return MediaQuery(
       data: MediaQuery.of(context)
           .copyWith(textScaler: TextScaler.linear(textScalerValue)),
@@ -196,8 +199,9 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                         ),
                         divider,
                         getRowWidgetForDetailsBox(
-                          "Total Amount",
-                          double.parse(totalAmount).toStringAsFixed(2),
+                          "Total Due Amount",
+                          (totalAmount < 0 ? 0 : totalAmount)
+                              .toStringAsFixed(2),
                         ),
                       ],
                     ),
@@ -215,19 +219,12 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                     invoiceList.length,
                     (index) {
                       double amount = 0;
-                      int returnQty = 0;
                       double returnAmount = 0;
-                      int deliveryQty = 0;
-                      double deliveryAmount = 0;
                       for (final ProductList productList
                           in invoiceList[index].productList ?? []) {
                         amount +=
                             (productList.netVal ?? 0) + (productList.vat ?? 0);
-                        returnQty += (productList.returnQuantity ?? 0).toInt();
                         returnAmount += (productList.returnNetVal ?? 0);
-                        deliveryQty +=
-                            (productList.deliveryQuantity ?? 0).toInt();
-                        deliveryAmount += (productList.deliveryNetVal ?? 0);
                       }
 
                       return GestureDetector(
@@ -570,13 +567,15 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                   [];
               // Extract partner invoice list
               String? partner = widget.result.partner;
-              String? getPass = widget.result.gatePassNo;
+              DateTime? billingDate = widget.result.billingDate;
               bool isFound = false;
               if (partner != null) {
                 final result = overdueCollectController
                     .overdueRemaining.value.result ??= [];
                 for (var r in result) {
-                  if (r.partner == partner && r.gatePassNo == getPass) {
+                  if (r.partner == partner &&
+                      billingDate != null &&
+                      r.billingDate?.compareTo(billingDate) == 0) {
                     isFound = true;
                     overdueInvoiceListController.invoiceList.value =
                         r.invoiceList ?? <InvoiceList>[];
@@ -601,7 +600,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
             );
           } else {
             setState(() {
-              totalAmount = due.toString();
+              totalAmount = due;
               invoiceList[index].dueAmount = due;
             });
           }
