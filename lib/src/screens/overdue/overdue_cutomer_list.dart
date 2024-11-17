@@ -161,8 +161,6 @@ class _OverdueCustomerListState extends State<OverdueCustomerList> {
               result: result,
               totalAmount: amount.toString(),
             ));
-        deliveryRemainingController.constOverdueRemaining.value =
-            DeliveryRemaining.fromMap(tem);
       },
       child: Container(
         margin: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),

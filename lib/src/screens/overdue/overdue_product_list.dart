@@ -63,7 +63,7 @@ class _OverdueProductListState extends State<OverdueProductList> {
     double totalAmount = 0;
 
     widget.invoice.productList?.forEach((element) {
-      totalAmount += element.netVal ?? 0;
+      totalAmount += (element.netVal ?? 0) + (element.vat ?? 0);
     });
 
     return MediaQuery(
