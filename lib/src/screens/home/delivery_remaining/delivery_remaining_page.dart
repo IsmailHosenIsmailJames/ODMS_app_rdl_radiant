@@ -317,9 +317,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
         await Get.to(() => InvoiceListPage(
               dateTime: dateTime,
               result: result,
-              totalAmount: (pageType == pagesState[5])
-                  ? dueAmount.toString()
-                  : amount.toString(),
+              totalAmount: amount.toString(),
             ));
         deliveryRemainingController.constDeliveryRemaining.value =
             DeliveryRemaining.fromMap(tem);
@@ -367,88 +365,63 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                 ],
               ),
             ),
-            pageType == pagesState[5]
-                ? Container(
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 10, bottom: 10, top: 10),
-                    child: Row(
-                      children: [
-                        const Text(
-                          "Due amount: ",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Gap(10),
-                        Text((dueAmount ?? 0).toStringAsFixed(2)),
-                        const Spacer(),
-                        const Icon(
-                          Icons.arrow_forward,
-                          size: 17,
-                        ),
-                      ],
-                    ),
-                  )
-                : Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              "Total Invoice",
-                              style: style,
-                            ),
-                            Text(
-                              invoiceLen,
-                              style: style,
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "Quantity",
-                              style: style,
-                            ),
-                            Text(
-                              quantity,
-                              style: style,
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              "Amount",
-                              style: style,
-                            ),
-                            Text(
-                              amount.toStringAsFixed(2),
-                              style: style,
-                            ),
-                          ],
-                        ),
-                        if (pageType == pagesState[3])
-                          Column(
-                            children: [
-                              Text(
-                                "Due",
-                                style: style,
-                              ),
-                              Text(
-                                invoiceDueAmount
-                                    .toPrecision(2)
-                                    .toStringAsFixed(2),
-                                style: style,
-                              ),
-                            ],
-                          )
-                      ],
-                    ),
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    children: [
+                      Text(
+                        "Total Invoice",
+                        style: style,
+                      ),
+                      Text(
+                        invoiceLen,
+                        style: style,
+                      ),
+                    ],
                   ),
+                  Column(
+                    children: [
+                      Text(
+                        "Quantity",
+                        style: style,
+                      ),
+                      Text(
+                        quantity,
+                        style: style,
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        "Amount",
+                        style: style,
+                      ),
+                      Text(
+                        amount.toStringAsFixed(2),
+                        style: style,
+                      ),
+                    ],
+                  ),
+                  if (pageType == pagesState[3])
+                    Column(
+                      children: [
+                        Text(
+                          "Due",
+                          style: style,
+                        ),
+                        Text(
+                          invoiceDueAmount.toPrecision(2).toStringAsFixed(2),
+                          style: style,
+                        ),
+                      ],
+                    )
+                ],
+              ),
+            ),
           ],
         ),
       ),

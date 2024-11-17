@@ -108,7 +108,7 @@ class _ProductListPageState extends State<ProductListPage> {
           actions: pageType == pagesState[1]
               ? null
               : [
-                  if (isDeliveryForToday && pageType != pagesState[5])
+                  if (isDeliveryForToday)
                     PopupMenuButton(
                       itemBuilder: (context) => [
                         PopupMenuItem(
@@ -259,9 +259,7 @@ class _ProductListPageState extends State<ProductListPage> {
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                pageType == pagesState[5]
-                                    ? "Total Due Amount"
-                                    : "Total Amount",
+                                "Total Amount",
                                 totalReceiveAmount
                                     .toPrecision(2)
                                     .toStringAsFixed(2),
@@ -414,8 +412,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                   ),
                                 if (pageType == pagesState[1]) const Divider(),
                                 if (!(pageType == pagesState[1]) &&
-                                    isDeliveryForToday &&
-                                    pageType != pagesState[5])
+                                    isDeliveryForToday)
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -529,8 +526,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                   ),
                                 if (isDeliveryForToday) const Gap(5),
                                 if (!(pageType == pagesState[1]) &&
-                                    isDeliveryForToday &&
-                                    pageType != pagesState[5])
+                                    isDeliveryForToday)
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -579,9 +575,7 @@ class _ProductListPageState extends State<ProductListPage> {
                 ) +
                 <Widget>[
                   if (!(pageType == pagesState[1])) const Gap(20),
-                  if (!(pageType == pagesState[1]) &&
-                      isDeliveryForToday &&
-                      pageType != pagesState[5])
+                  if (!(pageType == pagesState[1]) && isDeliveryForToday)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -628,9 +622,7 @@ class _ProductListPageState extends State<ProductListPage> {
                       ],
                     ),
                   if (!(pageType == pagesState[1])) const Gap(30),
-                  if (!(pageType == pagesState[1]) &&
-                      isDeliveryForToday &&
-                      pageType != pagesState[5])
+                  if (!(pageType == pagesState[1]) && isDeliveryForToday)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

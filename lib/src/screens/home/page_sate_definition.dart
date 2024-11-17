@@ -3,6 +3,5 @@ List<String> pagesState = [
   'Delivery Done',
   'Cash Collection Remaining',
   'Cash Collection Done',
-  'Return',
-  'Overdue'
+  'Return'
 ];
