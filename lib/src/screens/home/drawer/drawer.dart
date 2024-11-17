@@ -12,6 +12,8 @@ import 'package:intl/intl.dart';
 import 'package:odms/src/screens/attendance/attendance_evening.dart';
 import 'package:odms/src/screens/auth/login/login_page.dart';
 import 'package:odms/src/screens/customer_location/set_customer_location.dart';
+import 'package:odms/src/screens/overdue/controller.dart';
+import 'package:odms/src/screens/overdue/overdue_cutomer_list.dart';
 import 'package:odms/src/screens/visit%20customer/visits_customer_page.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -122,35 +124,6 @@ class _MyDrawerState extends State<MyDrawer> {
             ),
           ),
           const Gap(10),
-          // SizedBox(
-          //   child: TextButton(
-          //     onPressed: () {
-          //       if (Navigator.canPop(context)) {
-          //         Navigator.pop(context);
-          //       }
-
-          //       Get.to(
-          //         () => const ActivityRecognition(),
-          //       );
-          //     },
-          //     child: const Row(
-          //       children: [
-          //         Gap(20),
-          //         Icon(
-          //           Icons.directions_walk,
-          //           color: Colors.black,
-          //         ),
-          //         Gap(20),
-          //         Text(
-          //           'Activity Recognition',
-          //           style: TextStyle(
-          //             color: Colors.black,
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
           SizedBox(
             child: TextButton(
               onPressed: () async {
@@ -179,7 +152,6 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
             ),
           ),
-
           SizedBox(
             child: TextButton(
               onPressed: () async {
@@ -215,10 +187,9 @@ class _MyDrawerState extends State<MyDrawer> {
               ),
             ),
           ),
-
           SizedBox(
             child: TextButton(
-              onPressed: () {},
+              onPressed: callOverDueList,
               child: Row(
                 children: [
                   const Gap(20),
@@ -386,13 +357,12 @@ class _MyDrawerState extends State<MyDrawer> {
       );
 
       final controller = Get.put(
-        DeliveryRemainingController(modelFormHTTPResponse),
+        OverdueCollectController(modelFormHTTPResponse),
       );
-      controller.deliveryRemaining.value = modelFormHTTPResponse;
-      controller.constDeliveryRemaining.value = modelFormHTTPResponse;
-      controller.deliveryRemaining.value.result ??= [];
-      controller.constDeliveryRemaining.value.result ??= [];
-      controller.pageType.value = 'Overdue';
+      controller.overdueRemaining.value = modelFormHTTPResponse;
+      controller.constOverdueRemaining.value = modelFormHTTPResponse;
+      controller.overdueRemaining.value.result ??= [];
+      controller.constOverdueRemaining.value.result ??= [];
       await Future.delayed(const Duration(milliseconds: 100));
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
@@ -401,7 +371,7 @@ class _MyDrawerState extends State<MyDrawer> {
         Navigator.pop(context);
       }
       await Get.to(
-        () => const DeliveryRemainingPage(),
+        () => const OverdueCustomerList(),
       );
     } else {
       loadingTextController.currentState.value = -1;
