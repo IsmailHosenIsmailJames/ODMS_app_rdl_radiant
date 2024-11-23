@@ -545,6 +545,10 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
           "content-type": "application/json",
         },
       );
+
+      log("Got Response on ${base + collectOverdue}");
+      log(response.statusCode.toString());
+
       if (response.statusCode == 200) {
         final decoded = Map<String, dynamic>.from(jsonDecode(response.body));
         if (decoded['success'] == true) {
@@ -555,13 +559,36 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
             final response = await get(url);
 
             if (response.statusCode == 200) {
-              log("Got Due List");
+              log("Got Due List $base$getOverdueList/${box.get('sap_id')}");
               log(response.body);
 
+              final modelFormHTTPResponse =
+                  DeliveryRemaining.fromJson(response.body);
+
+              final partners = modelFormHTTPResponse.result!;
+              Map<String, List<Result>> mapForMarge = {};
+              for (var partner in partners) {
+                List<Result> previousList = mapForMarge[partner.partner] ?? [];
+                if (previousList.isNotEmpty) {
+                  previousList[0].invoiceList!.addAll(partner.invoiceList!);
+                  mapForMarge[partner.partner!] = previousList;
+                } else {
+                  previousList.add(partner);
+                  mapForMarge[partner.partner!] = previousList;
+                }
+              }
+
+              modelFormHTTPResponse.result = [];
+              mapForMarge.forEach(
+                (key, value) {
+                  modelFormHTTPResponse.result!.add(value[0]);
+                },
+              );
+
               overdueCollectController.overdueRemaining.value =
-                  DeliveryRemaining.fromJson(response.body);
+                  modelFormHTTPResponse;
               overdueCollectController.constOverdueRemaining.value =
-                  DeliveryRemaining.fromJson(response.body);
+                  modelFormHTTPResponse;
               overdueCollectController.overdueRemaining.value.result ??= [];
               overdueCollectController.constOverdueRemaining.value.result ??=
                   [];
