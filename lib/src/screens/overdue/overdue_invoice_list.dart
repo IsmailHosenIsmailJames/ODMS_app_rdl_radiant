@@ -556,6 +556,10 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
       if (response.statusCode == 200) {
         final decoded = Map<String, dynamic>.from(jsonDecode(response.body));
         if (decoded['success'] == true) {
+          log("Awaiting a 1 second");
+          await Future.delayed(Duration(seconds: 1));
+          log("done awaiting a 1 second");
+
           final box = Hive.box('info');
           final url = Uri.parse("$base$getOverdueListV2/${box.get('sap_id')}");
 
