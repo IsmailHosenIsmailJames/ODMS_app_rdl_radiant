@@ -1,0 +1,539 @@
+{
+    "success": true,
+    "result": [
+        {
+            "partner": null,
+            "partner_id": "11013317",
+            "customer_name": "Abir Pharmacy",
+            "customer_address": "Hospital GateMeherpur Sadar",
+            "customer_mobile": "01722414296",
+            "da_full_name": "Md. Humayun Kabir",
+            "da_mobile_no": "01871002354",
+            "billing_docs": [
+                {
+                    "billing_doc_no": "9026601776",
+                    "billing_date": "2024-03-12",
+                    "gate_pass_no": "2446000574",
+                    "da_code": "50012",
+                    "due_amount": 633.0,
+                    "net_val": 633.0,
+                    "return_amount": 0.0,
+                    "materials": [
+                        {
+                            "matnr": "14000014",
+                            "batch": "1199223",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 633.0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partner": null,
+            "partner_id": "11024136",
+            "customer_name": "Mia Pharmacy",
+            "customer_address": "Hospital GateMeherpur Sadar",
+            "customer_mobile": "01926701130",
+            "da_full_name": "Md. Humayun Kabir",
+            "da_mobile_no": "01871002354",
+            "billing_docs": [
+                {
+                    "billing_doc_no": "9027848989",
+                    "billing_date": "2024-05-05",
+                    "gate_pass_no": "2446000959",
+                    "da_code": "50012",
+                    "due_amount": 328.0,
+                    "net_val": 1830.0,
+                    "return_amount": 0.0,
+                    "materials": [
+                        {
+                            "matnr": "14000232",
+                            "batch": "1081024",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 1055.77
+                        },
+                        {
+                            "matnr": "14000302",
+                            "batch": "1273723",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 0.0,
+                            "return_net_val": 0.0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partner": null,
+            "partner_id": "11030733",
+            "customer_name": "Bhai Bhai Pharmacy",
+            "customer_address": "Court RoadMeherpur",
+            "customer_mobile": "01191108939",
+            "da_full_name": "Md. Humayun Kabir",
+            "da_mobile_no": "01871002354",
+            "billing_docs": [
+                {
+                    "billing_doc_no": "9026602179",
+                    "billing_date": "2024-03-12",
+                    "gate_pass_no": "2446000574",
+                    "da_code": "50012",
+                    "due_amount": 689.0,
+                    "net_val": 689.0,
+                    "return_amount": 0.0,
+                    "materials": [
+                        {
+                            "matnr": "14000128",
+                            "batch": "2045723",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 689.0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partner": null,
+            "partner_id": "11046935",
+            "customer_name": "Maysha Pharmacy",
+            "customer_address": "Hospital GateMeherpur",
+            "customer_mobile": "01729376127",
+            "da_full_name": "Md. Humayun Kabir",
+            "da_mobile_no": "01871002354",
+            "billing_docs": [
+                {
+                    "billing_doc_no": "9026534692",
+                    "billing_date": "2024-03-10",
+                    "gate_pass_no": "2446000554",
+                    "da_code": "50012",
+                    "due_amount": 862.0,
+                    "net_val": 1240.0,
+                    "return_amount": 0.0,
+                    "materials": [
+                        {
+                            "matnr": "14000107",
+                            "batch": "1210023",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 677.15
+                        },
+                        {
+                            "matnr": "14000252",
+                            "batch": "1255623",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 0.0,
+                            "return_net_val": 0.0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partner": null,
+            "partner_id": "11053363",
+            "customer_name": "Life Care D Lab",
+            "customer_address": "Boro BazarMeherpur",
+            "customer_mobile": "00",
+            "da_full_name": "Md. Humayun Kabir",
+            "da_mobile_no": "01871002354",
+            "billing_docs": [
+                {
+                    "billing_doc_no": "9026662055",
+                    "billing_date": "2024-03-14",
+                    "gate_pass_no": "2446000588",
+                    "da_code": "50012",
+                    "due_amount": 924.0,
+                    "net_val": 924.0,
+                    "return_amount": 0.0,
+                    "materials": [
+                        {
+                            "matnr": "14000022",
+                            "batch": "1250223",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 396.0
+                        },
+                        {
+                            "matnr": "14000060",
+                            "batch": "1231623",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 528.0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partner": null,
+            "partner_id": "11055297",
+            "customer_name": "General Pharmacy",
+            "customer_address": "Hospital RoadMeherpur.",
+            "customer_mobile": "01720604701",
+            "da_full_name": "Md. Humayun Kabir",
+            "da_mobile_no": "01871002354",
+            "billing_docs": [
+                {
+                    "billing_doc_no": "9026601793",
+                    "billing_date": "2024-03-12",
+                    "gate_pass_no": "2446000574",
+                    "da_code": "50012",
+                    "due_amount": 1.0,
+                    "net_val": 1557.0,
+                    "return_amount": 0.0,
+                    "materials": [
+                        {
+                            "matnr": "14000022",
+                            "batch": "1250223",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 0.0,
+                            "return_net_val": 0.0
+                        },
+                        {
+                            "matnr": "14000056",
+                            "batch": "1252623",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 0.0,
+                            "return_net_val": 0.0
+                        },
+                        {
+                            "matnr": "14000103",
+                            "batch": "1183623",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 0.0,
+                            "return_net_val": 0.0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partner": null,
+            "partner_id": "11062919",
+            "customer_name": "Mithun Drug",
+            "customer_address": "KedarganjMeherpur",
+            "customer_mobile": "01735458678",
+            "da_full_name": "Md. Humayun Kabir",
+            "da_mobile_no": "01871002354",
+            "billing_docs": [
+                {
+                    "billing_doc_no": "9028469792",
+                    "billing_date": "2024-05-28",
+                    "gate_pass_no": "2446001141",
+                    "da_code": "50012",
+                    "due_amount": 792.0,
+                    "net_val": 792.0,
+                    "return_amount": 0.0,
+                    "materials": [
+                        {
+                            "matnr": "14000105",
+                            "batch": "1259923",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 2.0,
+                            "return_net_val": 792.0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partner": null,
+            "partner_id": "11063178",
+            "customer_name": "Fatema Pharmacy",
+            "customer_address": "Kathuli RoadMeherpur.",
+            "customer_mobile": "01872120536",
+            "da_full_name": "Md. Humayun Kabir",
+            "da_mobile_no": "01871002354",
+            "billing_docs": [
+                {
+                    "billing_doc_no": "9026662132",
+                    "billing_date": "2024-03-14",
+                    "gate_pass_no": "2446000588",
+                    "da_code": "50012",
+                    "due_amount": 2891.0,
+                    "net_val": 2891.0,
+                    "return_amount": 0.0,
+                    "materials": [
+                        {
+                            "matnr": "14000000",
+                            "batch": "1218323",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 291.24
+                        },
+                        {
+                            "matnr": "14000005",
+                            "batch": "1219423",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 514.68
+                        },
+                        {
+                            "matnr": "14000095",
+                            "batch": "1008024",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 633.45
+                        },
+                        {
+                            "matnr": "14000107",
+                            "batch": "1210023",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 677.44
+                        },
+                        {
+                            "matnr": "14000302",
+                            "batch": "1258023",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 774.19
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partner": null,
+            "partner_id": "11065173",
+            "customer_name": "Maya Medical Hall",
+            "customer_address": "Beside of Azim Medical",
+            "customer_mobile": "01777204488",
+            "da_full_name": "Md. Humayun Kabir",
+            "da_mobile_no": "01871002354",
+            "billing_docs": [
+                {
+                    "billing_doc_no": "9026662116",
+                    "billing_date": "2024-03-14",
+                    "gate_pass_no": "2446000588",
+                    "da_code": "50012",
+                    "due_amount": 1364.0,
+                    "net_val": 1931.0,
+                    "return_amount": 0.0,
+                    "materials": [
+                        {
+                            "matnr": "14000014",
+                            "batch": "1199223",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 0.0,
+                            "return_net_val": 0.0
+                        },
+                        {
+                            "matnr": "14000060",
+                            "batch": "1231623",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 527.84
+                        },
+                        {
+                            "matnr": "14000112",
+                            "batch": "1238823",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 285.92
+                        },
+                        {
+                            "matnr": "14000239",
+                            "batch": "1226422",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 0.0,
+                            "return_net_val": 0.0
+                        },
+                        {
+                            "matnr": "14000276",
+                            "batch": "1030624",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 263.92
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partner": null,
+            "partner_id": "11066430",
+            "customer_name": "Jonoprio Pharmacy",
+            "customer_address": "Kachari ParaMeherpur",
+            "customer_mobile": "01787464941",
+            "da_full_name": "Md. Humayun Kabir",
+            "da_mobile_no": "01871002354",
+            "billing_docs": [
+                {
+                    "billing_doc_no": "9027849179",
+                    "billing_date": "2024-05-05",
+                    "gate_pass_no": "2446000959",
+                    "da_code": "50012",
+                    "due_amount": 879.0,
+                    "net_val": 1355.0,
+                    "return_amount": 0.0,
+                    "materials": [
+                        {
+                            "matnr": "14000814",
+                            "batch": "6074823",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 677.5
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partner": null,
+            "partner_id": "11074029",
+            "customer_name": "Forida Pharmacy",
+            "customer_address": "Thana RoadMeherpur",
+            "customer_mobile": "01301887280",
+            "da_full_name": "Md. Humayun Kabir",
+            "da_mobile_no": "01871002354",
+            "billing_docs": [
+                {
+                    "billing_doc_no": "9026534536",
+                    "billing_date": "2024-03-10",
+                    "gate_pass_no": "2446000554",
+                    "da_code": "50012",
+                    "due_amount": -10000.0,
+                    "net_val": 1164.0,
+                    "return_amount": 0.0,
+                    "materials": [
+                        {
+                            "matnr": "14000630",
+                            "batch": "2004324",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 0.0,
+                            "return_net_val": 0.0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "partner": null,
+            "partner_id": "11100790",
+            "customer_name": "Rana Medicine Point",
+            "customer_address": "Hotel Bazar",
+            "customer_mobile": "01732389221",
+            "da_full_name": "Md. Humayun Kabir",
+            "da_mobile_no": "01871002354",
+            "billing_docs": [
+                {
+                    "billing_doc_no": "9026662107",
+                    "billing_date": "2024-03-14",
+                    "gate_pass_no": "2446000588",
+                    "da_code": "50012",
+                    "due_amount": 307.0,
+                    "net_val": 941.0,
+                    "return_amount": 0.0,
+                    "materials": [
+                        {
+                            "matnr": "14000001",
+                            "batch": "1261223",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 167.1
+                        },
+                        {
+                            "matnr": "14000302",
+                            "batch": "1258023",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 0.0,
+                            "return_net_val": 0.0
+                        }
+                    ]
+                },
+                {
+                    "billing_doc_no": "9027849171",
+                    "billing_date": "2024-05-05",
+                    "gate_pass_no": "2446000959",
+                    "da_code": "50012",
+                    "due_amount": 1628.0,
+                    "net_val": 1628.0,
+                    "return_amount": 0.0,
+                    "materials": [
+                        {
+                            "matnr": "14000022",
+                            "batch": "1272823",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 396.01
+                        },
+                        {
+                            "matnr": "14000056",
+                            "batch": "1031324",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 703.98
+                        },
+                        {
+                            "matnr": "14000060",
+                            "batch": "1027624",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 528.01
+                        }
+                    ]
+                },
+                {
+                    "billing_doc_no": "9028226179",
+                    "billing_date": "2024-05-19",
+                    "gate_pass_no": "2446001070",
+                    "da_code": "50012",
+                    "due_amount": 1940.0,
+                    "net_val": 1940.0,
+                    "return_amount": 0.0,
+                    "materials": [
+                        {
+                            "matnr": "14000081",
+                            "batch": "2042023",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 776.0
+                        },
+                        {
+                            "matnr": "14000133",
+                            "batch": "2045323",
+                            "delivery_quantity": 0.0,
+                            "delivery_net_val": 0.0,
+                            "return_quantity": 1.0,
+                            "return_net_val": 1164.0
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

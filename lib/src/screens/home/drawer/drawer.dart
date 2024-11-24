@@ -12,7 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:odms/src/screens/attendance/attendance_evening.dart';
 import 'package:odms/src/screens/auth/login/login_page.dart';
 import 'package:odms/src/screens/customer_location/set_customer_location.dart';
-import 'package:odms/src/screens/overdue/controller.dart';
+import 'package:odms/src/screens/overdue/models/overdue_response_model.dart';
 import 'package:odms/src/screens/overdue/overdue_cutomer_list.dart';
 import 'package:odms/src/screens/visit%20customer/visits_customer_page.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -21,11 +21,11 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../apis/apis.dart';
 import '../../../widgets/loading/loading_popup_widget.dart';
 import '../../../widgets/loading/loading_text_controller.dart';
+import '../../overdue/controllers/overdue_controller_getx.dart';
 import '../../reports/reports_page_webview.dart';
 import '../conveyance/controller/conveyance_data_controller.dart';
 import '../conveyance/conveyance_page.dart';
 import '../conveyance/model/conveyance_data_model.dart';
-import '../delivery_remaining/models/deliver_remaining_model.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -315,10 +315,12 @@ class _MyDrawerState extends State<MyDrawer> {
   void callOverDueList() async {
     final box = Hive.box('info');
     final url = Uri.parse(
-      "$base$getOverdueList/${box.get('sap_id')}",
+      "$base$getOverdueListV2/${box.get('sap_id')}",
     );
 
-    log("$base$getOverdueList/${box.get('sap_id')}");
+    //
+
+    log("$base$getOverdueListV2/${box.get('sap_id')}");
 
     loadingTextController.currentState.value = 0;
     loadingTextController.loadingText.value = 'Loading Data\nPlease wait...';
@@ -326,7 +328,7 @@ class _MyDrawerState extends State<MyDrawer> {
 
     final response = await get(url);
     if (kDebugMode) {
-      log("Got Delivery Remaining List");
+      log("Got overdue Remaining List");
       log(response.statusCode.toString());
       log(response.body);
     }
@@ -335,29 +337,11 @@ class _MyDrawerState extends State<MyDrawer> {
       loadingTextController.currentState.value = 1;
       loadingTextController.loadingText.value = 'Successful';
 
-      final modelFormHTTPResponse = DeliveryRemaining.fromJson(response.body);
-      final partners = modelFormHTTPResponse.result!;
-      Map<String, List<Result>> mapForMarge = {};
-      for (var partner in partners) {
-        List<Result> previousList = mapForMarge[partner.partner] ?? [];
-        if (previousList.isNotEmpty) {
-          previousList[0].invoiceList!.addAll(partner.invoiceList!);
-          mapForMarge[partner.partner!] = previousList;
-        } else {
-          previousList.add(partner);
-          mapForMarge[partner.partner!] = previousList;
-        }
-      }
-
-      modelFormHTTPResponse.result = [];
-      mapForMarge.forEach(
-        (key, value) {
-          modelFormHTTPResponse.result!.add(value[0]);
-        },
-      );
+      final modelFormHTTPResponse =
+          OverdueResponseModel.fromJson(response.body);
 
       final controller = Get.put(
-        OverdueCollectController(modelFormHTTPResponse),
+        OverdueControllerGetx(modelFormHTTPResponse),
       );
       controller.overdueRemaining.value = modelFormHTTPResponse;
       controller.constOverdueRemaining.value = modelFormHTTPResponse;
@@ -370,6 +354,7 @@ class _MyDrawerState extends State<MyDrawer> {
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
       }
+      log(modelFormHTTPResponse.toString());
       await Get.to(
         () => const OverdueCustomerList(),
       );
