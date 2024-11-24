@@ -213,7 +213,7 @@ class _OverdueProductListState extends State<OverdueProductList> {
                                         ),
                                         const Gap(5),
                                         Text(
-                                          "materials[index]. ?? ''",
+                                          materials[index].materialName,
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
@@ -222,6 +222,24 @@ class _OverdueProductListState extends State<OverdueProductList> {
                                         ),
                                       ],
                                     ),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "Producer Company: ",
+                                        style: style,
+                                      ),
+                                      const Gap(5),
+                                      Text(
+                                        "(${materials[index].producerCompany})",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.copyWith(
+                                              color: Colors.grey.shade600,
+                                            ),
+                                      ),
+                                    ],
                                   ),
                                   const Divider(
                                     height: 4,

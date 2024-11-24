@@ -13,12 +13,14 @@ import 'package:intl/intl.dart';
 import 'package:odms/src/screens/overdue/controllers/overdue_controller_getx.dart';
 import 'package:odms/src/screens/overdue/models/overdue_response_model.dart';
 import 'package:odms/src/screens/overdue/overdue_product_list.dart';
+import 'package:simple_icons/simple_icons.dart';
 
 import '../../apis/apis.dart';
 import '../../theme/text_scaler_theme.dart';
 import '../../widgets/common_widgets_function.dart';
 import '../../widgets/loading/loading_popup_widget.dart';
 import '../../widgets/loading/loading_text_controller.dart';
+import '../maps/map_view.dart';
 
 class OverdueInvoiceList extends StatefulWidget {
   final DateTime dateTime;
@@ -78,34 +80,34 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
         appBar: AppBar(
           title: const Text("Overdue Invoice List"),
         ),
-        // floatingActionButton: widget.result.customerLatitude != null &&
-        //         widget.result.customerLongitude != null
-        //     ? FloatingActionButton(
-        //         onPressed: () async {
-        //           log("Lat:${widget.result.customerLatitude} ");
-        //           log("Lat:${widget.result.customerLongitude} ");
-        //           Get.to(
-        //             () => MyMapView(
-        //               lat: widget.result.customerLatitude,
-        //               lng: widget.result.customerLongitude,
-        //               customerName: customerName,
-        //             ),
-        //           );
-        //         },
-        //         child: Container(
-        //           padding: const EdgeInsets.all(8),
-        //           decoration: BoxDecoration(
-        //             border: Border.all(
-        //               color: Colors.grey.shade800,
-        //             ),
-        //             borderRadius: BorderRadius.circular(100),
-        //           ),
-        //           child: const Icon(
-        //             SimpleIcons.googlemaps,
-        //           ),
-        //         ),
-        //       )
-        //     : null,
+        floatingActionButton: widget.result.customerLatitude != null &&
+                widget.result.customerLongitude != null
+            ? FloatingActionButton(
+                onPressed: () async {
+                  log("Lat:${widget.result.customerLatitude} ");
+                  log("Lat:${widget.result.customerLongitude} ");
+                  Get.to(
+                    () => MyMapView(
+                      lat: widget.result.customerLatitude!,
+                      lng: widget.result.customerLongitude!,
+                      customerName: customerName ?? "",
+                    ),
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey.shade800,
+                    ),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                  child: const Icon(
+                    SimpleIcons.googlemaps,
+                  ),
+                ),
+              )
+            : null,
         body: ListView(
           padding: const EdgeInsets.all(10),
           children: [
@@ -229,7 +231,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                           for (final MaterialModel productList
                               in docsList[index].materials ?? []) {
                             amount += productList.deliveryNetVal;
-                            returnAmount += productList.returnNetVal;
+                            returnAmount += productList.returnNetVal ?? 0;
                           }
                           Get.to(
                             () => OverdueProductList(

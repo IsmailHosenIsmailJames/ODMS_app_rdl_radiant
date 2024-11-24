@@ -43,6 +43,8 @@ class Result {
   String partnerId;
   String? customerName;
   String? customerAddress;
+  double? customerLatitude;
+  double? customerLongitude;
   String? customerMobile;
   String daFullName;
   String daMobileNo;
@@ -52,6 +54,8 @@ class Result {
     required this.partnerId,
     required this.customerName,
     required this.customerAddress,
+    required this.customerLongitude,
+    required this.customerLatitude,
     required this.customerMobile,
     required this.daFullName,
     required this.daMobileNo,
@@ -62,6 +66,8 @@ class Result {
     String? partnerId,
     String? customerName,
     String? customerAddress,
+    double? customerLatitude,
+    double? customerLongitude,
     String? customerMobile,
     String? daFullName,
     String? daMobileNo,
@@ -71,6 +77,8 @@ class Result {
         partnerId: partnerId ?? this.partnerId,
         customerName: customerName ?? this.customerName,
         customerAddress: customerAddress ?? this.customerAddress,
+        customerLatitude: customerLatitude ?? this.customerLatitude,
+        customerLongitude: customerLongitude ?? this.customerLongitude,
         customerMobile: customerMobile ?? this.customerMobile,
         daFullName: daFullName ?? this.daFullName,
         daMobileNo: daMobileNo ?? this.daMobileNo,
@@ -85,6 +93,8 @@ class Result {
         partnerId: json["partner_id"],
         customerName: json["customer_name"],
         customerAddress: json["customer_address"],
+        customerLatitude: json["customer_latitude"],
+        customerLongitude: json["customer_longitude"],
         customerMobile: json["customer_mobile"],
         daFullName: json["da_full_name"],
         daMobileNo: json["da_mobile_no"],
@@ -96,6 +106,8 @@ class Result {
         "partner_id": partnerId,
         "customer_name": customerName,
         "customer_address": customerAddress,
+        "customer_latitude": customerLatitude,
+        "customer_longitude": customerLongitude,
         "customer_mobile": customerMobile,
         "da_full_name": daFullName,
         "da_mobile_no": daMobileNo,
@@ -181,14 +193,18 @@ class BillingDoc {
 
 class MaterialModel {
   String matnr;
+  String materialName;
+  String producerCompany;
   String batch;
   double deliveryQuantity;
   double deliveryNetVal;
-  double returnQuantity;
-  double returnNetVal;
+  double? returnQuantity;
+  double? returnNetVal;
 
   MaterialModel({
     required this.matnr,
+    required this.materialName,
+    required this.producerCompany,
     required this.batch,
     required this.deliveryQuantity,
     required this.deliveryNetVal,
@@ -198,6 +214,8 @@ class MaterialModel {
 
   MaterialModel copyWith({
     String? matnr,
+    String? materialName,
+    String? producerCompany,
     String? batch,
     double? deliveryQuantity,
     double? deliveryNetVal,
@@ -206,6 +224,8 @@ class MaterialModel {
   }) =>
       MaterialModel(
         matnr: matnr ?? this.matnr,
+        materialName: materialName ?? this.materialName,
+        producerCompany: producerCompany ?? this.producerCompany,
         batch: batch ?? this.batch,
         deliveryQuantity: deliveryQuantity ?? this.deliveryQuantity,
         deliveryNetVal: deliveryNetVal ?? this.deliveryNetVal,
@@ -220,6 +240,8 @@ class MaterialModel {
 
   factory MaterialModel.fromMap(Map<String, dynamic> json) => MaterialModel(
         matnr: json["matnr"],
+        materialName: json["material_name"],
+        producerCompany: json["producer_company"],
         batch: json["batch"],
         deliveryQuantity: json["delivery_quantity"],
         deliveryNetVal: json["delivery_net_val"],
@@ -229,6 +251,8 @@ class MaterialModel {
 
   Map<String, dynamic> toMap() => {
         "matnr": matnr,
+        "material_name": materialName,
+        "producer_company": producerCompany,
         "batch": batch,
         "delivery_quantity": deliveryQuantity,
         "delivery_net_val": deliveryNetVal,
