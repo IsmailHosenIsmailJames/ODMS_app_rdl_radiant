@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:odms/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
-import 'package:odms/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
-import 'package:odms/src/screens/overdue/controller.dart';
+import 'package:odms/src/screens/overdue/controllers/overdue_controller_getx.dart';
+import 'package:odms/src/screens/overdue/models/overdue_response_model.dart';
 import 'package:odms/src/widgets/common_widgets_function.dart';
 
 import '../../theme/text_scaler_theme.dart';
@@ -13,13 +12,15 @@ import '../../widgets/loading/loading_text_controller.dart';
 
 class OverdueProductList extends StatefulWidget {
   final DateTime? dateOfDelivery;
-  final InvoiceList invoice;
+  final BillingDoc billingDoc;
+  final Result result;
   final String invoiceNo;
   final String totalAmount;
   final int index;
   const OverdueProductList({
     super.key,
-    required this.invoice,
+    required this.billingDoc,
+    required this.result,
     required this.invoiceNo,
     required this.totalAmount,
     required this.index,
@@ -31,17 +32,15 @@ class OverdueProductList extends StatefulWidget {
 }
 
 class _OverdueProductListState extends State<OverdueProductList> {
-  final invoiceListController = Get.put(InvoiceListController());
+  final invoiceListController = Get.put(OverdueDocsListController());
   final LoadingTextController loadingTextController = Get.find();
 
-  late List<ProductList> productList;
+  late List<MaterialModel> materials;
   final formKey = GlobalKey<FormState>();
-
-  final OverdueCollectController deliveryRemainingController = Get.find();
 
   @override
   void initState() {
-    productList = widget.invoice.productList ?? [];
+    materials = widget.billingDoc.materials ?? [];
     super.initState();
   }
 
@@ -62,8 +61,8 @@ class _OverdueProductListState extends State<OverdueProductList> {
 
     double totalAmount = 0;
 
-    widget.invoice.productList?.forEach((element) {
-      totalAmount += (element.netVal ?? 0) + (element.vat ?? 0);
+    widget.billingDoc.materials?.forEach((element) {
+      totalAmount += element.deliveryNetVal;
     });
 
     return MediaQuery(
@@ -113,17 +112,17 @@ class _OverdueProductListState extends State<OverdueProductList> {
                               children: [
                                 getRowWidgetForDetailsBox(
                                   "Customer Name",
-                                  widget.invoice.customerName ?? "",
+                                  widget.result.customerName ?? "",
                                 ),
                                 divider,
                                 getRowWidgetForDetailsBox(
                                   "Customer Address",
-                                  widget.invoice.customerAddress ?? "",
+                                  widget.result.customerAddress ?? "",
                                 ),
                                 divider,
                                 getRowWidgetForDetailsBox(
                                   "Customer Mobile",
-                                  widget.invoice.customerMobile ?? "",
+                                  widget.result.customerMobile,
                                   optionalWidgetsAtLast: SizedBox(
                                     height: 23,
                                     width: 50,
@@ -131,7 +130,7 @@ class _OverdueProductListState extends State<OverdueProductList> {
                                       padding: EdgeInsets.zero,
                                       onPressed: () {
                                         FlutterClipboard.copy(
-                                          widget.invoice.customerMobile ?? "",
+                                          widget.result.customerMobile ?? "",
                                         ).then((value) {
                                           Fluttertoast.showToast(
                                               msg: "Number Copied");
@@ -147,12 +146,7 @@ class _OverdueProductListState extends State<OverdueProductList> {
                                 divider,
                                 getRowWidgetForDetailsBox(
                                   "Gate Pass",
-                                  widget.invoice.gatePassNo ?? "",
-                                ),
-                                divider,
-                                getRowWidgetForDetailsBox(
-                                  "Vehicle No",
-                                  widget.invoice.vehicleNo ?? "",
+                                  widget.billingDoc.gatePassNo,
                                 ),
                                 divider,
                                 getRowWidgetForDetailsBox(
@@ -168,7 +162,7 @@ class _OverdueProductListState extends State<OverdueProductList> {
                     const Gap(15),
                   ] +
                   List.generate(
-                    productList.length,
+                    materials.length,
                     (index) {
                       return Container(
                         margin: const EdgeInsets.only(top: 5, bottom: 5),
@@ -195,14 +189,14 @@ class _OverdueProductListState extends State<OverdueProductList> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "ID: ${productList[index].matnr}",
+                                        "ID: ${materials[index].matnr}",
                                         style: TextStyle(
                                           color: Colors.grey.shade700,
                                         ),
                                       ),
                                       const Gap(20),
                                       Text(
-                                        "Batch: ${productList[index].batch}",
+                                        "Batch: ${materials[index].batch}",
                                         style: TextStyle(
                                           color: Colors.grey.shade700,
                                         ),
@@ -219,7 +213,7 @@ class _OverdueProductListState extends State<OverdueProductList> {
                                         ),
                                         const Gap(5),
                                         Text(
-                                          productList[index].materialName ?? '',
+                                          "materials[index]. ?? ''",
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w500,
@@ -241,7 +235,7 @@ class _OverdueProductListState extends State<OverdueProductList> {
                                       ),
                                       const Gap(5),
                                       Text(
-                                        (productList[index].quantity ?? 0)
+                                        (materials[index].deliveryQuantity)
                                             .toPrecision(2)
                                             .toString(),
                                         style: TextStyle(
@@ -257,9 +251,8 @@ class _OverdueProductListState extends State<OverdueProductList> {
                                       ),
                                       const Gap(5),
                                       Text(
-                                        ((productList[index].vat ?? 0) +
-                                                (productList[index].netVal ??
-                                                    0))
+                                        materials[index]
+                                            .deliveryNetVal
                                             .toPrecision(2)
                                             .toStringAsFixed(2),
                                         style: TextStyle(

@@ -13,7 +13,7 @@ import 'package:odms/src/screens/attendance/attendance_evening.dart';
 import 'package:odms/src/screens/auth/login/login_page.dart';
 import 'package:odms/src/screens/customer_location/set_customer_location.dart';
 import 'package:odms/src/screens/overdue/models/overdue_response_model.dart';
-import 'package:odms/src/screens/overdue/overdue_cutomer_list.dart';
+import 'package:odms/src/screens/overdue/overdue_customer_list.dart';
 import 'package:odms/src/screens/visit%20customer/visits_customer_page.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';

@@ -18,5 +18,5 @@ class OverdueControllerGetx extends GetxController {
 }
 
 class OverdueDocsListController extends GetxController {
-  RxList<BillingDoc> invoiceList = (<BillingDoc>[]).obs;
+  RxList<BillingDoc> docsList = (<BillingDoc>[]).obs;
 }

@@ -13,7 +13,9 @@ import 'package:odms/src/screens/home/page_sate_definition.dart';
 import 'package:odms/src/screens/home/product_list/product_list_page.dart';
 import 'package:odms/src/screens/home/product_list/cash_collection/product_list_cash_collection.dart';
 import 'package:odms/src/screens/maps/map_view.dart';
-import 'package:odms/src/screens/overdue/controller.dart';
+import 'package:odms/src/screens/overdue/controllers/overdue_controller_getx.dart';
+import 'package:odms/src/screens/overdue/models/overdue_response_model.dart'
+    as overdue;
 import 'package:odms/src/screens/overdue/overdue_invoice_list.dart';
 import 'package:simple_icons/simple_icons.dart';
 
@@ -555,13 +557,13 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
 
   Future<void> onPreviousDueCollectButtonPressed(BuildContext context) async {
     final String? partnerPrev = invoiceListController.invoiceList[0].partner;
-    OverdueInvoiceListController overdueInvoiceListController =
-        Get.put(OverdueInvoiceListController());
+    OverdueDocsListController overdueInvoiceListController =
+        Get.put(OverdueDocsListController());
 
     //Call api for due list
     final box = Hive.box('info');
     final url = Uri.parse(
-      "$base$getOverdueList/${box.get('sap_id')}",
+      "$base$getOverdueListV2/${box.get('sap_id')}",
     );
 
     loadingTextController.currentState.value = 0;
@@ -578,29 +580,10 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
       loadingTextController.currentState.value = 1;
       loadingTextController.loadingText.value = 'Successful';
 
-      final modelFormHTTPResponse = DeliveryRemaining.fromJson(response.body);
-      final partners = modelFormHTTPResponse.result!;
-      Map<String, List<Result>> mapForMarge = {};
-      for (var partner in partners) {
-        List<Result> previousList = mapForMarge[partner.partner] ?? [];
-        if (previousList.isNotEmpty) {
-          previousList[0].invoiceList!.addAll(partner.invoiceList!);
-          mapForMarge[partner.partner!] = previousList;
-        } else {
-          previousList.add(partner);
-          mapForMarge[partner.partner!] = previousList;
-        }
-      }
-
-      modelFormHTTPResponse.result = [];
-      mapForMarge.forEach(
-        (key, value) {
-          modelFormHTTPResponse.result!.add(value[0]);
-        },
-      );
-
+      final modelFormHTTPResponse =
+          overdue.OverdueResponseModel.fromJson(response.body);
       final controller = Get.put(
-        OverdueCollectController(modelFormHTTPResponse),
+        OverdueControllerGetx(modelFormHTTPResponse),
       );
 
       controller.overdueRemaining.value = modelFormHTTPResponse;
@@ -613,23 +596,23 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
       }
       //  Go to invoice directly
       final results = controller.constOverdueRemaining.value.result!;
-      Result? result;
+      overdue.Result? result;
       for (var r in results) {
-        if (r.partner == partnerPrev && r.invoiceList?.isEmpty == false) {
+        if (r.partnerId == partnerPrev && r.billingDocs?.isEmpty == false) {
           result = r;
         }
       }
 
       if (result != null) {
-        overdueInvoiceListController.invoiceList.value =
-            result.invoiceList ?? <InvoiceList>[];
+        overdueInvoiceListController.docsList.value =
+            result.billingDocs ?? <overdue.BillingDoc>[];
         await showModalBottomSheet(
           scrollControlDisabledMaxHeightRatio: 0.8,
           context: context,
           builder: (context) => OverdueInvoiceList(
             dateTime: widget.dateTime,
             result: result!,
-            totalAmount: due.toString(),
+            dueAmount: due,
           ),
         );
       }
@@ -642,7 +625,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
 
     // calculate Due
     double nowDue = 0;
-    for (var invoice in overdueInvoiceListController.invoiceList.value) {
+    for (var invoice in overdueInvoiceListController.docsList.value) {
       nowDue += invoice.dueAmount ?? 0;
     }
 

@@ -10,11 +10,9 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-import 'package:odms/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
-import 'package:odms/src/screens/maps/map_view.dart';
-import 'package:odms/src/screens/overdue/controller.dart';
+import 'package:odms/src/screens/overdue/controllers/overdue_controller_getx.dart';
+import 'package:odms/src/screens/overdue/models/overdue_response_model.dart';
 import 'package:odms/src/screens/overdue/overdue_product_list.dart';
-import 'package:simple_icons/simple_icons.dart';
 
 import '../../apis/apis.dart';
 import '../../theme/text_scaler_theme.dart';
@@ -25,44 +23,40 @@ import '../../widgets/loading/loading_text_controller.dart';
 class OverdueInvoiceList extends StatefulWidget {
   final DateTime dateTime;
   final Result result;
-  final String totalAmount;
+  final double dueAmount;
   const OverdueInvoiceList(
       {super.key,
       required this.dateTime,
       required this.result,
-      required this.totalAmount});
+      required this.dueAmount});
 
   @override
   State<OverdueInvoiceList> createState() => _OverdueInvoiceListState();
 }
 
 class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
-  final overdueInvoiceListController = Get.put(OverdueInvoiceListController());
-  final OverdueCollectController overdueCollectController = Get.find();
+  final overdueInvoiceListController = Get.put(OverdueDocsListController());
+  final OverdueControllerGetx overdueCollectController = Get.find();
   final LoadingTextController loadingTextController = Get.find();
-  late final routeName =
-      overdueInvoiceListController.invoiceList[0].routeName ?? "";
-  late final daName = overdueInvoiceListController.invoiceList[0].daName ?? "";
-  late final partner =
-      overdueInvoiceListController.invoiceList[0].partner ?? "";
-  late final customerName =
-      overdueInvoiceListController.invoiceList[0].customerName ?? "";
-  late final customerAddress =
-      overdueInvoiceListController.invoiceList[0].customerAddress ?? "";
+
+  // late final routeName =
+  //     overdueInvoiceListController.docsList[0].routeName ?? "";
+  late final daName = widget.result.daFullName;
+  late final partner = widget.result.partnerId;
+  late final customerName = widget.result.customerName;
+  late final customerAddress = widget.result.customerAddress;
 
   String pageType = '';
-  late double due =
-      overdueInvoiceListController.invoiceList[0].previousDueAmount ?? 0;
-  late final customerMobile =
-      overdueInvoiceListController.invoiceList[0].customerMobile ?? "";
-  late final gatePassNo =
-      overdueInvoiceListController.invoiceList[0].gatePassNo ?? "";
+  late double due = overdueInvoiceListController.docsList[0].dueAmount ?? 0;
+  late final customerMobile = widget.result.customerMobile;
+  // late final gatePassNo =
+  //     overdueInvoiceListController.docsList[0].gatePassNo ;
 
   double totalAmount = 0;
 
   @override
   void initState() {
-    widget.result.invoiceList?.forEach(
+    widget.result.billingDocs?.forEach(
       (element) {
         totalAmount += element.dueAmount ?? 0;
       },
@@ -84,34 +78,34 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
         appBar: AppBar(
           title: const Text("Overdue Invoice List"),
         ),
-        floatingActionButton: widget.result.customerLatitude != null &&
-                widget.result.customerLongitude != null
-            ? FloatingActionButton(
-                onPressed: () async {
-                  log("Lat:${widget.result.customerLatitude} ");
-                  log("Lat:${widget.result.customerLongitude} ");
-                  Get.to(
-                    () => MyMapView(
-                      lat: widget.result.customerLatitude,
-                      lng: widget.result.customerLongitude,
-                      customerName: customerName,
-                    ),
-                  );
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey.shade800,
-                    ),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                  child: const Icon(
-                    SimpleIcons.googlemaps,
-                  ),
-                ),
-              )
-            : null,
+        // floatingActionButton: widget.result.customerLatitude != null &&
+        //         widget.result.customerLongitude != null
+        //     ? FloatingActionButton(
+        //         onPressed: () async {
+        //           log("Lat:${widget.result.customerLatitude} ");
+        //           log("Lat:${widget.result.customerLongitude} ");
+        //           Get.to(
+        //             () => MyMapView(
+        //               lat: widget.result.customerLatitude,
+        //               lng: widget.result.customerLongitude,
+        //               customerName: customerName,
+        //             ),
+        //           );
+        //         },
+        //         child: Container(
+        //           padding: const EdgeInsets.all(8),
+        //           decoration: BoxDecoration(
+        //             border: Border.all(
+        //               color: Colors.grey.shade800,
+        //             ),
+        //             borderRadius: BorderRadius.circular(100),
+        //           ),
+        //           child: const Icon(
+        //             SimpleIcons.googlemaps,
+        //           ),
+        //         ),
+        //       )
+        //     : null,
         body: ListView(
           padding: const EdgeInsets.all(10),
           children: [
@@ -145,11 +139,11 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                     padding: const EdgeInsets.all(10),
                     child: Column(
                       children: [
-                        getRowWidgetForDetailsBox(
-                          "Route Name",
-                          routeName,
-                        ),
-                        divider,
+                        // getRowWidgetForDetailsBox(
+                        //   "Route Name",
+                        //   routeName,
+                        // ),
+                        // divider,
                         getRowWidgetForDetailsBox(
                           "Da Name",
                           daName,
@@ -180,7 +174,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                               padding: EdgeInsets.zero,
                               onPressed: () {
                                 FlutterClipboard.copy(
-                                  customerMobile,
+                                  customerMobile ?? "",
                                 ).then((value) {
                                   Fluttertoast.showToast(msg: "Number Copied");
                                 });
@@ -193,11 +187,11 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                           ),
                         ),
                         divider,
-                        getRowWidgetForDetailsBox(
-                          "Gate Pass",
-                          gatePassNo,
-                        ),
-                        divider,
+                        // getRowWidgetForDetailsBox(
+                        //   "Gate Pass",
+                        //   gatePassNo,
+                        // ),
+                        // divider,
                         getRowWidgetForDetailsBox(
                           "Total Due Amount",
                           (totalAmount < 0 ? 0 : totalAmount)
@@ -212,33 +206,42 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
             const Gap(15),
             Obx(
               () {
-                List<InvoiceList> invoiceList =
-                    overdueInvoiceListController.invoiceList.value;
+                List<BillingDoc> docsList =
+                    overdueInvoiceListController.docsList.value;
                 return Column(
                   children: List.generate(
-                    invoiceList.length,
+                    docsList.length,
                     (index) {
-                      double amount = 0;
-                      double returnAmount = 0;
-                      for (final ProductList productList
-                          in invoiceList[index].productList ?? []) {
-                        amount +=
-                            (productList.netVal ?? 0) + (productList.vat ?? 0);
-                        returnAmount += (productList.returnNetVal ?? 0);
-                      }
+                      // double amount = 0;
+                      // double returnAmount = 0;
+                      // for (final ProductList productList
+                      //     in docsList[index].productList ?? []) {
+                      //   amount +=
+                      //       (productList.netVal ?? 0) + (productList.vat ?? 0);
+                      //   returnAmount += (productList.returnNetVal ?? 0);
+                      // }
 
                       return GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () async {
-                          Get.to(() => OverdueProductList(
-                                invoice: invoiceList[index],
-                                invoiceNo:
-                                    (invoiceList[index].billingDocNo ?? 0)
-                                        .toString(),
-                                totalAmount: (amount - returnAmount).toString(),
-                                index: index,
-                                dateOfDelivery: widget.dateTime,
-                              ));
+                          double amount = 0;
+                          double returnAmount = 0;
+                          for (final MaterialModel productList
+                              in docsList[index].materials ?? []) {
+                            amount += productList.deliveryNetVal;
+                            returnAmount += productList.returnNetVal;
+                          }
+                          Get.to(
+                            () => OverdueProductList(
+                              billingDoc: docsList[index],
+                              invoiceNo:
+                                  docsList[index].billingDocNo.toString(),
+                              totalAmount: (amount - returnAmount).toString(),
+                              result: widget.result,
+                              index: index,
+                              dateOfDelivery: widget.dateTime,
+                            ),
+                          );
                         },
                         child: Container(
                           margin: const EdgeInsets.only(top: 5, bottom: 5),
@@ -276,27 +279,27 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                                         ),
                                         const Gap(7),
                                         Text(
-                                          (invoiceList[index].billingDocNo ?? 0)
+                                          docsList[index]
+                                              .billingDocNo
                                               .toString(),
                                           style: style,
                                         ),
-                                        Text(
-                                          " (${invoiceList[index].producerCompany ?? ""})",
-                                          style: TextStyle(
-                                            color: Colors.grey.shade700,
-                                          ),
-                                        ),
-                                        const Spacer(),
-                                        Text(
-                                          invoiceList[index].deliveryStatus ??
-                                              "",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyLarge
-                                              ?.copyWith(
-                                                color: Colors.grey.shade600,
-                                              ),
-                                        )
+                                        // Text(
+                                        //   " (${docsList[index].producerCompany ?? ""})",
+                                        //   style: TextStyle(
+                                        //     color: Colors.grey.shade700,
+                                        //   ),
+                                        // ),
+                                        // const Spacer(),
+                                        // Text(
+                                        //   docsList[index].deliveryStatus ?? "",
+                                        //   style: Theme.of(context)
+                                        //       .textTheme
+                                        //       .bodyLarge
+                                        //       ?.copyWith(
+                                        //         color: Colors.grey.shade600,
+                                        //       ),
+                                        // )
                                       ],
                                     ),
                                     Row(
@@ -313,8 +316,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                                         const Gap(7),
                                         Text(
                                           DateFormat('yyyy-MM-dd').format(
-                                              invoiceList[index].billingDate ??
-                                                  DateTime.now()),
+                                              docsList[index].billingDate),
                                           style: style,
                                         ),
                                       ],
@@ -336,7 +338,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                                         ),
                                         Gap(7),
                                         Text(
-                                          (invoiceList[index].dueAmount ?? 0)
+                                          (docsList[index].dueAmount ?? 0)
                                               .toString(),
                                           style: TextStyle(
                                             fontSize: 16,
@@ -352,7 +354,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                                       child: ElevatedButton(
                                         onPressed: () {
                                           callDueCollectionApi(
-                                              invoiceList, index, context);
+                                              docsList, index, context);
                                         },
                                         child: Text("Collect"),
                                       ),
@@ -376,10 +378,10 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
   }
 
   void callDueCollectionApi(
-      List<InvoiceList> invoiceList, int index, BuildContext context) {
-    OverdueCollectController dueController = Get.find();
-    dueController.previousDue.value = invoiceList[index].dueAmount ?? 0;
-    dueController.currentDue.value = invoiceList[index].dueAmount ?? 0;
+      List<BillingDoc> docsList, int index, BuildContext context) {
+    OverdueControllerGetx dueController = Get.find();
+    dueController.previousDue.value = docsList[index].dueAmount ?? 0;
+    dueController.currentDue.value = 0;
 
     TextEditingController textEditingController =
         TextEditingController(text: dueController.previousDue.toString());
@@ -424,11 +426,11 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                   onChanged: (value) {
                     dueController.collectAmount.value =
                         double.tryParse(value) ?? 0;
-                    double currentDue = (invoiceList[index].dueAmount ?? 0) -
+                    double currentDue = (docsList[index].dueAmount ?? 0) -
                         (double.tryParse(value) ?? 0);
 
                     dueController.currentDue.value = currentDue < 0
-                        ? (invoiceList[index].dueAmount ?? 0)
+                        ? (docsList[index].dueAmount ?? 0)
                         : currentDue;
                   },
                   controller: textEditingController,
@@ -490,8 +492,8 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                           if (doubleValue > dueController.previousDue.value) {
                             return;
                           } else {
-                            await onDueCashCollection(context, invoiceList,
-                                index, doubleValue, dueController);
+                            await onDueCashCollection(context, docsList, index,
+                                doubleValue, dueController);
                             return;
                           }
                         }
@@ -509,10 +511,10 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
 
   Future<void> onDueCashCollection(
       BuildContext context,
-      List<InvoiceList> invoiceList,
+      List<BillingDoc> docsList,
       int index,
       double doubleValue,
-      OverdueCollectController dueController) async {
+      OverdueControllerGetx dueController) async {
     loadingTextController.currentState.value = 0;
     loadingTextController.loadingText.value =
         'Accessing Your Location\nPlease wait...';
@@ -524,7 +526,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
             AndroidSettings(timeLimit: const Duration(seconds: 30)),
       );
       String encodedDataToSend = jsonEncode({
-        "billing_doc_no": invoiceList[index].billingDocNo ?? "",
+        "billing_doc_no": docsList[index].billingDocNo,
         "cash_collection": doubleValue,
         "da_code": Hive.box('info').get("sap_id") as int,
         "cash_collection_latitude": position.latitude,
@@ -552,83 +554,56 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
       if (response.statusCode == 200) {
         final decoded = Map<String, dynamic>.from(jsonDecode(response.body));
         if (decoded['success'] == true) {
-          try {
-            final box = Hive.box('info');
-            final url = Uri.parse("$base$getOverdueList/${box.get('sap_id')}");
+          final box = Hive.box('info');
+          final url = Uri.parse("$base$getOverdueListV2/${box.get('sap_id')}");
 
-            final response = await get(url);
+          final response = await get(url);
+          log("Got overdue Remaining List");
+          log(response.statusCode.toString());
+          log(response.body);
 
-            if (response.statusCode == 200) {
-              log("Got Due List $base$getOverdueList/${box.get('sap_id')}");
-              log(response.body);
+          if (response.statusCode == 200) {
+            final modelFormHTTPResponse =
+                OverdueResponseModel.fromJson(response.body);
 
-              final modelFormHTTPResponse =
-                  DeliveryRemaining.fromJson(response.body);
+            final controller = Get.put(
+              OverdueControllerGetx(modelFormHTTPResponse),
+            );
+            controller.overdueRemaining.value = modelFormHTTPResponse;
+            controller.constOverdueRemaining.value = modelFormHTTPResponse;
+            controller.overdueRemaining.value.result ??= [];
+            controller.constOverdueRemaining.value.result ??= [];
 
-              final partners = modelFormHTTPResponse.result!;
-              Map<String, List<Result>> mapForMarge = {};
-              for (var partner in partners) {
-                List<Result> previousList = mapForMarge[partner.partner] ?? [];
-                if (previousList.isNotEmpty) {
-                  previousList[0].invoiceList!.addAll(partner.invoiceList!);
-                  mapForMarge[partner.partner!] = previousList;
-                } else {
-                  previousList.add(partner);
-                  mapForMarge[partner.partner!] = previousList;
-                }
+            log(modelFormHTTPResponse.toString());
+
+            String? partner = widget.result.partnerId;
+            bool isFound = false;
+            final result =
+                overdueCollectController.overdueRemaining.value.result ??= [];
+            for (var r in result) {
+              if (r.partnerId == partner) {
+                isFound = true;
+                overdueInvoiceListController.docsList.value =
+                    r.billingDocs ?? <BillingDoc>[];
               }
-
-              modelFormHTTPResponse.result = [];
-              mapForMarge.forEach(
-                (key, value) {
-                  modelFormHTTPResponse.result!.add(value[0]);
-                },
-              );
-
-              overdueCollectController.overdueRemaining.value =
-                  modelFormHTTPResponse;
-              overdueCollectController.constOverdueRemaining.value =
-                  modelFormHTTPResponse;
-              overdueCollectController.overdueRemaining.value.result ??= [];
-              overdueCollectController.constOverdueRemaining.value.result ??=
-                  [];
-              // Extract partner invoice list
-              String? partner = widget.result.partner;
-              DateTime? billingDate = widget.result.billingDate;
-              bool isFound = false;
-              if (partner != null) {
-                final result = overdueCollectController
-                    .overdueRemaining.value.result ??= [];
-                for (var r in result) {
-                  if (r.partner == partner &&
-                      billingDate != null &&
-                      r.billingDate?.compareTo(billingDate) == 0) {
-                    isFound = true;
-                    overdueInvoiceListController.invoiceList.value =
-                        r.invoiceList ?? <InvoiceList>[];
-                  }
-                }
-                if (!isFound) {
-                  overdueInvoiceListController.invoiceList.value =
-                      <InvoiceList>[];
-                }
+              if (!isFound) {
+                overdueInvoiceListController.docsList.value = <BillingDoc>[];
               }
             }
-          } catch (e) {
-            log(e.toString());
           }
+
           loadingTextController.currentState.value = 0;
           loadingTextController.loadingText.value = 'Successful';
           double due = dueController.previousDue.value -
               dueController.collectAmount.value;
           if (due == 0) {
-            overdueInvoiceListController.invoiceList.removeAt(
+            overdueInvoiceListController.docsList.removeAt(
               index,
             );
           } else {
             setState(() {
               totalAmount = due;
-              invoiceList[index].dueAmount = due;
+              docsList[index].dueAmount = due;
             });
           }
           if (Navigator.canPop(context)) {

@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:odms/src/screens/overdue/controllers/overdue_controller_getx.dart';
 import 'package:odms/src/screens/overdue/models/overdue_response_model.dart';
+import 'package:odms/src/screens/overdue/overdue_invoice_list.dart';
 import 'package:odms/src/theme/text_scaler_theme.dart';
 
 class OverdueCustomerList extends StatefulWidget {
@@ -130,13 +131,13 @@ class _OverdueCustomerListState extends State<OverdueCustomerList> {
             OverdueResponseModel.fromMap(tem);
         OverdueDocsListController overdueInvoiceListController =
             Get.put(OverdueDocsListController());
-        overdueInvoiceListController.invoiceList.value =
+        overdueInvoiceListController.docsList.value =
             result.billingDocs ?? <BillingDoc>[];
-        // await Get.to(() => OverdueInvoiceList(
-        //       dateTime: dateTime,
-        //       result: result,
-        //       totalAmount: amount.toString(),
-        //     ));
+        await Get.to(() => OverdueInvoiceList(
+              dateTime: dateTime,
+              result: result,
+              dueAmount: dueAmount,
+            ));
       },
       child: Container(
         margin: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),

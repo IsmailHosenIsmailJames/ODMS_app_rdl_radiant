@@ -43,7 +43,7 @@ class Result {
   String partnerId;
   String? customerName;
   String? customerAddress;
-  String customerMobile;
+  String? customerMobile;
   String daFullName;
   String daMobileNo;
   List<BillingDoc>? billingDocs;

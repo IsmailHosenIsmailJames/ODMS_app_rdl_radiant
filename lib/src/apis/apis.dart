@@ -1,5 +1,5 @@
-String base = 'http://192.168.128.221:6042';
-// String base = 'http://128.199.199.164:6042';
+// String base = 'http://192.168.128.221:6042';
+String base = 'http://128.199.199.164:6042';
 String version = "v1";
 String getAppInfoAPI = "/api/$version/app_info";
 String loginPath = '/api/$version/user_login';
@@ -21,6 +21,7 @@ String conveyanceList = "/api/$version/conveyance/list";
 String conveyanceEnd = "/api/$version/conveyance/end";
 String conveyanceTransportMode = "/api/$version/conveyance/transport_modes";
 String getOverdueList = "/api/$version/cash_collection/overdue/list";
+String getOverdueListV2 = "/api/$version/cash_collection/overdue/list/v2";
 String collectOverdue = "/api/$version/cash_collection/overdue";
 String visitApiPath = "/api/$version/visit/create";
 String reportsAPI = "/web_view/v1/reports";
