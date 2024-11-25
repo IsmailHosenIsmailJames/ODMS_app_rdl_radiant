@@ -52,7 +52,6 @@ dependencies:
   open_file: ^3.5.9
   package_info_plus: ^8.1.0
   permission_handler: ^11.3.1
-  flutter_svg: ^2.0.15
 
 dev_dependencies:
   leancode_lint: ^14.1.0
@@ -64,10 +63,6 @@ flutter:
     - assets/allow_location.png
     - assets/ic_logo_color.png
     - assets/No_Internet_Connection.png
-    - assets/delivery-truck.png
-    - assets/delivery_done.png
-    - assets/cash_collection.png
-    - assets/delivery_back.png
     - assets/icon_for_medical_shop.png
     - assets/Map-100x100.bmp
     - assets/overdue.jpg

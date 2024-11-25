@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
 import 'dart:developer';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -133,7 +132,7 @@ class _HomePageState extends State<HomePage> {
             Container(
               margin: EdgeInsets.all(5),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.15),
+                color: Colors.blue.shade100.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: Colors.grey.shade300,
@@ -214,6 +213,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+            Gap(15),
             Expanded(
               child: GetX<DashboardControllerGetx>(
                 builder: (controller) {
@@ -222,44 +222,39 @@ class _HomePageState extends State<HomePage> {
                       DashBoardResult data =
                           controller.dashboardData.value.result![0];
                       return ListView(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(5),
                         children: [
                           getCardView(
                             data.deliveryRemaining.toString(),
-                            Image.asset('assets/delivery-truck.png'),
+                            'assets/icons/truck.png',
                             'Delivery Remaining',
                             0,
                             onPressed: callDeliveryRemainingList,
                           ),
                           getCardView(
                             data.deliveryDone.toString(),
-                            Image.asset('assets/delivery_done.png'),
+                            'assets/icons/package_delivered.png',
                             'Delivery Done',
                             1,
                             onPressed: callDeliveryDoneList,
                           ),
                           getCardView(
                             data.cashRemaining.toString(),
-                            Image.asset('assets/cash_collection.png'),
+                            'assets/icons/cash_collection.png',
                             'Cash Collection Remaining',
                             0,
                             onPressed: callCashCollectionRemainingList,
                           ),
                           getCardView(
                             data.cashDone.toString(),
-                            const Icon(
-                              FluentIcons.money_hand_20_filled,
-                              size: 40,
-                            ),
+                            'assets/icons/cash_collection_done.png',
                             'Cash Collection Done',
                             1,
                             onPressed: callCashCollectionDoneList,
                           ),
                           getCardView(
                             (data.totalReturnQuantity ?? 0).toInt().toString(),
-                            Image.asset(
-                              'assets/delivery_back.png',
-                            ),
+                            'assets/icons/return.png',
                             'Returned',
                             0,
                             onPressed: callReturnedList,
@@ -273,43 +268,35 @@ class _HomePageState extends State<HomePage> {
                     }
                   } else {
                     return ListView(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(5),
                       children: [
-                        getCardView(
-                            null,
-                            Image.asset('assets/delivery-truck.png'),
-                            'Delivery Remaining',
-                            0,
+                        getCardView(null, 'assets/icons/truck.png',
+                            'Delivery Remaining', 0,
                             onPressed: callDeliveryRemainingList),
                         getCardView(
                           null,
-                          Image.asset('assets/delivery_done.png'),
+                          'assets/icons/package_delivered.png',
                           'Delivery Done',
                           1,
                           onPressed: callDeliveryDoneList,
                         ),
                         getCardView(
                           null,
-                          Image.asset('assets/cash_collection.png'),
+                          'assets/icons/cash_collection.png',
                           'Cash Collection Remaining',
                           0,
                           onPressed: callCashCollectionRemainingList,
                         ),
                         getCardView(
                           null,
-                          const Icon(
-                            FluentIcons.money_hand_20_filled,
-                            size: 40,
-                          ),
+                          'assets/icons/cash_collection_done.png',
                           'Cash Collection Done',
                           1,
                           onPressed: callCashCollectionDoneList,
                         ),
                         getCardView(
                           null,
-                          Image.asset(
-                            'assets/delivery_back.png',
-                          ),
+                          'assets/icons/return.png',
                           'Returned',
                           0,
                           onPressed: callReturnedList,
@@ -355,14 +342,14 @@ class _HomePageState extends State<HomePage> {
 
   Widget getCardView(
     String? count,
-    Widget iconWidget,
+    String iconAssetName,
     String titleText,
     int colorIndex, {
     void Function()? onPressed,
   }) {
     final color = [
-      Colors.blue.withOpacity(0.15),
-      Colors.blue.withOpacity(0.15),
+      Colors.blue.shade100,
+      Colors.blue.shade100,
     ][colorIndex];
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -371,6 +358,9 @@ class _HomePageState extends State<HomePage> {
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: Colors.grey.shade300,
+          ),
         ),
         padding: const EdgeInsets.all(5),
         margin: const EdgeInsets.only(top: 5, bottom: 5),
@@ -382,10 +372,13 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(100),
+                image: DecorationImage(
+                  image: AssetImage(iconAssetName),
+                  fit: BoxFit.cover,
+                ),
               ),
               height: 50,
               width: 50,
-              child: iconWidget,
             ),
             const Gap(10),
             Column(
