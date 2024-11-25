@@ -6,6 +6,7 @@ String loginPath = '/api/$version/user_login';
 String registrationPath = '/api/$version/user_registration';
 String startWorkPath = '/api/$version/attendance/start_work';
 String dashBoardGetDataPath = '/api/$version/reports/dashboard';
+String dashboardRouteInfo = "/api/$version/reports/dashboard/info";
 String endWorkPath = '/api/$version/attendance/end_work';
 String getDeliveryList = '/api/$version/delivery/v2/list';
 String saveDeliveryList = '/api/$version/delivery/save';

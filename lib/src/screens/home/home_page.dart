@@ -41,6 +41,14 @@ class _HomePageState extends State<HomePage> {
   final LoadingTextController loadingTextController = Get.find();
   Map<String, dynamic> jsonUserData = {};
 
+  final Map<String, dynamic> routeInfo = {
+    "route_id": "400874",
+    "route_name": "Tungipara, Gopalgonj",
+    "total_gate_pass": 1,
+    "total_gate_pass_amount": 112335.0,
+    "total_customer": 17,
+  };
+
   @override
   void initState() {
     final box = Hive.box('info');
@@ -95,14 +103,16 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   StreamBuilder(
-                    stream: Stream.periodic(const Duration(seconds: 1), (i) {
-                      return '${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}';
+                    stream: Stream.periodic(const Duration(seconds: 1), (_) {
+                      final now = DateTime.now();
+                      return DateFormat('hh:mm:ss a')
+                          .format(now); // 12-hour format with AM/PM
                     }),
                     builder: (context, snapshot) {
                       return Text(
-                        "Time: ${snapshot.data ?? ''}",
+                        snapshot.data ?? '',
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.grey.shade600,
                         ),
@@ -120,47 +130,76 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            const Gap(10),
-            const Padding(
-              padding: EdgeInsets.only(left: 10, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Hello,',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
+            Card(
+              elevation: 5,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          jsonUserData['full_name'].toString(),
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Gap(7),
+                        Text(
+                          "(${jsonUserData['sap_id'].toString()})",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                    Divider(),
+                    // Info Rows
+                    _buildInfoRow(
+                      icon: Icons.route_outlined,
+                      label: "Route Name",
+                      value: routeInfo["route_name"],
+                      optional: routeInfo["route_id"],
+                    ),
+                    Divider(
+                      color: Colors.white,
+                      height: 0,
+                    ),
+                    _buildInfoRow(
+                      icon: Icons.receipt,
+                      label: "Total Gate Passes",
+                      value: routeInfo["total_gate_pass"].toString(),
+                    ),
+                    Divider(
+                      color: Colors.white,
+                      height: 0,
+                    ),
+                    _buildInfoRow(
+                      icon: Icons.attach_money,
+                      label: "Gate Pass Amount",
+                      value: routeInfo["total_gate_pass_amount"].toString(),
+                    ),
+                    Divider(
+                      color: Colors.white,
+                      height: 0,
+                    ),
+                    _buildInfoRow(
+                      icon: Icons.people,
+                      label: "Total Customers",
+                      value: routeInfo["total_customer"].toString(),
+                    ),
+                  ],
+                ),
               ),
             ),
-            const Gap(5),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    jsonUserData['full_name'].toString(),
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    jsonUserData['sap_id'].toString(),
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Gap(10),
             Expanded(
               child: GetX<DashboardControllerGetx>(
                 builder: (controller) {
@@ -625,5 +664,50 @@ class _HomePageState extends State<HomePage> {
       loadingTextController.currentState.value = -1;
       loadingTextController.loadingText.value = 'Something went wrong';
     }
+  }
+
+  Widget _buildInfoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    String? optional,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: Colors.blue),
+          const SizedBox(width: 10),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 14),
+          ),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  value.length > 30 ? "${value.substring(0, 30)}..." : value,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                if (optional != null)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: Text(
+                      "($optional)",
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
