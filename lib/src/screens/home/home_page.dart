@@ -130,18 +130,22 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            Card(
-              elevation: 5,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
+            Container(
+              margin: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(
+                  color: Colors.grey.shade300,
+                ),
               ),
-              child: Container(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Row(
                       children: [
                         Text(
                           jsonUserData['full_name'].toString(),
@@ -161,43 +165,53 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ],
                     ),
-                    Divider(),
-                    // Info Rows
-                    _buildInfoRow(
-                      icon: Icons.route_outlined,
-                      label: "Route Name",
-                      value: routeInfo["route_name"],
-                      optional: routeInfo["route_id"],
+                  ),
+                  Divider(
+                    color: Colors.grey.shade300,
+                    height: 0,
+                  ),
+                  // Info Rows
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Column(
+                      children: [
+                        _buildInfoRow(
+                          icon: Icons.route_outlined,
+                          label: "Route Name",
+                          value: routeInfo["route_name"],
+                          optional: routeInfo["route_id"],
+                        ),
+                        Divider(
+                          color: Colors.white,
+                          height: 0,
+                        ),
+                        _buildInfoRow(
+                          icon: Icons.receipt,
+                          label: "Total Gate Passes",
+                          value: routeInfo["total_gate_pass"].toString(),
+                        ),
+                        Divider(
+                          color: Colors.white,
+                          height: 0,
+                        ),
+                        _buildInfoRow(
+                          icon: Icons.attach_money,
+                          label: "Gate Pass Amount",
+                          value: routeInfo["total_gate_pass_amount"].toString(),
+                        ),
+                        Divider(
+                          color: Colors.white,
+                          height: 0,
+                        ),
+                        _buildInfoRow(
+                          icon: Icons.people,
+                          label: "Total Customers",
+                          value: routeInfo["total_customer"].toString(),
+                        ),
+                      ],
                     ),
-                    Divider(
-                      color: Colors.white,
-                      height: 0,
-                    ),
-                    _buildInfoRow(
-                      icon: Icons.receipt,
-                      label: "Total Gate Passes",
-                      value: routeInfo["total_gate_pass"].toString(),
-                    ),
-                    Divider(
-                      color: Colors.white,
-                      height: 0,
-                    ),
-                    _buildInfoRow(
-                      icon: Icons.attach_money,
-                      label: "Gate Pass Amount",
-                      value: routeInfo["total_gate_pass_amount"].toString(),
-                    ),
-                    Divider(
-                      color: Colors.white,
-                      height: 0,
-                    ),
-                    _buildInfoRow(
-                      icon: Icons.people,
-                      label: "Total Customers",
-                      value: routeInfo["total_customer"].toString(),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             Expanded(

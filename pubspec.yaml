@@ -52,6 +52,7 @@ dependencies:
   open_file: ^3.5.9
   package_info_plus: ^8.1.0
   permission_handler: ^11.3.1
+  flutter_svg: ^2.0.15
 
 dev_dependencies:
   leancode_lint: ^14.1.0
@@ -72,6 +73,7 @@ flutter:
     - assets/overdue.jpg
     - assets/app_logo_big.png
     - assets/visit.png
+    - assets/icons/
 
 
 flutter_native_splash:
