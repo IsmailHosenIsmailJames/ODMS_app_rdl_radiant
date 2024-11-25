@@ -208,6 +208,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
             const Gap(15),
             Obx(
               () {
+                log("List Generated");
                 List<BillingDoc> docsList =
                     overdueInvoiceListController.docsList.value;
                 return Column(
@@ -494,8 +495,13 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                           if (doubleValue > dueController.previousDue.value) {
                             return;
                           } else {
-                            await onDueCashCollection(context, docsList, index,
-                                doubleValue, dueController);
+                            await onDueCashCollection(
+                                context,
+                                docsList,
+                                index,
+                                doubleValue,
+                                dueController.previousDue.value,
+                                dueController);
                             return;
                           }
                         }
@@ -516,6 +522,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
       List<BillingDoc> docsList,
       int index,
       double doubleValue,
+      double totalDue,
       OverdueControllerGetx dueController) async {
     loadingTextController.currentState.value = 0;
     loadingTextController.loadingText.value =
@@ -581,35 +588,31 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
             controller.constOverdueRemaining.value.result ??= [];
 
             log(modelFormHTTPResponse.toString());
-
-            String? partner = widget.result.partnerId;
-            bool isFound = false;
-            final result =
-                overdueCollectController.overdueRemaining.value.result ??= [];
-            for (var r in result) {
-              if (r.partnerId == partner) {
-                isFound = true;
-                overdueInvoiceListController.docsList.value =
-                    r.billingDocs ?? <BillingDoc>[];
-              }
-              if (!isFound) {
-                overdueInvoiceListController.docsList.value = <BillingDoc>[];
-              }
-            }
           }
 
           loadingTextController.currentState.value = 0;
           loadingTextController.loadingText.value = 'Successful';
-          double due = dueController.previousDue.value -
-              dueController.collectAmount.value;
+          double due = totalDue - doubleValue;
           if (due == 0) {
-            overdueInvoiceListController.docsList.removeAt(
-              index,
-            );
+            log("DUE IS ZERO");
+
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              setState(() {
+                overdueInvoiceListController.docsList.removeAt(
+                  index,
+                );
+              });
+            });
           } else {
-            setState(() {
-              totalAmount = due;
-              docsList[index].dueAmount = due;
+            log("DUE IS NOT ZERO");
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              setState(() {
+                docsList[index].dueAmount = due;
+                totalAmount = 0;
+                for (int i = 0; i < docsList.length; i++) {
+                  totalAmount += docsList[i].dueAmount ?? 0;
+                }
+              });
             });
           }
           if (Navigator.canPop(context)) {

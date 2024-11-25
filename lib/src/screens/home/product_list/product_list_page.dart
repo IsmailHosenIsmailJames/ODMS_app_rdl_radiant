@@ -119,7 +119,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                 color: Colors.green,
                               ),
                               Gap(10),
-                              Text("All Received"),
+                              Text("Select All"),
                             ],
                           ),
                           onTap: () {
@@ -151,7 +151,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                 color: Colors.deepOrange,
                               ),
                               Gap(10),
-                              Text("All Return"),
+                              Text("Deselect All"),
                             ],
                           ),
                           onTap: () {

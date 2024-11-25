@@ -108,7 +108,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               color: Colors.deepOrange,
                             ),
                             Gap(10),
-                            Text("All Return"),
+                            Text("Deselect All"),
                           ],
                         ),
                         onTap: () {
