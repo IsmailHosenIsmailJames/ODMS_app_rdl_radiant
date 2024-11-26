@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
 import 'dart:developer';
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +19,7 @@ import 'package:odms/src/screens/home/dash_board_controller/dashboard_controller
 import 'package:odms/src/screens/home/delivery_remaining/delivery_remaining_page.dart';
 import 'package:odms/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
 import 'package:odms/src/screens/home/drawer/drawer.dart';
+import 'package:odms/src/screens/home/product_list/models/route_info.dart';
 import 'package:odms/src/widgets/loading/loading_popup_widget.dart';
 import 'package:odms/src/widgets/loading/loading_text_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -95,14 +95,16 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   StreamBuilder(
-                    stream: Stream.periodic(const Duration(seconds: 1), (i) {
-                      return '${DateTime.now().hour}:${DateTime.now().minute}:${DateTime.now().second}';
+                    stream: Stream.periodic(const Duration(seconds: 1), (_) {
+                      final now = DateTime.now();
+                      return DateFormat('hh:mm:ss a')
+                          .format(now); // 12-hour format with AM/PM
                     }),
                     builder: (context, snapshot) {
                       return Text(
-                        "Time: ${snapshot.data ?? ''}",
+                        snapshot.data ?? '',
                         style: TextStyle(
-                          fontSize: 15,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.grey.shade600,
                         ),
@@ -120,47 +122,35 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            const Gap(10),
-            const Padding(
-              padding: EdgeInsets.only(left: 10, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Hello,',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
+            FutureBuilder(
+              future: http.get(Uri.parse(
+                  "$base$dashboardRouteInfo/${jsonUserData['sap_id']}")),
+              builder: (context, snapshot) {
+                log("Route Info :   $base$dashboardRouteInfo/${jsonUserData['sap_id']}");
+                if (snapshot.hasData) {
+                  http.Response data = snapshot.data!;
+                  if (data.statusCode == 200) {
+                    RouteInfo routeInfo = RouteInfo();
+                    final mainData = json.decode(data.body);
+                    if (mainData["success"] == true) {
+                      if (mainData["result"] != null) {
+                        routeInfo = RouteInfo.fromMap(
+                          Map<String, dynamic>.from(
+                            mainData["result"],
+                          ),
+                        );
+                      }
+                    }
+                    return buildFullInfoWidget(routeInfo);
+                  } else {
+                    return buildFullInfoWidget(RouteInfo(), isLoading: false);
+                  }
+                } else {
+                  return buildFullInfoWidget(RouteInfo(), isLoading: true);
+                }
+              },
             ),
-            const Gap(5),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    jsonUserData['full_name'].toString(),
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    jsonUserData['sap_id'].toString(),
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Gap(10),
+            Gap(15),
             Expanded(
               child: GetX<DashboardControllerGetx>(
                 builder: (controller) {
@@ -169,44 +159,39 @@ class _HomePageState extends State<HomePage> {
                       DashBoardResult data =
                           controller.dashboardData.value.result![0];
                       return ListView(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(5),
                         children: [
                           getCardView(
                             data.deliveryRemaining.toString(),
-                            Image.asset('assets/delivery-truck.png'),
+                            'assets/icons/truck.png',
                             'Delivery Remaining',
                             0,
                             onPressed: callDeliveryRemainingList,
                           ),
                           getCardView(
                             data.deliveryDone.toString(),
-                            Image.asset('assets/delivery_done.png'),
+                            'assets/icons/package_delivered.png',
                             'Delivery Done',
                             1,
                             onPressed: callDeliveryDoneList,
                           ),
                           getCardView(
                             data.cashRemaining.toString(),
-                            Image.asset('assets/cash_collection.png'),
+                            'assets/icons/cash_collection.png',
                             'Cash Collection Remaining',
                             0,
                             onPressed: callCashCollectionRemainingList,
                           ),
                           getCardView(
                             data.cashDone.toString(),
-                            const Icon(
-                              FluentIcons.money_hand_20_filled,
-                              size: 40,
-                            ),
+                            'assets/icons/cash_collection_done.png',
                             'Cash Collection Done',
                             1,
                             onPressed: callCashCollectionDoneList,
                           ),
                           getCardView(
                             (data.totalReturnQuantity ?? 0).toInt().toString(),
-                            Image.asset(
-                              'assets/delivery_back.png',
-                            ),
+                            'assets/icons/return.png',
                             'Returned',
                             0,
                             onPressed: callReturnedList,
@@ -220,43 +205,35 @@ class _HomePageState extends State<HomePage> {
                     }
                   } else {
                     return ListView(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(5),
                       children: [
-                        getCardView(
-                            null,
-                            Image.asset('assets/delivery-truck.png'),
-                            'Delivery Remaining',
-                            0,
+                        getCardView(null, 'assets/icons/truck.png',
+                            'Delivery Remaining', 0,
                             onPressed: callDeliveryRemainingList),
                         getCardView(
                           null,
-                          Image.asset('assets/delivery_done.png'),
+                          'assets/icons/package_delivered.png',
                           'Delivery Done',
                           1,
                           onPressed: callDeliveryDoneList,
                         ),
                         getCardView(
                           null,
-                          Image.asset('assets/cash_collection.png'),
+                          'assets/icons/cash_collection.png',
                           'Cash Collection Remaining',
                           0,
                           onPressed: callCashCollectionRemainingList,
                         ),
                         getCardView(
                           null,
-                          const Icon(
-                            FluentIcons.money_hand_20_filled,
-                            size: 40,
-                          ),
+                          'assets/icons/cash_collection_done.png',
                           'Cash Collection Done',
                           1,
                           onPressed: callCashCollectionDoneList,
                         ),
                         getCardView(
                           null,
-                          Image.asset(
-                            'assets/delivery_back.png',
-                          ),
+                          'assets/icons/return.png',
                           'Returned',
                           0,
                           onPressed: callReturnedList,
@@ -282,6 +259,7 @@ class _HomePageState extends State<HomePage> {
     final response =
         await http.get(Uri.parse('$base$dashBoardGetDataPath/$sapID'));
     if (response.statusCode == 200) {
+      log('$base$dashBoardGetDataPath/$sapID');
       log("User Dashboard Data ${response.body}");
       var data = Map<String, dynamic>.from(
         jsonDecode(response.body) as Map,
@@ -301,14 +279,14 @@ class _HomePageState extends State<HomePage> {
 
   Widget getCardView(
     String? count,
-    Widget iconWidget,
+    String iconAssetName,
     String titleText,
     int colorIndex, {
     void Function()? onPressed,
   }) {
     final color = [
-      Colors.blue.withOpacity(0.15),
-      Colors.blue.withOpacity(0.15),
+      Colors.blue.shade100.withOpacity(0.8),
+      Colors.blue.shade100.withOpacity(0.8),
     ][colorIndex];
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -317,6 +295,9 @@ class _HomePageState extends State<HomePage> {
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: Colors.grey.shade300,
+          ),
         ),
         padding: const EdgeInsets.all(5),
         margin: const EdgeInsets.only(top: 5, bottom: 5),
@@ -328,10 +309,13 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(100),
+                image: DecorationImage(
+                  image: AssetImage(iconAssetName),
+                  fit: BoxFit.cover,
+                ),
               ),
               height: 50,
               width: 50,
-              child: iconWidget,
             ),
             const Gap(10),
             Column(
@@ -624,5 +608,173 @@ class _HomePageState extends State<HomePage> {
       loadingTextController.currentState.value = -1;
       loadingTextController.loadingText.value = 'Something went wrong';
     }
+  }
+
+  Widget _buildInfoRow({
+    required IconData icon,
+    required String label,
+    required String value,
+    String? optional,
+    bool isLoading = false,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: Colors.blue),
+          const SizedBox(width: 10),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 14),
+          ),
+          Gap(10),
+          Expanded(
+            child: isLoading
+                ? Container(
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  )
+                    .animate(onPlay: (controller) => controller.repeat())
+                    .shimmer(
+                      duration: 1200.ms,
+                      color: const Color(0xFF80DDFF),
+                    )
+                : Padding(
+                    padding: EdgeInsets.only(right: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          width: value.length > 24
+                              ? MediaQuery.of(context).size.width * 0.54
+                              : null,
+                          child: Text.rich(
+                            textAlign: TextAlign.end,
+                            TextSpan(
+                              children: <InlineSpan>[
+                                TextSpan(
+                                  text: value,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                if (optional != null)
+                                  TextSpan(
+                                    text: " ($optional)",
+                                    style: TextStyle(
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildFullInfoWidget(RouteInfo routeInfo, {bool isLoading = false}) {
+    String fullName = jsonUserData['full_name'].toString();
+    if (fullName.length > 35) {
+      fullName = "${fullName.substring(0, 35)}...";
+    }
+    return Container(
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade100.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey.shade300,
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Row(
+              children: [
+                Text(
+                  fullName,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Gap(5),
+                Text(
+                  "(${jsonUserData['sap_id'].toString()})",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            color: Colors.grey.shade300,
+            height: 0,
+          ),
+          // Info Rows
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Column(
+              children: [
+                _buildInfoRow(
+                  isLoading: isLoading,
+                  icon: Icons.route_outlined,
+                  label: "Route Name",
+                  value: routeInfo.routeName ?? "Not found",
+                  optional: routeInfo.routeId,
+                ),
+                Divider(
+                  color: Colors.white,
+                  height: 0,
+                ),
+                _buildInfoRow(
+                  isLoading: isLoading,
+                  icon: Icons.receipt,
+                  label: "Total Gate Passes",
+                  value: routeInfo.totalGatePass?.toString() ?? "Not found",
+                ),
+                Divider(
+                  color: Colors.white,
+                  height: 0,
+                ),
+                _buildInfoRow(
+                  isLoading: isLoading,
+                  icon: Icons.attach_money,
+                  label: "Gate Pass Amount",
+                  value:
+                      routeInfo.totalGatePassAmount?.toString() ?? "Not found",
+                ),
+                Divider(
+                  color: Colors.white,
+                  height: 0,
+                ),
+                _buildInfoRow(
+                  isLoading: isLoading,
+                  icon: Icons.people,
+                  label: "Total Customers",
+                  value: routeInfo.totalCustomer?.toString() ?? "Not found",
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

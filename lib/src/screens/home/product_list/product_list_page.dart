@@ -108,7 +108,7 @@ class _ProductListPageState extends State<ProductListPage> {
           actions: pageType == pagesState[1]
               ? null
               : [
-                  if (isDeliveryForToday && pageType != pagesState[5])
+                  if (isDeliveryForToday)
                     PopupMenuButton(
                       itemBuilder: (context) => [
                         PopupMenuItem(
@@ -119,7 +119,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                 color: Colors.green,
                               ),
                               Gap(10),
-                              Text("All Received"),
+                              Text("Select All"),
                             ],
                           ),
                           onTap: () {
@@ -151,7 +151,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                 color: Colors.deepOrange,
                               ),
                               Gap(10),
-                              Text("All Return"),
+                              Text("Deselect All"),
                             ],
                           ),
                           onTap: () {
@@ -259,9 +259,7 @@ class _ProductListPageState extends State<ProductListPage> {
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                pageType == pagesState[5]
-                                    ? "Total Due Amount"
-                                    : "Total Amount",
+                                "Total Amount",
                                 totalReceiveAmount
                                     .toPrecision(2)
                                     .toStringAsFixed(2),
@@ -414,8 +412,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                   ),
                                 if (pageType == pagesState[1]) const Divider(),
                                 if (!(pageType == pagesState[1]) &&
-                                    isDeliveryForToday &&
-                                    pageType != pagesState[5])
+                                    isDeliveryForToday)
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -529,8 +526,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                   ),
                                 if (isDeliveryForToday) const Gap(5),
                                 if (!(pageType == pagesState[1]) &&
-                                    isDeliveryForToday &&
-                                    pageType != pagesState[5])
+                                    isDeliveryForToday)
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -579,9 +575,7 @@ class _ProductListPageState extends State<ProductListPage> {
                 ) +
                 <Widget>[
                   if (!(pageType == pagesState[1])) const Gap(20),
-                  if (!(pageType == pagesState[1]) &&
-                      isDeliveryForToday &&
-                      pageType != pagesState[5])
+                  if (!(pageType == pagesState[1]) && isDeliveryForToday)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -628,9 +622,7 @@ class _ProductListPageState extends State<ProductListPage> {
                       ],
                     ),
                   if (!(pageType == pagesState[1])) const Gap(30),
-                  if (!(pageType == pagesState[1]) &&
-                      isDeliveryForToday &&
-                      pageType != pagesState[5])
+                  if (!(pageType == pagesState[1]) && isDeliveryForToday)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -830,6 +822,10 @@ class _ProductListPageState extends State<ProductListPage> {
         if (response.statusCode == 200) {
           final decoded = Map<String, dynamic>.from(jsonDecode(response.body));
           if (decoded['success'] == true) {
+            log("Awaiting a 1 second");
+            await Future.delayed(Duration(seconds: 1));
+            log("done awaiting a 1 second");
+
             try {
               final box = Hive.box('info');
               final url = Uri.parse(

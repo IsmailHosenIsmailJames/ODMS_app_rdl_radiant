@@ -1,7 +1,7 @@
 name: odms
 description: Developed By MD. Ismail Hosen James.
 publish_to: none
-version: 1.6.16+25
+version: 1.6.17+27
 
 environment:
   sdk: ">=3.1.0 <4.0.0"
@@ -52,7 +52,6 @@ dependencies:
   open_file: ^3.5.9
   package_info_plus: ^8.1.0
   permission_handler: ^11.3.1
-  two_dimensional_scrollables: ^0.3.3
 
 dev_dependencies:
   leancode_lint: ^14.1.0
@@ -64,15 +63,12 @@ flutter:
     - assets/allow_location.png
     - assets/ic_logo_color.png
     - assets/No_Internet_Connection.png
-    - assets/delivery-truck.png
-    - assets/delivery_done.png
-    - assets/cash_collection.png
-    - assets/delivery_back.png
     - assets/icon_for_medical_shop.png
     - assets/Map-100x100.bmp
     - assets/overdue.jpg
     - assets/app_logo_big.png
     - assets/visit.png
+    - assets/icons/
 
 
 flutter_native_splash:
