@@ -19,6 +19,7 @@ import 'package:odms/src/screens/home/dash_board_controller/dashboard_controller
 import 'package:odms/src/screens/home/delivery_remaining/delivery_remaining_page.dart';
 import 'package:odms/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
 import 'package:odms/src/screens/home/drawer/drawer.dart';
+import 'package:odms/src/screens/home/product_list/models/route_info.dart';
 import 'package:odms/src/widgets/loading/loading_popup_widget.dart';
 import 'package:odms/src/widgets/loading/loading_text_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,14 +40,6 @@ class _HomePageState extends State<HomePage> {
   final dashboardController = Get.put(DashboardControllerGetx());
   final LoadingTextController loadingTextController = Get.find();
   Map<String, dynamic> jsonUserData = {};
-
-  final Map<String, dynamic> routeInfo = {
-    "route_id": "400874",
-    "route_name": "Tungipara, Gopalgonj",
-    "total_gate_pass": 1,
-    "total_gate_pass_amount": 112335.0,
-    "total_customer": 17,
-  };
 
   @override
   void initState() {
@@ -129,89 +122,33 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            Container(
-              margin: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade100.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: Colors.grey.shade300,
-                ),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Row(
-                      children: [
-                        Text(
-                          jsonUserData['full_name'].toString(),
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
+            FutureBuilder(
+              future: http.get(Uri.parse(
+                  "$base$dashboardRouteInfo/${jsonUserData['sap_id']}")),
+              builder: (context, snapshot) {
+                log("Route Info :   $base$dashboardRouteInfo/${jsonUserData['sap_id']}");
+                if (snapshot.hasData) {
+                  http.Response data = snapshot.data!;
+                  if (data.statusCode == 200) {
+                    RouteInfo routeInfo = RouteInfo();
+                    final mainData = json.decode(data.body);
+                    if (mainData["success"] == true) {
+                      if (mainData["result"] != null) {
+                        routeInfo = RouteInfo.fromMap(
+                          Map<String, dynamic>.from(
+                            mainData["result"],
                           ),
-                        ),
-                        Gap(7),
-                        Text(
-                          "(${jsonUserData['sap_id'].toString()})",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    color: Colors.grey.shade300,
-                    height: 0,
-                  ),
-                  // Info Rows
-                  Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: Column(
-                      children: [
-                        _buildInfoRow(
-                          icon: Icons.route_outlined,
-                          label: "Route Name",
-                          value: routeInfo["route_name"],
-                          optional: routeInfo["route_id"],
-                        ),
-                        Divider(
-                          color: Colors.white,
-                          height: 0,
-                        ),
-                        _buildInfoRow(
-                          icon: Icons.receipt,
-                          label: "Total Gate Passes",
-                          value: routeInfo["total_gate_pass"].toString(),
-                        ),
-                        Divider(
-                          color: Colors.white,
-                          height: 0,
-                        ),
-                        _buildInfoRow(
-                          icon: Icons.attach_money,
-                          label: "Gate Pass Amount",
-                          value: routeInfo["total_gate_pass_amount"].toString(),
-                        ),
-                        Divider(
-                          color: Colors.white,
-                          height: 0,
-                        ),
-                        _buildInfoRow(
-                          icon: Icons.people,
-                          label: "Total Customers",
-                          value: routeInfo["total_customer"].toString(),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                        );
+                      }
+                    }
+                    return buildFullInfoWidget(routeInfo);
+                  } else {
+                    return buildFullInfoWidget(RouteInfo(), isLoading: false);
+                  }
+                } else {
+                  return buildFullInfoWidget(RouteInfo(), isLoading: true);
+                }
+              },
             ),
             Gap(15),
             Expanded(
@@ -348,8 +285,8 @@ class _HomePageState extends State<HomePage> {
     void Function()? onPressed,
   }) {
     final color = [
-      Colors.blue.shade100,
-      Colors.blue.shade100,
+      Colors.blue.shade100.withOpacity(0.8),
+      Colors.blue.shade100.withOpacity(0.8),
     ][colorIndex];
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
@@ -678,6 +615,7 @@ class _HomePageState extends State<HomePage> {
     required String label,
     required String value,
     String? optional,
+    bool isLoading = false,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -689,27 +627,149 @@ class _HomePageState extends State<HomePage> {
             label,
             style: const TextStyle(fontSize: 14),
           ),
+          Gap(10),
           Expanded(
+            child: isLoading
+                ? Container(
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  )
+                    .animate(onPlay: (controller) => controller.repeat())
+                    .shimmer(
+                      duration: 1200.ms,
+                      color: const Color(0xFF80DDFF),
+                    )
+                : Padding(
+                    padding: EdgeInsets.only(right: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          width: value.length > 24
+                              ? MediaQuery.of(context).size.width * 0.54
+                              : null,
+                          child: Text.rich(
+                            textAlign: TextAlign.end,
+                            TextSpan(
+                              children: <InlineSpan>[
+                                TextSpan(
+                                  text: value,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                if (optional != null)
+                                  TextSpan(
+                                    text: " ($optional)",
+                                    style: TextStyle(
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildFullInfoWidget(RouteInfo routeInfo, {bool isLoading = false}) {
+    String fullName = jsonUserData['full_name'].toString();
+    if (fullName.length > 35) {
+      fullName = "${fullName.substring(0, 35)}...";
+    }
+    return Container(
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade100.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey.shade300,
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(5.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(
-                  value.length > 30 ? "${value.substring(0, 30)}..." : value,
+                  fullName,
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 17,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                if (optional != null)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4.0),
-                    child: Text(
-                      "($optional)",
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
+                Gap(5),
+                Text(
+                  "(${jsonUserData['sap_id'].toString()})",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey.shade600,
                   ),
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            color: Colors.grey.shade300,
+            height: 0,
+          ),
+          // Info Rows
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Column(
+              children: [
+                _buildInfoRow(
+                  isLoading: isLoading,
+                  icon: Icons.route_outlined,
+                  label: "Route Name",
+                  value: routeInfo.routeName ?? "Not found",
+                  optional: routeInfo.routeId,
+                ),
+                Divider(
+                  color: Colors.white,
+                  height: 0,
+                ),
+                _buildInfoRow(
+                  isLoading: isLoading,
+                  icon: Icons.receipt,
+                  label: "Total Gate Passes",
+                  value: routeInfo.totalGatePass?.toString() ?? "Not found",
+                ),
+                Divider(
+                  color: Colors.white,
+                  height: 0,
+                ),
+                _buildInfoRow(
+                  isLoading: isLoading,
+                  icon: Icons.attach_money,
+                  label: "Gate Pass Amount",
+                  value:
+                      routeInfo.totalGatePassAmount?.toString() ?? "Not found",
+                ),
+                Divider(
+                  color: Colors.white,
+                  height: 0,
+                ),
+                _buildInfoRow(
+                  isLoading: isLoading,
+                  icon: Icons.people,
+                  label: "Total Customers",
+                  value: routeInfo.totalCustomer?.toString() ?? "Not found",
+                ),
               ],
             ),
           ),
