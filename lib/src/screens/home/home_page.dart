@@ -791,7 +791,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   String formatBangladeshiTaka(double amount) {
-    // Split the number into integer and fractional parts
     List<String> parts = amount.toStringAsFixed(2).split('.');
     String integerPart = parts[0];
     String fractionalPart = parts[1];
@@ -799,21 +798,18 @@ class _HomePageState extends State<HomePage> {
 
     int counter = 0;
 
-    // Format the integer part in Bangladeshi style
     for (int i = integerPart.length - 1; i >= 0; i--) {
       formatted = integerPart[i] + formatted;
       counter++;
 
       if (counter == 3 || (counter > 3 && (counter - 3) % 2 == 0)) {
         if (i != 0) {
-          formatted = ',' + formatted;
+          formatted = ',$formatted';
         }
       }
     }
 
-    // Append the fractional part
     formatted += '.$fractionalPart';
-
     return formatted;
   }
 }
