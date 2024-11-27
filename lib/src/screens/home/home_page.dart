@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -616,12 +617,13 @@ class _HomePageState extends State<HomePage> {
     required String value,
     String? optional,
     bool isLoading = false,
+    Widget? iconWidget,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: Colors.blue),
+          iconWidget ?? Icon(icon, size: 20, color: Colors.blue),
           const SizedBox(width: 10),
           Text(
             label,
@@ -756,9 +758,19 @@ class _HomePageState extends State<HomePage> {
                 _buildInfoRow(
                   isLoading: isLoading,
                   icon: Icons.attach_money,
+                  iconWidget: Container(
+                    height: 21,
+                    width: 21,
+                    padding: EdgeInsets.all(1),
+                    child: SvgPicture.asset(
+                      "assets/icons/taka.svg",
+                      // ignore: deprecated_member_use
+                      color: Colors.blue,
+                    ),
+                  ),
                   label: "Gate Pass Amount",
                   value:
-                      routeInfo.totalGatePassAmount?.toString() ?? "Not found",
+                      formatBangladeshiTaka(routeInfo.totalGatePassAmount ?? 0),
                 ),
                 Divider(
                   color: Colors.white,
@@ -776,5 +788,32 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
+  }
+
+  String formatBangladeshiTaka(double amount) {
+    // Split the number into integer and fractional parts
+    List<String> parts = amount.toStringAsFixed(2).split('.');
+    String integerPart = parts[0];
+    String fractionalPart = parts[1];
+    String formatted = '';
+
+    int counter = 0;
+
+    // Format the integer part in Bangladeshi style
+    for (int i = integerPart.length - 1; i >= 0; i--) {
+      formatted = integerPart[i] + formatted;
+      counter++;
+
+      if (counter == 3 || (counter > 3 && (counter - 3) % 2 == 0)) {
+        if (i != 0) {
+          formatted = ',' + formatted;
+        }
+      }
+    }
+
+    // Append the fractional part
+    formatted += '.$fractionalPart';
+
+    return formatted;
   }
 }
