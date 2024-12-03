@@ -26,3 +26,4 @@ String getOverdueListV2 = "/api/$version/overdue/list";
 String collectOverdue = "/api/$version/overdue/collect";
 String visitApiPath = "/api/$version/visit/create";
 String reportsAPI = "/web_view/v1/reports";
+String errorInfo = "mobile_app/v1/error_info";

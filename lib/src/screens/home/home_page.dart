@@ -41,6 +41,8 @@ class _HomePageState extends State<HomePage> {
   final dashboardController = Get.put(DashboardControllerGetx());
   final LoadingTextController loadingTextController = Get.find();
   Map<String, dynamic> jsonUserData = {};
+  String errorInfoState = "loading"; // error and success
+  String errorInfoMessage = "";
 
   @override
   void initState() {
@@ -88,170 +90,213 @@ class _HomePageState extends State<HomePage> {
       drawer: const MyDrawer(),
       body: MediaQuery(
         data: const MediaQueryData(textScaler: TextScaler.linear(0.85)),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        child: errorInfoState == "success"
+            ? Column(
                 children: [
-                  StreamBuilder(
-                    stream: Stream.periodic(const Duration(seconds: 1), (_) {
-                      final now = DateTime.now();
-                      return DateFormat('hh:mm:ss a')
-                          .format(now); // 12-hour format with AM/PM
-                    }),
-                    builder: (context, snapshot) {
-                      return Text(
-                        snapshot.data ?? '',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey.shade600,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        StreamBuilder(
+                          stream:
+                              Stream.periodic(const Duration(seconds: 1), (_) {
+                            final now = DateTime.now();
+                            return DateFormat('hh:mm:ss a')
+                                .format(now); // 12-hour format with AM/PM
+                          }),
+                          builder: (context, snapshot) {
+                            return Text(
+                              snapshot.data ?? '',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey.shade600,
+                              ),
+                            );
+                          },
                         ),
-                      );
+                        Text(
+                          '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  FutureBuilder(
+                    future: http.get(Uri.parse(
+                        "$base$dashboardRouteInfo/${jsonUserData['sap_id']}")),
+                    builder: (context, snapshot) {
+                      log("Route Info :   $base$dashboardRouteInfo/${jsonUserData['sap_id']}");
+                      if (snapshot.hasData) {
+                        http.Response data = snapshot.data!;
+                        if (data.statusCode == 200) {
+                          RouteInfo routeInfo = RouteInfo();
+                          final mainData = json.decode(data.body);
+                          if (mainData["success"] == true) {
+                            if (mainData["result"] != null) {
+                              routeInfo = RouteInfo.fromMap(
+                                Map<String, dynamic>.from(
+                                  mainData["result"],
+                                ),
+                              );
+                            }
+                          }
+                          return buildFullInfoWidget(routeInfo);
+                        } else {
+                          return buildFullInfoWidget(RouteInfo(),
+                              isLoading: false);
+                        }
+                      } else {
+                        return buildFullInfoWidget(RouteInfo(),
+                            isLoading: true);
+                      }
                     },
                   ),
-                  Text(
-                    '${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.grey.shade600,
+                  Gap(15),
+                  Expanded(
+                    child: GetX<DashboardControllerGetx>(
+                      builder: (controller) {
+                        if (controller.dashboardData.value.success != null) {
+                          if (controller.dashboardData.value.result != null) {
+                            DashBoardResult data =
+                                controller.dashboardData.value.result![0];
+                            return ListView(
+                              padding: const EdgeInsets.all(5),
+                              children: [
+                                getCardView(
+                                  data.deliveryRemaining.toString(),
+                                  'assets/icons/truck.png',
+                                  'Delivery Remaining',
+                                  0,
+                                  onPressed: callDeliveryRemainingList,
+                                ),
+                                getCardView(
+                                  data.deliveryDone.toString(),
+                                  'assets/icons/package_delivered.png',
+                                  'Delivery Done',
+                                  1,
+                                  onPressed: callDeliveryDoneList,
+                                ),
+                                getCardView(
+                                  data.cashRemaining.toString(),
+                                  'assets/icons/cash_collection.png',
+                                  'Cash Collection Remaining',
+                                  0,
+                                  onPressed: callCashCollectionRemainingList,
+                                ),
+                                getCardView(
+                                  data.cashDone.toString(),
+                                  'assets/icons/cash_collection_done.png',
+                                  'Cash Collection Done',
+                                  1,
+                                  onPressed: callCashCollectionDoneList,
+                                ),
+                                getCardView(
+                                  (data.totalReturnQuantity ?? 0)
+                                      .toInt()
+                                      .toString(),
+                                  'assets/icons/return.png',
+                                  'Returned',
+                                  0,
+                                  onPressed: callReturnedList,
+                                ),
+                              ],
+                            );
+                          } else {
+                            return const Center(
+                              child: Text("Something went wrong"),
+                            );
+                          }
+                        } else {
+                          return ListView(
+                            padding: const EdgeInsets.all(5),
+                            children: [
+                              getCardView(null, 'assets/icons/truck.png',
+                                  'Delivery Remaining', 0,
+                                  onPressed: callDeliveryRemainingList),
+                              getCardView(
+                                null,
+                                'assets/icons/package_delivered.png',
+                                'Delivery Done',
+                                1,
+                                onPressed: callDeliveryDoneList,
+                              ),
+                              getCardView(
+                                null,
+                                'assets/icons/cash_collection.png',
+                                'Cash Collection Remaining',
+                                0,
+                                onPressed: callCashCollectionRemainingList,
+                              ),
+                              getCardView(
+                                null,
+                                'assets/icons/cash_collection_done.png',
+                                'Cash Collection Done',
+                                1,
+                                onPressed: callCashCollectionDoneList,
+                              ),
+                              getCardView(
+                                null,
+                                'assets/icons/return.png',
+                                'Returned',
+                                0,
+                                onPressed: callReturnedList,
+                              ),
+                            ],
+                          );
+                        }
+                      },
                     ),
                   ),
                 ],
+              )
+            : Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(
+                    errorInfoMessage,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
               ),
-            ),
-            FutureBuilder(
-              future: http.get(Uri.parse(
-                  "$base$dashboardRouteInfo/${jsonUserData['sap_id']}")),
-              builder: (context, snapshot) {
-                log("Route Info :   $base$dashboardRouteInfo/${jsonUserData['sap_id']}");
-                if (snapshot.hasData) {
-                  http.Response data = snapshot.data!;
-                  if (data.statusCode == 200) {
-                    RouteInfo routeInfo = RouteInfo();
-                    final mainData = json.decode(data.body);
-                    if (mainData["success"] == true) {
-                      if (mainData["result"] != null) {
-                        routeInfo = RouteInfo.fromMap(
-                          Map<String, dynamic>.from(
-                            mainData["result"],
-                          ),
-                        );
-                      }
-                    }
-                    return buildFullInfoWidget(routeInfo);
-                  } else {
-                    return buildFullInfoWidget(RouteInfo(), isLoading: false);
-                  }
-                } else {
-                  return buildFullInfoWidget(RouteInfo(), isLoading: true);
-                }
-              },
-            ),
-            Gap(15),
-            Expanded(
-              child: GetX<DashboardControllerGetx>(
-                builder: (controller) {
-                  if (controller.dashboardData.value.success != null) {
-                    if (controller.dashboardData.value.result != null) {
-                      DashBoardResult data =
-                          controller.dashboardData.value.result![0];
-                      return ListView(
-                        padding: const EdgeInsets.all(5),
-                        children: [
-                          getCardView(
-                            data.deliveryRemaining.toString(),
-                            'assets/icons/truck.png',
-                            'Delivery Remaining',
-                            0,
-                            onPressed: callDeliveryRemainingList,
-                          ),
-                          getCardView(
-                            data.deliveryDone.toString(),
-                            'assets/icons/package_delivered.png',
-                            'Delivery Done',
-                            1,
-                            onPressed: callDeliveryDoneList,
-                          ),
-                          getCardView(
-                            data.cashRemaining.toString(),
-                            'assets/icons/cash_collection.png',
-                            'Cash Collection Remaining',
-                            0,
-                            onPressed: callCashCollectionRemainingList,
-                          ),
-                          getCardView(
-                            data.cashDone.toString(),
-                            'assets/icons/cash_collection_done.png',
-                            'Cash Collection Done',
-                            1,
-                            onPressed: callCashCollectionDoneList,
-                          ),
-                          getCardView(
-                            (data.totalReturnQuantity ?? 0).toInt().toString(),
-                            'assets/icons/return.png',
-                            'Returned',
-                            0,
-                            onPressed: callReturnedList,
-                          ),
-                        ],
-                      );
-                    } else {
-                      return const Center(
-                        child: Text("Something went wrong"),
-                      );
-                    }
-                  } else {
-                    return ListView(
-                      padding: const EdgeInsets.all(5),
-                      children: [
-                        getCardView(null, 'assets/icons/truck.png',
-                            'Delivery Remaining', 0,
-                            onPressed: callDeliveryRemainingList),
-                        getCardView(
-                          null,
-                          'assets/icons/package_delivered.png',
-                          'Delivery Done',
-                          1,
-                          onPressed: callDeliveryDoneList,
-                        ),
-                        getCardView(
-                          null,
-                          'assets/icons/cash_collection.png',
-                          'Cash Collection Remaining',
-                          0,
-                          onPressed: callCashCollectionRemainingList,
-                        ),
-                        getCardView(
-                          null,
-                          'assets/icons/cash_collection_done.png',
-                          'Cash Collection Done',
-                          1,
-                          onPressed: callCashCollectionDoneList,
-                        ),
-                        getCardView(
-                          null,
-                          'assets/icons/return.png',
-                          'Returned',
-                          0,
-                          onPressed: callReturnedList,
-                        ),
-                      ],
-                    );
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
 
   Future<void> getDashBoardData() async {
+    // Check app errorInfo
+
+    try {
+      final errorInfoResponse = await http.get(Uri.parse(base + errorInfo));
+      final jsonDecode = json.decode(errorInfoResponse.body);
+      if (jsonDecode["success"] != true) {
+        setState(() {
+          errorInfoMessage = jsonDecode["message"];
+          errorInfoState = "error";
+        });
+        return;
+      }
+      setState(() {
+        errorInfoState = "success";
+      });
+    } catch (e) {
+      setState(() {
+        errorInfoState = "loading Error";
+        errorInfoMessage =
+            "Something went wrong, Unable to load. Please try again";
+      });
+      return;
+    }
+
+    // --#--
     if (dashboardController.dashboardData.value.success != null) {
       dashboardController.dashboardData.value = DashBoardModel();
     }
