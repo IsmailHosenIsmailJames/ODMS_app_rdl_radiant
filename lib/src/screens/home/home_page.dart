@@ -88,7 +88,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      drawer: const MyDrawer(),
+      drawer: (errorInfoState != "success" && errorInfoState != "loading")
+          ? null
+          : const MyDrawer(),
       body: MediaQuery(
           data: const MediaQueryData(textScaler: TextScaler.linear(0.85)),
           child: (errorInfoState != "success" && errorInfoState != "loading")
@@ -113,20 +115,8 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          CircleAvatar(
-                              radius: 50,
-                              backgroundColor: Colors.red,
-                              child: Text(
-                                errorInfoCode,
-                                style: TextStyle(
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.white,
-                                ),
-                              )),
-                          Gap(10),
                           Text(
-                            "Error",
+                            errorInfoCode,
                             style: TextStyle(
                               fontSize: 50,
                               color: Colors.red,
@@ -137,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                             errorInfoMessage,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 22,
+                              fontSize: 30,
                             ),
                           ),
                         ],
