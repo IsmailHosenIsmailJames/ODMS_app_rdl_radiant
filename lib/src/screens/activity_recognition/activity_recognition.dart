@@ -170,10 +170,6 @@ class _ActivityRecognitionState extends State<ActivityRecognition> {
     ActivityType.STILL: ActivityIconWithName(Icons.person, "Still"),
     ActivityType.WALKING:
         ActivityIconWithName(Icons.directions_walk, "Walking"),
-    ActivityType.ON_FOOT:
-        ActivityIconWithName(Icons.directions_walk, "On Foot"),
-    ActivityType.TILTING:
-        ActivityIconWithName(Icons.directions_walk, "Tilting"),
     ActivityType.UNKNOWN: ActivityIconWithName(Icons.device_unknown, "Unknown"),
   };
 

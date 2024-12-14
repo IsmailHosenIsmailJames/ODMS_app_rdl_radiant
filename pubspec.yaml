@@ -1,7 +1,7 @@
 name: odms
 description: Developed By MD. Ismail Hosen James.
 publish_to: none
-version: 1.6.18+28
+version: 1.6.20+29
 
 environment:
   sdk: ">=3.1.0 <4.0.0"
@@ -46,16 +46,13 @@ dependencies:
   socket_io_client: ^3.0.0
   url_launcher: ^6.2.5
   webview_flutter: ^4.9.0
-  flutter_activity_recognition:
-    path: ./flutter_activity_recognition
   device_info_plus: ^11.1.0
   open_file: ^3.5.9
   package_info_plus: ^8.1.0
   permission_handler: ^11.3.1
   flutter_svg: ^2.0.16
+  flutter_activity_recognition: ^4.0.0
 
-dev_dependencies:
-  leancode_lint: ^14.1.0
 
 flutter:
   uses-material-design: true

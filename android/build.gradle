@@ -8,18 +8,11 @@ allprojects {
 rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
     project.evaluationDependsOn(":app")
 }
 
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
-
-gradle.projectsEvaluated {
-    project(":geolocator_android") {
-        tasks.withType(JavaCompile) {
-            options.compilerArgs << "-Xlint:all"
-        }
-    }
-}
-

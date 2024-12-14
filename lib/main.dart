@@ -37,12 +37,14 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(),
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.blue.shade900,
+          brightness: Brightness.light,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
             backgroundColor: Colors.blue.shade900,
             shadowColor: Colors.transparent,
+            iconColor: Colors.white,
           ),
         ),
       ),

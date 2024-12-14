@@ -1,5 +1,5 @@
-String base = 'http://192.168.109.221:6042';
-// String base = 'http://128.199.199.164:6042';
+// String base = 'http://192.168.109.221:6042';
+String base = 'http://128.199.199.164:6042';
 String version = "v1";
 String getAppInfoAPI = "/mobile_app/v1/info";
 String loginPath = '/api/$version/user_login';
