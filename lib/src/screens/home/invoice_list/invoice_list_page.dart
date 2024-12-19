@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:odms/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
 import 'package:odms/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
 import 'package:odms/src/screens/home/page_sate_definition.dart';
@@ -29,12 +30,11 @@ import '../delivery_remaining/controller/delivery_remaining_controller.dart';
 class InvoiceListPage extends StatefulWidget {
   final DateTime dateTime;
   final Result result;
-  final String totalAmount;
-  const InvoiceListPage(
-      {super.key,
-      required this.dateTime,
-      required this.result,
-      required this.totalAmount});
+  const InvoiceListPage({
+    super.key,
+    required this.dateTime,
+    required this.result,
+  });
 
   @override
   State<InvoiceListPage> createState() => _InvoiceListPageState();
@@ -58,12 +58,9 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
       invoiceListController.invoiceList[0].customerMobile ?? "";
   late final gatePassNo = invoiceListController.invoiceList[0].gatePassNo ?? "";
 
-  late String totalAmount;
-
   @override
   void initState() {
     pageType = deliveryRemainingController.pageType.value;
-    totalAmount = widget.totalAmount;
     super.initState();
   }
 
@@ -209,7 +206,9 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                       divider,
                       getRowWidgetForDetailsBox(
                         "Total Amount",
-                        double.parse(totalAmount).toStringAsFixed(2),
+                        calculateTotalAmount()
+                            .toPrecision(2)
+                            .toStringAsFixed(2),
                       ),
                       divider,
 
@@ -249,14 +248,14 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                 children: List.generate(
                   invoiceList.length,
                   (index) {
-                    double amount = 0;
+                    double invoiceAmount = 0;
                     int returnQty = 0;
                     double returnAmount = 0;
                     int deliveryQty = 0;
                     double deliveryAmount = 0;
                     for (final ProductList productList
                         in invoiceList[index].productList ?? []) {
-                      amount +=
+                      invoiceAmount +=
                           (productList.netVal ?? 0) + (productList.vat ?? 0);
                       returnQty += (productList.returnQuantity ?? 0).toInt();
                       returnAmount += (productList.returnNetVal ?? 0);
@@ -278,7 +277,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                       (invoiceList[index].billingDocNo ?? 0)
                                           .toString(),
                                   totalAmount:
-                                      (amount - returnAmount).toString(),
+                                      (invoiceAmount - returnAmount).toString(),
                                   index: index,
                                 ),
                               )
@@ -289,7 +288,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                       (invoiceList[index].billingDocNo ?? 0)
                                           .toString(),
                                   totalAmount:
-                                      (amount - returnAmount).toString(),
+                                      (invoiceAmount - returnAmount).toString(),
                                   index: index,
                                   dateOfDelivery: widget.dateTime,
                                 ),
@@ -439,7 +438,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                         SizedBox(
                                           width: width / 3.5,
                                           child: Text(
-                                            amount.toStringAsFixed(2),
+                                            invoiceAmount.toStringAsFixed(2),
                                             style: style.copyWith(
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -615,6 +614,35 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
             dueAmount: due,
           ),
         );
+
+        // reload data
+        try {
+          final box = Hive.box('info');
+          final url = Uri.parse(
+            "$base${(pageType == pagesState[0] || pageType == pagesState[1]) ? getDeliveryList : cashCollectionList}/${box.get('sap_id')}?type=${(pageType == pagesState[1] ? "Done" : "Remaining")}&date=${DateFormat('yyyy-MM-dd').format(DateTime.now())}",
+          );
+
+          final response = await get(url);
+
+          if (response.statusCode == 200) {
+            log("Got Delivery Remaining List");
+            log(response.body);
+
+            final controller = Get.put(
+              DeliveryRemainingController(
+                DeliveryRemaining.fromJson(response.body),
+              ),
+            );
+            controller.deliveryRemaining.value =
+                DeliveryRemaining.fromJson(response.body);
+            controller.constDeliveryRemaining.value =
+                DeliveryRemaining.fromJson(response.body);
+            controller.deliveryRemaining.value.result ??= [];
+            controller.constDeliveryRemaining.value.result ??= [];
+          }
+        } catch (e) {
+          log("Failed when try to reload the data");
+        }
       }
 
       // back
@@ -634,6 +662,21 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
         due = nowDue;
       });
     });
+  }
+
+  double calculateTotalAmount() {
+    double totalAmount = 0;
+    for (final invoice in invoiceListController.invoiceList) {
+      final productList = invoice.productList;
+
+      if (productList != null) {
+        for (int i = 0; i < productList.length; i++) {
+          totalAmount +=
+              (productList[i].netVal ?? 0) + (productList[i].vat ?? 0);
+        }
+      }
+    }
+    return totalAmount;
   }
 
   TextStyle style = const TextStyle(fontSize: 17, fontWeight: FontWeight.bold);

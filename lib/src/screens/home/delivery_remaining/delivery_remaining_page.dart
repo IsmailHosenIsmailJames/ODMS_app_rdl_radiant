@@ -317,7 +317,6 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
         await Get.to(() => InvoiceListPage(
               dateTime: dateTime,
               result: result,
-              totalAmount: amount.toString(),
             ));
         deliveryRemainingController.constDeliveryRemaining.value =
             DeliveryRemaining.fromMap(tem);
