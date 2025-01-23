@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -12,7 +10,6 @@ void showCustomPopUpLoadingDialog(BuildContext context,
   // 0 -> loading
   // 1 -> success
   // -1 -> Error
-  final LoadingTextController loadingTextController = Get.find();
   final Widget widget = Dialog(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     child: Padding(
@@ -107,14 +104,6 @@ void showCustomPopUpLoadingDialog(BuildContext context,
           context: context,
           builder: (context) => PopScope(
             canPop: false,
-            onPopInvokedWithResult: (didPop, result) async {
-              if (loadingTextController.currentState.value == 0) {
-                log("Here We Have ...");
-              } else {
-                log("There we have");
-                Navigator.pop(context);
-              }
-            },
             child: Scaffold(
               backgroundColor: Colors.grey.withOpacity(0.3),
               body: Center(
