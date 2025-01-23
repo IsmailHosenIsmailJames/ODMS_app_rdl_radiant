@@ -1,7 +1,7 @@
 name: odms
 description: Developed By MD. Ismail Hosen James.
 publish_to: none
-version: 1.6.21+30
+version: 1.6.22+30
 
 environment:
   sdk: ">=3.1.0 <4.0.0"
@@ -35,7 +35,7 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   http: ^1.2.2
-  intl: ^0.19.0
+  intl: ^0.20.1
   loading_animation_widget: ^1.2.1
   path_provider: ^2.1.4
   shared_preferences: ^2.3.2
