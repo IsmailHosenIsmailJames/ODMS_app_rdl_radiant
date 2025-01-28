@@ -48,7 +48,9 @@ void showCustomPopUpLoadingDialog(BuildContext context,
               ),
             if (controller.currentState.value == 0)
               LoadingAnimationWidget.discreteCircle(
-                  color: Colors.deepPurple, size: 50),
+                color: Colors.blue.shade800,
+                size: 50,
+              ),
             if (controller.currentState.value == 1)
               Container(
                 margin: const EdgeInsets.all(10),
