@@ -90,7 +90,7 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
           .copyWith(textScaler: TextScaler.linear(textScalerValue)),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Customer Details"),
+          title: const Text('Customer Details'),
         ),
         body: customerDetailsModel == null || isUnsuccessful
             ? Center(
@@ -116,17 +116,17 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                           child: SingleChildScrollView(
                             child: Column(
                               children: [
-                                getRowWidgetForDetailsBox("Partner ID",
+                                getRowWidgetForDetailsBox('Partner ID',
                                     customerDetailsModel?.partner),
                                 dividerWhite,
-                                getRowWidgetForDetailsBox("Pharmacy Name",
+                                getRowWidgetForDetailsBox('Pharmacy Name',
                                     customerDetailsModel?.name1),
                                 dividerWhite,
-                                getRowWidgetForDetailsBox("Customer Name",
+                                getRowWidgetForDetailsBox('Customer Name',
                                     customerDetailsModel?.contactPerson),
                                 dividerWhite,
                                 getRowWidgetForDetailsBox(
-                                  "Customer Mobile",
+                                  'Customer Mobile',
                                   customerDetailsModel?.mobileNo,
                                   optionalWidgetsAtLast: SizedBox(
                                     height: 23,
@@ -135,12 +135,12 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                                       padding: EdgeInsets.zero,
                                       onPressed: () {
                                         FlutterClipboard.copy(
-                                          customerDetailsModel?.mobileNo ?? "",
+                                          customerDetailsModel?.mobileNo ?? '',
                                         ).then((value) {
                                           Fluttertoast.showToast(
                                               msg: customerDetailsModel
                                                       ?.mobileNo ??
-                                                  "");
+                                                  '');
                                         });
                                       },
                                       icon: const Icon(
@@ -152,47 +152,47 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                                 ),
                                 dividerWhite,
                                 getRowWidgetForDetailsBox(
-                                    "Street", customerDetailsModel?.street),
-                                if ((customerDetailsModel?.street1 ?? "")
+                                    'Street', customerDetailsModel?.street),
+                                if ((customerDetailsModel?.street1 ?? '')
                                     .isNotEmpty)
                                   const Divider(
                                     color: Colors.white,
                                     height: 1,
                                   ),
-                                if ((customerDetailsModel?.street1 ?? "")
+                                if ((customerDetailsModel?.street1 ?? '')
                                     .isNotEmpty)
-                                  getRowWidgetForDetailsBox("Street 1",
+                                  getRowWidgetForDetailsBox('Street 1',
                                       customerDetailsModel?.street1),
-                                if ((customerDetailsModel?.street2 ?? "")
+                                if ((customerDetailsModel?.street2 ?? '')
                                     .isNotEmpty)
                                   const Divider(
                                     color: Colors.white,
                                     height: 1,
                                   ),
-                                if ((customerDetailsModel?.street2 ?? "")
+                                if ((customerDetailsModel?.street2 ?? '')
                                     .isNotEmpty)
-                                  getRowWidgetForDetailsBox("Street 2",
+                                  getRowWidgetForDetailsBox('Street 2',
                                       customerDetailsModel?.street2),
                                 dividerWhite,
                                 getRowWidgetForDetailsBox(
-                                    "District", customerDetailsModel?.district),
+                                    'District', customerDetailsModel?.district),
                                 dividerWhite,
                                 getRowWidgetForDetailsBox(
-                                    "Upazila", customerDetailsModel?.upazilla),
+                                    'Upazila', customerDetailsModel?.upazilla),
                                 dividerWhite,
-                                getRowWidgetForDetailsBox("Trans. P. zone",
+                                getRowWidgetForDetailsBox('Trans. P. zone',
                                     customerDetailsModel?.transPZone),
                                 dividerWhite,
                                 getRowWidgetForDetailsBox(
-                                    "Latitude",
+                                    'Latitude',
                                     (customerDetailsModel?.latitude ??
-                                            "No Data Found")
+                                            'No Data Found')
                                         .toString()),
                                 dividerWhite,
                                 getRowWidgetForDetailsBox(
-                                    "Longitude",
+                                    'Longitude',
                                     (customerDetailsModel?.longitude ??
-                                            "No Data Found")
+                                            'No Data Found')
                                         .toString()),
                               ],
                             ),
@@ -220,7 +220,7 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                   ),
                   Gap(15),
                   Text(
-                    "Visit Type",
+                    'Visit Type',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: Colors.grey.shade600,
@@ -229,7 +229,7 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                   Gap(5),
                   FutureBuilder(
                     future: get(Uri.parse(
-                        "http://128.199.199.164:6042/api/v1/visit/visit_type")),
+                        'http://128.199.199.164:6042/api/v1/visit/visit_type')),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         List visitTypes = jsonDecode(snapshot.data!.body);
@@ -241,15 +241,15 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                                 visitTypes.length,
                                 (index) {
                                   return DropdownMenuEntry(
-                                    value: (visitTypes[index]["value"] ?? "")
+                                    value: (visitTypes[index]['value'] ?? '')
                                         .toString(),
-                                    label: (visitTypes[index]["value"] ?? "")
+                                    label: (visitTypes[index]['value'] ?? '')
                                         .toString()
-                                        .replaceAll("_", " "),
+                                        .replaceAll('_', ' '),
                                   );
                                 },
                               ),
-                              hintText: "Select Visit Type",
+                              hintText: 'Select Visit Type',
                               onSelected: (value) {
                                 setState(() {
                                   visitTypeName = value.toString();
@@ -262,13 +262,13 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                           child: CircularProgressIndicator(),
                         );
                       } else {
-                        return Text("Something went wrong");
+                        return Text('Something went wrong');
                       }
                     },
                   ),
                   Gap(15),
                   Text(
-                    "Comment",
+                    'Comment',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: Colors.grey.shade600,
@@ -278,7 +278,7 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                   TextFormField(
                     controller: commentsController,
                     decoration: InputDecoration(border: OutlineInputBorder(),
-                    hintText: "type your comment here..."
+                    hintText: 'type your comment here...'
                     ),
                   ),
                   Gap(15),
@@ -297,7 +297,7 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                           Position position =
                               await Geolocator.getCurrentPosition();
 
-                          log("Got user Location");
+                          log('Got user Location');
 
                           if (Navigator.canPop(context)) {
                             Navigator.pop(context);
@@ -308,24 +308,24 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                               context: context,
                               builder: (context) => AlertDialog(
                                 insetPadding: EdgeInsets.all(10),
-                                title: const Text("Are you sure?"),
+                                title: const Text('Are you sure?'),
                                 content: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      "Visit Type : ",
+                                      'Visit Type : ',
                                       style: TextStyle(
                                         color: Colors.grey.shade600,
                                       ),
                                     ),
-                                    Text((visitTypeName ?? "")
-                                        .replaceAll("_", " ")),
+                                    Text((visitTypeName ?? '')
+                                        .replaceAll('_', ' ')),
                                     Gap(7),
                                     if (commentsController.text.isNotEmpty)
                                       Text(
-                                        "Comments :",
+                                        'Comments :',
                                         style: TextStyle(
                                           color: Colors.grey.shade600,
                                         ),
@@ -334,12 +334,12 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                                       Text(commentsController.text),
                                     Gap(7),
                                     Text(
-                                      "Your Latitude : ${position.latitude.toPrecision(6)}",
+                                      'Your Latitude : ${position.latitude.toPrecision(6)}',
                                       style: TextStyle(
                                           color: Colors.grey.shade600),
                                     ),
                                     Text(
-                                      "Your Longitude : ${position.longitude.toPrecision(6)}",
+                                      'Your Longitude : ${position.longitude.toPrecision(6)}',
                                       style: TextStyle(
                                           color: Colors.grey.shade600),
                                     ),
@@ -356,7 +356,7 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      child: const Text("Cancel"),
+                                      child: const Text('Cancel'),
                                     ),
                                   ),
                                   SizedBox(
@@ -373,7 +373,7 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                                           commentsController.text,
                                         );
                                       },
-                                      child: const Text("Yes"),
+                                      child: const Text('Yes'),
                                     ),
                                   ),
                                 ],
@@ -382,13 +382,13 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                           }
                         } else {
                           Fluttertoast.showToast(
-                            msg: "Please select visit type",
+                            msg: 'Please select visit type',
                             toastLength: Toast.LENGTH_SHORT,
                           );
                         }
                       },
                       label: Text(
-                        "Save",
+                        'Save',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
@@ -417,7 +417,7 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
     final uri = Uri.parse(base + visitApiPath);
     final response = await http.post(
       uri,
-      headers: {"Content-Type": "application/json"},
+      headers: {'Content-Type': 'application/json'},
       body: VisitsDataToApiModel(
         daCode: sapID,
         routeCode: widget.route,

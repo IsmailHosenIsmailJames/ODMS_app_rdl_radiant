@@ -41,9 +41,9 @@ class _HomePageState extends State<HomePage> {
   final dashboardController = Get.put(DashboardControllerGetx());
   final LoadingTextController loadingTextController = Get.find();
   Map<String, dynamic> jsonUserData = {};
-  String errorInfoState = "loading"; // error and success
-  String errorInfoCode = ""; // error and success
-  String errorInfoMessage = "";
+  String errorInfoState = 'loading'; // error and success
+  String errorInfoCode = ''; // error and success
+  String errorInfoMessage = '';
 
   @override
   void initState() {
@@ -88,12 +88,12 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      drawer: (errorInfoState != "success" && errorInfoState != "loading")
+      drawer: (errorInfoState != 'success' && errorInfoState != 'loading')
           ? null
           : const MyDrawer(),
       body: MediaQuery(
           data: const MediaQueryData(textScaler: TextScaler.linear(0.85)),
-          child: (errorInfoState != "success" && errorInfoState != "loading")
+          child: (errorInfoState != 'success' && errorInfoState != 'loading')
               ? Center(
                   child: Padding(
                     padding: const EdgeInsets.all(20),
@@ -181,11 +181,11 @@ class _HomePageState extends State<HomePage> {
                           if (data.statusCode == 200) {
                             RouteInfo routeInfo = RouteInfo();
                             final mainData = json.decode(data.body);
-                            if (mainData["success"] == true) {
-                              if (mainData["result"] != null) {
+                            if (mainData['success'] == true) {
+                              if (mainData['result'] != null) {
                                 routeInfo = RouteInfo.fromMap(
                                   Map<String, dynamic>.from(
-                                    mainData["result"],
+                                    mainData['result'],
                                   ),
                                 );
                               }
@@ -253,7 +253,7 @@ class _HomePageState extends State<HomePage> {
                               );
                             } else {
                               return const Center(
-                                child: Text("Something went wrong"),
+                                child: Text('Something went wrong'),
                               );
                             }
                           } else {
@@ -308,23 +308,23 @@ class _HomePageState extends State<HomePage> {
     try {
       final errorInfoResponse = await http.get(Uri.parse(base + errorInfo));
       final jsonDecode = json.decode(errorInfoResponse.body);
-      if (jsonDecode["success"] != true) {
+      if (jsonDecode['success'] != true) {
         setState(() {
-          errorInfoMessage = jsonDecode["message"];
+          errorInfoMessage = jsonDecode['message'];
           errorInfoCode = jsonDecode['code'];
-          errorInfoState = "error";
+          errorInfoState = 'error';
         });
         log(errorInfoResponse.body);
         return;
       }
       setState(() {
-        errorInfoState = "success";
+        errorInfoState = 'success';
       });
     } catch (e) {
       setState(() {
-        errorInfoState = "error";
+        errorInfoState = 'error';
         errorInfoMessage =
-            "Something went wrong, Unable to load. Please try again";
+            'Something went wrong, Unable to load. Please try again';
       });
       return;
     }
@@ -334,18 +334,18 @@ class _HomePageState extends State<HomePage> {
       dashboardController.dashboardData.value = DashBoardModel();
     }
     final box = Hive.box('info');
-    final sapID = box.get("sap_id");
+    final sapID = box.get('sap_id');
     final response =
         await http.get(Uri.parse('$base$dashBoardGetDataPath/$sapID'));
     if (response.statusCode == 200) {
       log('$base$dashBoardGetDataPath/$sapID');
-      log("User Dashboard Data ${response.body}");
+      log('User Dashboard Data ${response.body}');
       var data = Map<String, dynamic>.from(
         jsonDecode(response.body) as Map,
       );
       final SharedPreferences info = await SharedPreferences.getInstance();
-      await info.setInt("time_interval", data["result"][0]["time_interval"]);
-      await info.setInt("minimum_distance", data["result"][0]["distance"]);
+      await info.setInt('time_interval', data['result'][0]['time_interval']);
+      await info.setInt('minimum_distance', data['result'][0]['distance']);
 
       if (data['success'] == true) {
         dashboardController.dashboardData.value = DashBoardModel.fromMap(data);
@@ -475,7 +475,7 @@ class _HomePageState extends State<HomePage> {
       loadingTextController.loadingText.value = 'Successful';
 
       if (kDebugMode) {
-        log("Got Delivery Remaining List");
+        log('Got Delivery Remaining List');
         log(response.body);
       }
 
@@ -521,7 +521,7 @@ class _HomePageState extends State<HomePage> {
       loadingTextController.currentState.value = 1;
       loadingTextController.loadingText.value = 'Successful';
       if (kDebugMode) {
-        log("Got Delivery Remaining List");
+        log('Got Delivery Remaining List');
         log(response.body);
       }
 
@@ -744,7 +744,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 if (optional != null)
                                   TextSpan(
-                                    text: " ($optional)",
+                                    text: ' ($optional)',
                                     style: TextStyle(
                                       color: Colors.grey.shade600,
                                     ),
@@ -765,7 +765,7 @@ class _HomePageState extends State<HomePage> {
   Widget buildFullInfoWidget(RouteInfo routeInfo, {bool isLoading = false}) {
     String fullName = jsonUserData['full_name'].toString();
     if (fullName.length > 35) {
-      fullName = "${fullName.substring(0, 35)}...";
+      fullName = '${fullName.substring(0, 35)}...';
     }
     return Container(
       margin: EdgeInsets.all(5),
@@ -815,8 +815,8 @@ class _HomePageState extends State<HomePage> {
                 _buildInfoRow(
                   isLoading: isLoading,
                   icon: Icons.route_outlined,
-                  label: "Route Name",
-                  value: routeInfo.routeName ?? "Not found",
+                  label: 'Route Name',
+                  value: routeInfo.routeName ?? 'Not found',
                   optional: routeInfo.routeId,
                 ),
                 Divider(
@@ -826,8 +826,8 @@ class _HomePageState extends State<HomePage> {
                 _buildInfoRow(
                   isLoading: isLoading,
                   icon: Icons.receipt,
-                  label: "Total Gate Passes",
-                  value: routeInfo.totalGatePass?.toString() ?? "Not found",
+                  label: 'Total Gate Passes',
+                  value: routeInfo.totalGatePass?.toString() ?? 'Not found',
                 ),
                 Divider(
                   color: Colors.white,
@@ -841,12 +841,12 @@ class _HomePageState extends State<HomePage> {
                     width: 21,
                     padding: EdgeInsets.all(1),
                     child: SvgPicture.asset(
-                      "assets/icons/taka.svg",
+                      'assets/icons/taka.svg',
                       // ignore: deprecated_member_use
                       color: Colors.blue,
                     ),
                   ),
-                  label: "Gate Pass Amount",
+                  label: 'Gate Pass Amount',
                   value:
                       formatBangladeshiTaka(routeInfo.totalGatePassAmount ?? 0),
                 ),
@@ -857,8 +857,8 @@ class _HomePageState extends State<HomePage> {
                 _buildInfoRow(
                   isLoading: isLoading,
                   icon: Icons.people,
-                  label: "Total Customers",
-                  value: routeInfo.totalCustomer?.toString() ?? "Not found",
+                  label: 'Total Customers',
+                  value: routeInfo.totalCustomer?.toString() ?? 'Not found',
                 ),
               ],
             ),

@@ -100,10 +100,10 @@ class _MyMapViewState extends State<FinishConveyance> {
   Future<void> getLocationDetailsFormLatLon(LatLng latlng) async {
     destination = latlng;
     markers['destination'] = Marker(
-        markerId: const MarkerId("destination"),
+        markerId: const MarkerId('destination'),
         position: latlng,
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-        infoWindow: const InfoWindow(title: "Destination"));
+        infoWindow: const InfoWindow(title: 'Destination'));
 
     setState(() {
       destination = LatLng(latlng.latitude, latlng.longitude);
@@ -149,7 +149,7 @@ class _MyMapViewState extends State<FinishConveyance> {
           .copyWith(textScaler: TextScaler.linear(textScalerValue)),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Map of Journey"),
+          title: const Text('Map of Journey'),
         ),
         body: Stack(
           children: [
@@ -161,7 +161,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                       children: [
                         LoadingAnimationWidget.threeRotatingDots(
                             color: Colors.blue.shade900, size: 30),
-                        const Text("Loading your location..."),
+                        const Text('Loading your location...'),
                       ],
                     ),
                   )
@@ -188,7 +188,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                           'My Location',
                           LatLng(initMyLocation!.latitude,
                               initMyLocation!.longitude),
-                          infoWindow: const InfoWindow(title: "My Location"),
+                          infoWindow: const InfoWindow(title: 'My Location'),
                         );
                       }
                     },
@@ -213,7 +213,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
-                      "Your Current Location Details: ",
+                      'Your Current Location Details: ',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -231,7 +231,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: const Center(
-                              child: Text("Loading your location..."),
+                              child: Text('Loading your location...'),
                             ),
                           )
                             .animate(
@@ -250,7 +250,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                                     fontSize: 14, fontWeight: FontWeight.w500),
                               ),
                               Text(
-                                "$subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country",
+                                '$subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country',
                                 style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,
@@ -259,7 +259,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                               Row(
                                 children: [
                                   const Text(
-                                    "Lat: ",
+                                    'Lat: ',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -269,7 +269,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                                       destination!.latitude.toStringAsFixed(4)),
                                   const Gap(15),
                                   const Text(
-                                    "Lon: ",
+                                    'Lon: ',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -282,7 +282,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                               Row(
                                 children: [
                                   const Text(
-                                    "Distance: ",
+                                    'Distance: ',
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -290,7 +290,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                                   ),
                                   const Gap(2),
                                   Text(
-                                    "${(distance / 1000).toStringAsFixed(2)} km",
+                                    '${(distance / 1000).toStringAsFixed(2)} km',
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -305,7 +305,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                                     finishTheJourney(context, distance);
                                   },
                                   icon: const Icon(Icons.done),
-                                  label: const Text("Finish the journey"),
+                                  label: const Text('Finish the journey'),
                                 ),
                               ),
                             ],
@@ -338,7 +338,7 @@ class _MyMapViewState extends State<FinishConveyance> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Fill the information",
+                  'Fill the information',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -356,12 +356,12 @@ class _MyMapViewState extends State<FinishConveyance> {
                   child: TextFormField(
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return "Cost of the journey is required";
+                        return 'Cost of the journey is required';
                       } else {
                         if (double.tryParse(value) != null) {
                           return null;
                         } else {
-                          return "Cost amount must always be a number";
+                          return 'Cost amount must always be a number';
                         }
                       }
                     },
@@ -369,13 +369,13 @@ class _MyMapViewState extends State<FinishConveyance> {
                     autovalidateMode: AutovalidateMode.always,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
-                      hintText: "Cost of the journey",
+                      hintText: 'Cost of the journey',
                     ),
                   ),
                 ),
                 const Gap(10),
                 const Text(
-                  "Select Transport Modes",
+                  'Select Transport Modes',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -455,7 +455,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: const Center(
-                          child: Text("Loading transport modes..."),
+                          child: Text('Loading transport modes...'),
                         ),
                       )
                           .animate(onPlay: (controller) => controller.repeat())
@@ -469,7 +469,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                 ),
                 const Gap(5),
                 Text(
-                  "Distance : ${(distance / 1000).toStringAsFixed(2)} km",
+                  'Distance : ${(distance / 1000).toStringAsFixed(2)} km',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -489,24 +489,24 @@ class _MyMapViewState extends State<FinishConveyance> {
                             isCupertino: true);
 
                         String toSendData = jsonEncode({
-                          "end_journey_latitude":
+                          'end_journey_latitude':
                               destination!.latitude.toStringAsFixed(9),
-                          "end_journey_longitude":
+                          'end_journey_longitude':
                               destination!.longitude.toStringAsFixed(9),
-                          "transport_mode": jsonEncode(
+                          'transport_mode': jsonEncode(
                               conveyanceDataController.transportModes.value),
-                          "transport_cost": controller.text,
+                          'transport_cost': controller.text,
                         });
                         final response = await put(
                           Uri.parse(
                               '$base$conveyanceEnd/${widget.conveyanceData.id}'),
-                          headers: {"Content-Type": "application/json"},
+                          headers: {'Content-Type': 'application/json'},
                           body: toSendData,
                         );
 
                         if (response.statusCode == 200) {
                           final decoded = jsonDecode(response.body);
-                          log("Message with success: ${response.body}");
+                          log('Message with success: ${response.body}');
                           if (decoded['success'] == true) {
                             conveyanceDataController.transportModes.value = [];
                             try {
@@ -519,7 +519,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                               log(response.body);
 
                               if (response.statusCode == 200) {
-                                log("Message with success 2: ${response.body}");
+                                log('Message with success 2: ${response.body}');
 
                                 Map decoded = jsonDecode(response.body);
 
@@ -558,11 +558,11 @@ class _MyMapViewState extends State<FinishConveyance> {
                           }
                         } else {
                           Fluttertoast.showToast(
-                              msg: "Fill the information correctly");
+                              msg: 'Fill the information correctly');
                         }
                       }
                     },
-                    child: const Text("Submit"),
+                    child: const Text('Submit'),
                   ),
                 ),
               ],
@@ -586,7 +586,7 @@ class _MyMapViewState extends State<FinishConveyance> {
     double distance = Geolocator.distanceBetween(
             pos1.latitude, pos1.longitude, pos2.latitude, pos2.longitude) /
         1000;
-    log("distance: $distance");
+    log('distance: $distance');
 
     if (distance > 100) {
       return 11;
@@ -644,7 +644,7 @@ class _MyMapViewState extends State<FinishConveyance> {
   }
 
   void generatePolylinesFormsPoints(List<LatLng> points) {
-    PolylineId id = const PolylineId("destination");
+    PolylineId id = const PolylineId('destination');
     Polyline polyline = Polyline(
       polylineId: id,
       color: Colors.deepOrange,

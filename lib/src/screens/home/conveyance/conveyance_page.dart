@@ -41,7 +41,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
           .copyWith(textScaler: TextScaler.linear(textScalerValue)),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Conveyance"),
+          title: const Text('Conveyance'),
           actions: [
             GetX<ConveyanceDataController>(
               builder: (controller) => ElevatedButton(
@@ -57,7 +57,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                   controller.isSummary.value = !controller.isSummary.value;
                 },
                 child: const Text(
-                  "Summary",
+                  'Summary',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
               ),
@@ -90,7 +90,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                 children: [
                   const Spacer(),
                   const Center(
-                    child: Text("Conveyance list is empty"),
+                    child: Text('Conveyance list is empty'),
                   ),
                   const Spacer(),
                   widgetForNewStart(),
@@ -133,7 +133,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                               alignment: Alignment.center,
                                               width: 50,
                                               child: Text(
-                                                "SL. No.",
+                                                'SL. No.',
                                                 style: textStyleForHeader,
                                               ),
                                             ),
@@ -143,7 +143,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                               color: Colors.orange.shade100
                                                   .withOpacity(0.2),
                                               child: Text(
-                                                "From",
+                                                'From',
                                                 style: textStyleForHeader,
                                               ),
                                             ),
@@ -151,7 +151,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                               alignment: Alignment.center,
                                               width: 180,
                                               child: Text(
-                                                "To",
+                                                'To',
                                                 style: textStyleForHeader,
                                               ),
                                             ),
@@ -159,7 +159,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                               alignment: Alignment.center,
                                               width: 100,
                                               child: Text(
-                                                "Transport Mode",
+                                                'Transport Mode',
                                                 style: textStyleForHeader,
                                               ),
                                             ),
@@ -167,7 +167,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                               alignment: Alignment.center,
                                               width: 100,
                                               child: Text(
-                                                "Cost",
+                                                'Cost',
                                                 style: textStyleForHeader,
                                               ),
                                             ),
@@ -190,7 +190,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                               alignment: Alignment.center,
                                               width: 50,
                                               child: Text(
-                                                "${index + 1}",
+                                                '${index + 1}',
                                                 style: textStyleForHeader,
                                               ),
                                             ),
@@ -216,17 +216,17 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                                   if (snapshot.hasData) {
                                                     log(snapshot.data![0]
                                                         .toString());
-                                                    String street = "";
+                                                    String street = '';
                                                     for (var x
                                                         in snapshot.data!) {
                                                       if (!(street.contains(
                                                               x.street ??
-                                                                  "")) &&
+                                                                  '')) &&
                                                           'Unnamed Road' !=
                                                               x.street) {
                                                         street +=
-                                                            x.street ?? "";
-                                                        street += ", ";
+                                                            x.street ?? '';
+                                                        street += ', ';
                                                       }
                                                     }
                                                     return Text(
@@ -270,18 +270,18 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                                         if (snapshot.hasData) {
                                                           log(snapshot.data![0]
                                                               .toString());
-                                                          String street = "";
+                                                          String street = '';
                                                           for (var x in snapshot
                                                               .data!) {
                                                             if (!(street.contains(
                                                                     x.street ??
-                                                                        "")) &&
+                                                                        '')) &&
                                                                 'Unnamed Road' !=
                                                                     x.street) {
                                                               street +=
                                                                   x.street ??
-                                                                      "";
-                                                              street += ", ";
+                                                                      '';
+                                                              street += ', ';
                                                             }
                                                           }
                                                           return Text(
@@ -297,7 +297,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                                       },
                                                     )
                                                   : const Text(
-                                                      "Live",
+                                                      'Live',
                                                       style: TextStyle(
                                                         color: Colors.red,
                                                       ),
@@ -328,7 +328,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                                           textStyleForContent,
                                                     )
                                                   : const Text(
-                                                      "Live",
+                                                      'Live',
                                                       style: TextStyle(
                                                         color: Colors.red,
                                                       ),
@@ -348,7 +348,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                                 : SizedBox(
                                                     width: 100,
                                                     child: const Text(
-                                                      "Live",
+                                                      'Live',
                                                       style: TextStyle(
                                                         color: Colors.red,
                                                       ),
@@ -439,7 +439,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
                                               const Text(
-                                                "Your starting location was: ",
+                                                'Your starting location was: ',
                                                 style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
@@ -447,7 +447,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                               ),
                                               if (isLive)
                                                 const Text(
-                                                  "Live",
+                                                  'Live',
                                                   style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.bold,
@@ -456,7 +456,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                                 ),
                                               if (!isLive)
                                                 const Text(
-                                                  "End",
+                                                  'End',
                                                   style: TextStyle(
                                                     fontSize: 18,
                                                     fontWeight: FontWeight.bold,
@@ -505,7 +505,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                                         .spaceBetween,
                                                 children: [
                                                   Text(
-                                                    "Your end location was: ",
+                                                    'Your end location was: ',
                                                     style: TextStyle(
                                                       fontSize: 16,
                                                       fontWeight:
@@ -518,7 +518,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                                 ? const Row(
                                                     children: [
                                                       Text(
-                                                        "Data is not valid",
+                                                        'Data is not valid',
                                                         style: TextStyle(
                                                           fontSize: 16,
                                                           color: Colors.red,
@@ -566,7 +566,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                             ),
                                           );
                                         },
-                                        child: const Text("Next"),
+                                        child: const Text('Next'),
                                       ),
                                     ),
                                   if (!isLive)
@@ -579,7 +579,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                       Row(
                                         children: [
                                           const Text(
-                                            "Distance: ",
+                                            'Distance: ',
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
@@ -611,7 +611,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                     Row(
                                       children: [
                                         const Text(
-                                          "Transport Mode:",
+                                          'Transport Mode:',
                                           style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold),
@@ -681,7 +681,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                 buttonPadding: EdgeInsets.all(10),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                title: const Text("Are you sure?"),
+                title: const Text('Are you sure?'),
                 content: getAddressWidget(placeMarkImportantData,
                     LatLng(position.latitude, position.longitude)),
                 actions: [
@@ -695,7 +695,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text("Cancel"),
+                      child: const Text('Cancel'),
                     ),
                   ),
                   SizedBox(
@@ -707,14 +707,14 @@ class _ConveyancePageState extends State<ConveyancePage> {
                         callStartConveyance(
                             position, box.get('sap_id').toString());
                       },
-                      child: const Text("Yes"),
+                      child: const Text('Yes'),
                     ),
                   ),
                 ],
               ),
             );
           },
-          child: const Text("Start New Conveyance"),
+          child: const Text('Start New Conveyance'),
         ),
       ),
     );
@@ -730,11 +730,11 @@ class _ConveyancePageState extends State<ConveyancePage> {
     final uri = Uri.parse(base + conveyanceStart);
     final response = await http.post(
       uri,
-      headers: {"Content-Type": "application/json"},
+      headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
-        "da_code": sapID,
-        "start_journey_latitude": position.latitude.toStringAsFixed(9),
-        "start_journey_longitude": position.longitude.toStringAsFixed(9),
+        'da_code': sapID,
+        'start_journey_latitude': position.latitude.toStringAsFixed(9),
+        'start_journey_longitude': position.longitude.toStringAsFixed(9),
       }),
     );
     if (response.statusCode == 200) {
@@ -750,7 +750,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
           loadingTextController.currentState.value = 1;
           loadingTextController.loadingText.value = 'Successful';
 
-          log("Message with success: ${response.body}");
+          log('Message with success: ${response.body}');
 
           Map decoded = jsonDecode(response.body);
 
@@ -779,7 +779,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
       builder: (context) => BottomPicker.date(
         height: 500,
         pickerTitle: const Text(
-          "Pick a Date",
+          'Pick a Date',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -826,7 +826,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
         loadingTextController.currentState.value = -1;
         loadingTextController.loadingText.value = 'Something went wrong';
 
-        Fluttertoast.showToast(msg: "Something went wrong");
+        Fluttertoast.showToast(msg: 'Something went wrong');
       }
     }
   }
@@ -846,24 +846,24 @@ List<String> analyzePlaceMark(List<Placemark> placeMarks) {
 
     name +=
         '${placemark.name ?? ""}${(placemark.name ?? "").isEmpty ? "" : ", "}';
-    if (!administrativeArea.contains(placemark.administrativeArea ?? "")) {
+    if (!administrativeArea.contains(placemark.administrativeArea ?? '')) {
       administrativeArea +=
           '${placemark.administrativeArea ?? ""}${(placemark.administrativeArea ?? "").isEmpty ? "" : ", "}';
     }
     if (!subAdministrativeArea
-        .contains(placemark.subAdministrativeArea ?? "")) {
+        .contains(placemark.subAdministrativeArea ?? '')) {
       subAdministrativeArea +=
           '${placemark.subAdministrativeArea ?? ""}${(placemark.subAdministrativeArea ?? "").isEmpty ? "" : ", "}';
     }
-    if (!locality.contains(placemark.locality ?? "")) {
+    if (!locality.contains(placemark.locality ?? '')) {
       locality +=
           '${placemark.locality ?? ""}${(placemark.locality ?? "").isEmpty ? "" : ", "}';
     }
-    if (!country.contains(placemark.country ?? "")) {
+    if (!country.contains(placemark.country ?? '')) {
       country +=
           '${placemark.country ?? ""}${(placemark.country ?? "").isEmpty ? "" : ", "}';
     }
-    if (!subLocality.contains(placemark.subLocality ?? "")) {
+    if (!subLocality.contains(placemark.subLocality ?? '')) {
       subLocality +=
           '${placemark.subLocality ?? ""}${(placemark.subLocality ?? "").isEmpty ? "" : ", "}';
     }
@@ -929,7 +929,7 @@ Widget getAddressWidget(
       children: [
         if (showTitle)
           const Text(
-            "Your location is: ",
+            'Your location is: ',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w500,
@@ -940,7 +940,7 @@ Widget getAddressWidget(
           style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
         ),
         Text(
-          "$subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country",
+          '$subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country',
           style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
@@ -949,7 +949,7 @@ Widget getAddressWidget(
         Row(
           children: [
             const Text(
-              "Lat: ",
+              'Lat: ',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -960,7 +960,7 @@ Widget getAddressWidget(
             ),
             const Gap(15),
             const Text(
-              "Lon: ",
+              'Lon: ',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),

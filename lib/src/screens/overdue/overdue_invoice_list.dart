@@ -78,19 +78,19 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
           .copyWith(textScaler: TextScaler.linear(textScalerValue)),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Overdue Invoice List"),
+          title: const Text('Overdue Invoice List'),
         ),
         floatingActionButton: widget.result.customerLatitude != null &&
                 widget.result.customerLongitude != null
             ? FloatingActionButton(
                 onPressed: () async {
-                  log("Lat:${widget.result.customerLatitude} ");
-                  log("Lat:${widget.result.customerLongitude} ");
+                  log('Lat:${widget.result.customerLatitude} ');
+                  log('Lat:${widget.result.customerLongitude} ');
                   Get.to(
                     () => MyMapView(
                       lat: widget.result.customerLatitude!,
                       lng: widget.result.customerLongitude!,
-                      customerName: customerName ?? "",
+                      customerName: customerName ?? '',
                     ),
                   );
                 },
@@ -147,27 +147,27 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                         // ),
                         // divider,
                         getRowWidgetForDetailsBox(
-                          "Da Name",
+                          'Da Name',
                           daName,
                         ),
                         divider,
                         getRowWidgetForDetailsBox(
-                          "Partner ID",
+                          'Partner ID',
                           partner,
                         ),
                         divider,
                         getRowWidgetForDetailsBox(
-                          "Customer Name",
+                          'Customer Name',
                           customerName,
                         ),
                         divider,
                         getRowWidgetForDetailsBox(
-                          "Customer Address",
+                          'Customer Address',
                           customerAddress,
                         ),
                         divider,
                         getRowWidgetForDetailsBox(
-                          "Customer Mobile",
+                          'Customer Mobile',
                           customerMobile,
                           optionalWidgetsAtLast: SizedBox(
                             height: 23,
@@ -176,9 +176,9 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                               padding: EdgeInsets.zero,
                               onPressed: () {
                                 FlutterClipboard.copy(
-                                  customerMobile ?? "",
+                                  customerMobile ?? '',
                                 ).then((value) {
-                                  Fluttertoast.showToast(msg: "Number Copied");
+                                  Fluttertoast.showToast(msg: 'Number Copied');
                                 });
                               },
                               icon: const Icon(
@@ -195,7 +195,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                         // ),
                         // divider,
                         getRowWidgetForDetailsBox(
-                          "Total Due Amount",
+                          'Total Due Amount',
                           (totalAmount < 0 ? 0 : totalAmount)
                               .toStringAsFixed(2),
                         ),
@@ -208,7 +208,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
             const Gap(15),
             Obx(
               () {
-                log("List Generated");
+                log('List Generated');
                 List<BillingDoc> docsList =
                     overdueInvoiceListController.docsList.value;
                 return Column(
@@ -274,7 +274,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         const Text(
-                                          "Invoice No:",
+                                          'Invoice No:',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -310,7 +310,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         const Text(
-                                          "Billing Date:",
+                                          'Billing Date:',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -334,7 +334,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                                     Row(
                                       children: [
                                         Text(
-                                          "Due amount:",
+                                          'Due amount:',
                                           style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w600),
@@ -359,7 +359,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                                           callDueCollectionApi(
                                               docsList, index, context);
                                         },
-                                        child: Text("Collect"),
+                                        child: Text('Collect'),
                                       ),
                                     ),
                                   ],
@@ -404,7 +404,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "Collect Due",
+                  'Collect Due',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -415,7 +415,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                 TextFormField(
                   autovalidateMode: AutovalidateMode.always,
                   validator: (value) {
-                    double? doubleValue = double.tryParse(value ?? "");
+                    double? doubleValue = double.tryParse(value ?? '');
                     if (doubleValue != null) {
                       if (doubleValue > dueController.previousDue.value) {
                         return "amount can't be bigger than due amount";
@@ -423,7 +423,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                         return null;
                       }
                     } else {
-                      return "value is not valid";
+                      return 'value is not valid';
                     }
                   },
                   onChanged: (value) {
@@ -438,7 +438,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                   },
                   controller: textEditingController,
                   decoration: InputDecoration(
-                    hintText: "type amount here",
+                    hintText: 'type amount here',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(
                         10,
@@ -450,7 +450,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                 Row(
                   children: [
                     Text(
-                      "Previous due:",
+                      'Previous due:',
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -469,7 +469,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                 Row(
                   children: [
                     Text(
-                      "Due after collection:",
+                      'Due after collection:',
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium
@@ -505,9 +505,9 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                             return;
                           }
                         }
-                        Fluttertoast.showToast(msg: "Amount is not valid");
+                        Fluttertoast.showToast(msg: 'Amount is not valid');
                       },
-                      child: const Text("Collect")),
+                      child: const Text('Collect')),
                 )
               ],
             ),
@@ -535,13 +535,13 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
             AndroidSettings(timeLimit: const Duration(seconds: 30)),
       );
       String encodedDataToSend = jsonEncode({
-        "billing_doc_no": docsList[index].billingDocNo,
-        "cash_collection": doubleValue,
-        "da_code": Hive.box('info').get("sap_id") as int,
-        "cash_collection_latitude": position.latitude,
-        "cash_collection_longitude": position.longitude,
+        'billing_doc_no': docsList[index].billingDocNo,
+        'cash_collection': doubleValue,
+        'da_code': Hive.box('info').get('sap_id') as int,
+        'cash_collection_latitude': position.latitude,
+        'cash_collection_longitude': position.longitude,
       });
-      log("Sending to api: ");
+      log('Sending to api: ');
       log(encodedDataToSend);
 
       loadingTextController.loadingText.value =
@@ -553,25 +553,25 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
         ),
         body: encodedDataToSend,
         headers: {
-          "content-type": "application/json",
+          'content-type': 'application/json',
         },
       );
 
-      log("Got Response on ${base + collectOverdue}");
+      log('Got Response on ${base + collectOverdue}');
       log(response.statusCode.toString());
 
       if (response.statusCode == 200) {
         final decoded = Map<String, dynamic>.from(jsonDecode(response.body));
         if (decoded['success'] == true) {
-          log("Awaiting a 1 second");
+          log('Awaiting a 1 second');
           await Future.delayed(Duration(seconds: 1));
-          log("done awaiting a 1 second");
+          log('done awaiting a 1 second');
 
           final box = Hive.box('info');
           final url = Uri.parse("$base$getOverdueListV2/${box.get('sap_id')}");
 
           final response = await get(url);
-          log("Got overdue Remaining List");
+          log('Got overdue Remaining List');
           log(response.statusCode.toString());
           log(response.body);
 
@@ -594,7 +594,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
           loadingTextController.loadingText.value = 'Successful';
           double due = totalDue - doubleValue;
           if (due == 0) {
-            log("DUE IS ZERO");
+            log('DUE IS ZERO');
 
             WidgetsBinding.instance.addPostFrameCallback((_) {
               setState(() {
@@ -604,7 +604,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
               });
             });
           } else {
-            log("DUE IS NOT ZERO");
+            log('DUE IS NOT ZERO');
             WidgetsBinding.instance.addPostFrameCallback((_) {
               setState(() {
                 docsList[index].dueAmount = due;

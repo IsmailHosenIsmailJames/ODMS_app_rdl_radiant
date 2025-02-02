@@ -7,7 +7,7 @@ import 'package:odms/src/apis/apis.dart';
 
 Future<Response?> loginAndGetJsonResponse(Map<String, dynamic> query) async {
   try {
-    log("Sending to login api for login :  \n${jsonEncode(query)}");
+    log('Sending to login api for login :  \n${jsonEncode(query)}');
     log(base + loginPath);
     final response = await post(
       Uri.parse(base + loginPath),

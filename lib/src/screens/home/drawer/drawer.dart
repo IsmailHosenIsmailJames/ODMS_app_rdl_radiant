@@ -56,16 +56,16 @@ class _MyDrawerState extends State<MyDrawer> {
                 SizedBox(
                   height: 150,
                   child: Image.asset(
-                    "assets/app_logo_big.png",
+                    'assets/app_logo_big.png',
                     fit: BoxFit.fitWidth,
                   ),
                 ),
                 FutureBuilder(
                   future: PackageInfo.fromPlatform(),
                   builder: (context, snapshot) {
-                    final v = snapshot.data?.version ?? "";
+                    final v = snapshot.data?.version ?? '';
                     return Text(
-                      v.isEmpty ? "" : 'v$v',
+                      v.isEmpty ? '' : 'v$v',
                       style: TextStyle(
                         fontSize: 10,
                         color: Colors.grey.shade600,
@@ -74,7 +74,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   },
                 ),
                 const Text(
-                  "ODMS",
+                  'ODMS',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
@@ -82,7 +82,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   ),
                 ),
                 Text(
-                  "Outbound Delivery Management System",
+                  'Outbound Delivery Management System',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade700,
@@ -169,7 +169,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
                       image: const DecorationImage(
-                        image: AssetImage("assets/visit.png"),
+                        image: AssetImage('assets/visit.png'),
                         fit: BoxFit.scaleDown,
                       ),
                     ),
@@ -197,7 +197,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
                       image: const DecorationImage(
-                        image: AssetImage("assets/overdue.jpg"),
+                        image: AssetImage('assets/overdue.jpg'),
                         fit: BoxFit.fitHeight,
                       ),
                     ),
@@ -296,12 +296,12 @@ class _MyDrawerState extends State<MyDrawer> {
           GestureDetector(
             onTap: () {
               launchUrl(
-                Uri.parse("https://impalaintech.com/"),
+                Uri.parse('https://impalaintech.com/'),
                 mode: LaunchMode.externalApplication,
               );
             },
             child: Text(
-              "Developed by © Impala Intech Limited. All Rights Reserved",
+              'Developed by © Impala Intech Limited. All Rights Reserved',
               style: TextStyle(fontSize: 9, color: Colors.grey[600]),
               textAlign: TextAlign.center,
             ),
@@ -328,7 +328,7 @@ class _MyDrawerState extends State<MyDrawer> {
 
     final response = await get(url);
     if (kDebugMode) {
-      log("Got overdue Remaining List");
+      log('Got overdue Remaining List');
       log(response.statusCode.toString());
       log(response.body);
     }
@@ -381,7 +381,7 @@ class _MyDrawerState extends State<MyDrawer> {
       loadingTextController.currentState.value = 1;
       loadingTextController.loadingText.value = 'Successful';
 
-      log("Message with success: ${response.body}");
+      log('Message with success: ${response.body}');
 
       Map decoded = jsonDecode(response.body);
 

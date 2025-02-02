@@ -71,7 +71,7 @@ class _OverdueProductListState extends State<OverdueProductList> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            "Overdue Product List",
+            'Overdue Product List',
             style: const TextStyle(fontSize: 20),
           ),
         ),
@@ -111,17 +111,17 @@ class _OverdueProductListState extends State<OverdueProductList> {
                             child: Column(
                               children: [
                                 getRowWidgetForDetailsBox(
-                                  "Customer Name",
-                                  widget.result.customerName ?? "",
+                                  'Customer Name',
+                                  widget.result.customerName ?? '',
                                 ),
                                 divider,
                                 getRowWidgetForDetailsBox(
-                                  "Customer Address",
-                                  widget.result.customerAddress ?? "",
+                                  'Customer Address',
+                                  widget.result.customerAddress ?? '',
                                 ),
                                 divider,
                                 getRowWidgetForDetailsBox(
-                                  "Customer Mobile",
+                                  'Customer Mobile',
                                   widget.result.customerMobile,
                                   optionalWidgetsAtLast: SizedBox(
                                     height: 23,
@@ -130,10 +130,10 @@ class _OverdueProductListState extends State<OverdueProductList> {
                                       padding: EdgeInsets.zero,
                                       onPressed: () {
                                         FlutterClipboard.copy(
-                                          widget.result.customerMobile ?? "",
+                                          widget.result.customerMobile ?? '',
                                         ).then((value) {
                                           Fluttertoast.showToast(
-                                              msg: "Number Copied");
+                                              msg: 'Number Copied');
                                         });
                                       },
                                       icon: const Icon(
@@ -145,12 +145,12 @@ class _OverdueProductListState extends State<OverdueProductList> {
                                 ),
                                 divider,
                                 getRowWidgetForDetailsBox(
-                                  "Gate Pass",
+                                  'Gate Pass',
                                   widget.billingDoc.gatePassNo,
                                 ),
                                 divider,
                                 getRowWidgetForDetailsBox(
-                                  "Total Amount",
+                                  'Total Amount',
                                   totalAmount.toStringAsFixed(2),
                                 ),
                               ],
@@ -189,14 +189,14 @@ class _OverdueProductListState extends State<OverdueProductList> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "ID: ${materials[index].matnr}",
+                                        'ID: ${materials[index].matnr}',
                                         style: TextStyle(
                                           color: Colors.grey.shade700,
                                         ),
                                       ),
                                       const Gap(20),
                                       Text(
-                                        "Batch: ${materials[index].batch}",
+                                        'Batch: ${materials[index].batch}',
                                         style: TextStyle(
                                           color: Colors.grey.shade700,
                                         ),
@@ -208,7 +208,7 @@ class _OverdueProductListState extends State<OverdueProductList> {
                                     child: Row(
                                       children: [
                                         Text(
-                                          "Product Name: ",
+                                          'Product Name: ',
                                           style: style,
                                         ),
                                         const Gap(5),
@@ -226,12 +226,12 @@ class _OverdueProductListState extends State<OverdueProductList> {
                                   Row(
                                     children: [
                                       Text(
-                                        "Producer Company: ",
+                                        'Producer Company: ',
                                         style: style,
                                       ),
                                       const Gap(5),
                                       Text(
-                                        "(${materials[index].producerCompany})",
+                                        '(${materials[index].producerCompany})',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyLarge
@@ -248,7 +248,7 @@ class _OverdueProductListState extends State<OverdueProductList> {
                                   Row(
                                     children: [
                                       Text(
-                                        "Quantity : ",
+                                        'Quantity : ',
                                         style: style,
                                       ),
                                       const Gap(5),
@@ -264,7 +264,7 @@ class _OverdueProductListState extends State<OverdueProductList> {
                                       ),
                                       const Spacer(),
                                       Text(
-                                        "Invoice Amount : ",
+                                        'Invoice Amount : ',
                                         style: style,
                                       ),
                                       const Gap(5),

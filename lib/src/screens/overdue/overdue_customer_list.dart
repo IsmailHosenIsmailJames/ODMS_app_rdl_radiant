@@ -28,7 +28,7 @@ class _OverdueCustomerListState extends State<OverdueCustomerList> {
           .copyWith(textScaler: TextScaler.linear(textScalerValue)),
       child: Scaffold(
         appBar: AppBar(
-          title: Text("Overdue"),
+          title: Text('Overdue'),
         ),
         body: Column(
           children: [
@@ -77,7 +77,7 @@ class _OverdueCustomerListState extends State<OverdueCustomerList> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          "No overdue found",
+                          'No overdue found',
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
@@ -91,9 +91,9 @@ class _OverdueCustomerListState extends State<OverdueCustomerList> {
                           padding: const EdgeInsets.only(top: 10),
                           itemCount: results.length,
                           itemBuilder: (context, index) {
-                            String name = results[index].customerName ?? "";
+                            String name = results[index].customerName ?? '';
                             String address =
-                                results[index].customerAddress ?? "";
+                                results[index].customerAddress ?? '';
                             return card(
                               index: index,
                               name: name,
@@ -186,7 +186,7 @@ class _OverdueCustomerListState extends State<OverdueCustomerList> {
               child: Row(
                 children: [
                   Text(
-                    "Due amount:",
+                    'Due amount:',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                   Gap(7),

@@ -5,9 +5,9 @@ class InAppUpdateController extends GetxController {
   RxList<LatestAppInfoAPIModel> latestAppInfoApiModel =
       <LatestAppInfoAPIModel>[].obs;
   List<String> supportedArchitectureList = <String>[
-    "arm64-v8a",
-    "armeabi-v7a",
-    "x86_64",
+    'arm64-v8a',
+    'armeabi-v7a',
+    'x86_64',
   ];
   RxDouble downloadProgress = 0.0.obs;
 }

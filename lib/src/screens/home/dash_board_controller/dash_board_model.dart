@@ -24,16 +24,16 @@ class DashBoardModel {
   String toJson() => json.encode(toMap());
 
   factory DashBoardModel.fromMap(Map<String, dynamic> json) => DashBoardModel(
-        success: json["success"],
-        result: json["result"] == null
+        success: json['success'],
+        result: json['result'] == null
             ? []
             : List<DashBoardResult>.from(
-                json["result"]!.map((x) => DashBoardResult.fromMap(x))),
+                json['result']!.map((x) => DashBoardResult.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
-        "success": success,
-        "result": result == null
+        'success': success,
+        'result': result == null
             ? []
             : List<dynamic>.from(result!.map((x) => x.toMap())),
       };
@@ -100,30 +100,30 @@ class DashBoardResult {
   String toJson() => json.encode(toMap());
 
   factory DashBoardResult.fromMap(Map<String, dynamic> json) => DashBoardResult(
-        deliveryRemaining: json["delivery_remaining"],
-        deliveryDone: json["delivery_done"],
-        cashRemaining: json["cash_remaining"],
-        cashDone: json["cash_done"],
-        sapId: json["sap_id"],
-        totalGatePassAmount: json["total_gate_pass_amount"],
-        totalCollectionAmount: json["total_collection_amount"],
-        totalReturnAmount: json["total_return_amount"],
-        totalReturnQuantity: json["total_return_quantity"],
-        dueAmountTotal: json["due_amount_total"],
-        previousDayDue: json["previous_day_due"],
+        deliveryRemaining: json['delivery_remaining'],
+        deliveryDone: json['delivery_done'],
+        cashRemaining: json['cash_remaining'],
+        cashDone: json['cash_done'],
+        sapId: json['sap_id'],
+        totalGatePassAmount: json['total_gate_pass_amount'],
+        totalCollectionAmount: json['total_collection_amount'],
+        totalReturnAmount: json['total_return_amount'],
+        totalReturnQuantity: json['total_return_quantity'],
+        dueAmountTotal: json['due_amount_total'],
+        previousDayDue: json['previous_day_due'],
       );
 
   Map<String, dynamic> toMap() => {
-        "delivery_remaining": deliveryRemaining,
-        "delivery_done": deliveryDone,
-        "cash_remaining": cashRemaining,
-        "cash_done": cashDone,
-        "sap_id": sapId,
-        "total_gate_pass_amount": totalGatePassAmount,
-        "total_collection_amount": totalCollectionAmount,
-        "total_return_amount": totalReturnAmount,
-        "total_return_quantity": totalReturnQuantity,
-        "due_amount_total": dueAmountTotal,
-        "previous_day_due": previousDayDue,
+        'delivery_remaining': deliveryRemaining,
+        'delivery_done': deliveryDone,
+        'cash_remaining': cashRemaining,
+        'cash_done': cashDone,
+        'sap_id': sapId,
+        'total_gate_pass_amount': totalGatePassAmount,
+        'total_collection_amount': totalCollectionAmount,
+        'total_return_amount': totalReturnAmount,
+        'total_return_quantity': totalReturnQuantity,
+        'due_amount_total': dueAmountTotal,
+        'previous_day_due': previousDayDue,
       };
 }

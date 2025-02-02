@@ -52,28 +52,28 @@ class LatestAppInfoAPIModel {
 
   factory LatestAppInfoAPIModel.fromMap(Map<String, dynamic> json) =>
       LatestAppInfoAPIModel(
-        version: json["version"],
-        buildNumber: json["buildNumber"],
-        forceToUpdate: json["forceToUpdate"],
-        removeCacheOnUpdate: json["removeCacheOnUpdate"],
-        removeDataOnUpdate: json["removeDataOnUpdate"],
-        removeCacheAndDataOnUpdate: json["removeCacheAndDataOnUpdate"],
-        downloadLink: json["downloadLink"],
-        downloadLinkList: json["downloadLinkList"] == null
+        version: json['version'],
+        buildNumber: json['buildNumber'],
+        forceToUpdate: json['forceToUpdate'],
+        removeCacheOnUpdate: json['removeCacheOnUpdate'],
+        removeDataOnUpdate: json['removeDataOnUpdate'],
+        removeCacheAndDataOnUpdate: json['removeCacheAndDataOnUpdate'],
+        downloadLink: json['downloadLink'],
+        downloadLinkList: json['downloadLinkList'] == null
             ? []
-            : List<DownloadLinkList>.from(json["downloadLinkList"]!
+            : List<DownloadLinkList>.from(json['downloadLinkList']!
                 .map((x) => DownloadLinkList.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
-        "version": version,
-        "buildNumber": buildNumber,
-        "forceToUpdate": forceToUpdate,
-        "removeCacheOnUpdate": removeCacheOnUpdate,
-        "removeDataOnUpdate": removeDataOnUpdate,
-        "removeCacheAndDataOnUpdate": removeCacheAndDataOnUpdate,
-        "downloadLink": downloadLink,
-        "downloadLinkList": downloadLinkList == null
+        'version': version,
+        'buildNumber': buildNumber,
+        'forceToUpdate': forceToUpdate,
+        'removeCacheOnUpdate': removeCacheOnUpdate,
+        'removeDataOnUpdate': removeDataOnUpdate,
+        'removeCacheAndDataOnUpdate': removeCacheAndDataOnUpdate,
+        'downloadLink': downloadLink,
+        'downloadLinkList': downloadLinkList == null
             ? []
             : List<dynamic>.from(downloadLinkList!.map((x) => x.toMap())),
       };
@@ -104,12 +104,12 @@ class DownloadLinkList {
 
   factory DownloadLinkList.fromMap(Map<String, dynamic> json) =>
       DownloadLinkList(
-        architecture: json["architecture"],
-        link: json["link"],
+        architecture: json['architecture'],
+        link: json['link'],
       );
 
   Map<String, dynamic> toMap() => {
-        "architecture": architecture,
-        "link": link,
+        'architecture': architecture,
+        'link': link,
       };
 }

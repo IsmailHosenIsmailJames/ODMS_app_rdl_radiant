@@ -19,7 +19,7 @@ Widget getRowWidgetForDetailsBox(String column1, String? column2,
         ),
       ),
       const Text(
-        ":  ",
+        ':  ',
         style: TextStyle(fontSize: 18),
       ),
       Expanded(
@@ -30,7 +30,7 @@ Widget getRowWidgetForDetailsBox(String column1, String? column2,
               ? Row(
                   children: [
                     Text(
-                      column2 ?? "",
+                      column2 ?? '',
                       style: topContainerTextStyleForDetailsBox,
                     ),
                     const Gap(20),
@@ -38,7 +38,7 @@ Widget getRowWidgetForDetailsBox(String column1, String? column2,
                   ],
                 )
               : Text(
-                  column2 ?? "",
+                  column2 ?? '',
                   style: topContainerTextStyleForDetailsBox,
                 ),
         ),

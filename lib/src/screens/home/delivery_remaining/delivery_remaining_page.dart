@@ -121,9 +121,9 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                           padding: const EdgeInsets.only(top: 10),
                           itemCount: results.length,
                           itemBuilder: (context, index) {
-                            String name = results[index].customerName ?? "";
+                            String name = results[index].customerName ?? '';
                             String address =
-                                results[index].customerAddress ?? "";
+                                results[index].customerAddress ?? '';
                             double quantity = 0;
                             double amount = 0;
                             double dueAmount = 0;
@@ -178,7 +178,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const Text(
-                    "Pick a Date",
+                    'Pick a Date',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -191,37 +191,37 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    label: const Text("Filter by"),
+                    label: const Text('Filter by'),
                     onSelected: (value) {
-                      filterBy = value ?? "";
+                      filterBy = value ?? '';
                     },
                     dropdownMenuEntries: const [
                       DropdownMenuEntry(
-                        value: "All",
-                        label: "All",
+                        value: 'All',
+                        label: 'All',
                       ),
                       DropdownMenuEntry(
-                        value: "GatePass",
-                        label: "GatePass",
+                        value: 'GatePass',
+                        label: 'GatePass',
                       ),
                       DropdownMenuEntry(
-                        value: "Return",
-                        label: "Return",
+                        value: 'Return',
+                        label: 'Return',
                       ),
                       DropdownMenuEntry(
-                        value: "Due",
-                        label: "Due",
+                        value: 'Due',
+                        label: 'Due',
                       ),
                       DropdownMenuEntry(
-                        value: "Remaining",
-                        label: "Remaining",
+                        value: 'Remaining',
+                        label: 'Remaining',
                       ),
                     ],
                   ),
                 ],
               )
             : const Text(
-                "Pick a Date",
+                'Pick a Date',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -259,7 +259,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
 
       if (response.statusCode == 200) {
         if (kDebugMode) {
-          print("Got Delivery Remaining List");
+          print('Got Delivery Remaining List');
           print(response.body);
         }
 
@@ -276,9 +276,9 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
       } else {
         if (kDebugMode) {
           print(
-            "Delivery Remaining response error : ${response.statusCode}",
+            'Delivery Remaining response error : ${response.statusCode}',
           );
-          Fluttertoast.showToast(msg: "Something went wrong");
+          Fluttertoast.showToast(msg: 'Something went wrong');
         }
       }
     }
@@ -359,7 +359,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                       color: Colors.grey.shade700,
                     ),
                   ),
-                  Text("Date: $date"),
+                  Text('Date: $date'),
                   const Gap(3),
                 ],
               ),
@@ -372,7 +372,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                   Column(
                     children: [
                       Text(
-                        "Total Invoice",
+                        'Total Invoice',
                         style: style,
                       ),
                       Text(
@@ -384,7 +384,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                   Column(
                     children: [
                       Text(
-                        "Quantity",
+                        'Quantity',
                         style: style,
                       ),
                       Text(
@@ -396,7 +396,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                   Column(
                     children: [
                       Text(
-                        "Amount",
+                        'Amount',
                         style: style,
                       ),
                       Text(
@@ -409,7 +409,7 @@ class _DeliveryRemainingPageState extends State<DeliveryRemainingPage> {
                     Column(
                       children: [
                         Text(
-                          "Due",
+                          'Due',
                           style: style,
                         ),
                         Text(

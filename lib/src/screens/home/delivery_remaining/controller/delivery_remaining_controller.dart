@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:odms/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
 
 class DeliveryRemainingController extends GetxController {
-  RxString pageType = "".obs;
+  RxString pageType = ''.obs;
   late DeliveryRemaining x;
   late Rx<DeliveryRemaining> deliveryRemaining;
 

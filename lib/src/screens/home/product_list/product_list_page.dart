@@ -102,7 +102,7 @@ class _ProductListPageState extends State<ProductListPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            "$pageType Product List",
+            '$pageType Product List',
             style: const TextStyle(fontSize: 20),
           ),
           actions: pageType == pagesState[1]
@@ -119,7 +119,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                 color: Colors.green,
                               ),
                               Gap(10),
-                              Text("Select All"),
+                              Text('Select All'),
                             ],
                           ),
                           onTap: () {
@@ -151,7 +151,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                 color: Colors.deepOrange,
                               ),
                               Gap(10),
-                              Text("Deselect All"),
+                              Text('Deselect All'),
                             ],
                           ),
                           onTap: () {
@@ -215,18 +215,18 @@ class _ProductListPageState extends State<ProductListPage> {
                           child: Column(
                             children: [
                               getRowWidgetForDetailsBox(
-                                "Customer Name",
-                                widget.invoice.customerName ?? "",
+                                'Customer Name',
+                                widget.invoice.customerName ?? '',
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Customer Address",
-                                widget.invoice.customerAddress ?? "",
+                                'Customer Address',
+                                widget.invoice.customerAddress ?? '',
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Customer Mobile",
-                                widget.invoice.customerMobile ?? "",
+                                'Customer Mobile',
+                                widget.invoice.customerMobile ?? '',
                                 optionalWidgetsAtLast: SizedBox(
                                   height: 23,
                                   width: 50,
@@ -234,10 +234,10 @@ class _ProductListPageState extends State<ProductListPage> {
                                     padding: EdgeInsets.zero,
                                     onPressed: () {
                                       FlutterClipboard.copy(
-                                        widget.invoice.customerMobile ?? "",
+                                        widget.invoice.customerMobile ?? '',
                                       ).then((value) {
                                         Fluttertoast.showToast(
-                                            msg: "Number Copied");
+                                            msg: 'Number Copied');
                                       });
                                     },
                                     icon: const Icon(
@@ -249,17 +249,17 @@ class _ProductListPageState extends State<ProductListPage> {
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Gate Pass",
-                                widget.invoice.gatePassNo ?? "",
+                                'Gate Pass',
+                                widget.invoice.gatePassNo ?? '',
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Vehicle No",
-                                widget.invoice.vehicleNo ?? "",
+                                'Vehicle No',
+                                widget.invoice.vehicleNo ?? '',
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Total Amount",
+                                'Total Amount',
                                 totalReceiveAmount
                                     .toPrecision(2)
                                     .toStringAsFixed(2),
@@ -307,14 +307,14 @@ class _ProductListPageState extends State<ProductListPage> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "ID: ${productList[index].matnr}",
+                                      'ID: ${productList[index].matnr}',
                                       style: TextStyle(
                                         color: Colors.grey.shade700,
                                       ),
                                     ),
                                     const Gap(20),
                                     Text(
-                                      "Batch: ${productList[index].batch}",
+                                      'Batch: ${productList[index].batch}',
                                       style: TextStyle(
                                         color: Colors.grey.shade700,
                                       ),
@@ -326,7 +326,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                   child: Row(
                                     children: [
                                       Text(
-                                        "Product Name: ",
+                                        'Product Name: ',
                                         style: style,
                                       ),
                                       const Gap(5),
@@ -348,7 +348,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                 Row(
                                   children: [
                                     Text(
-                                      "Quantity : ",
+                                      'Quantity : ',
                                       style: style,
                                     ),
                                     const Gap(5),
@@ -364,7 +364,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                     ),
                                     const Spacer(),
                                     Text(
-                                      "Invoice Amount : ",
+                                      'Invoice Amount : ',
                                       style: style,
                                     ),
                                     const Gap(5),
@@ -395,14 +395,14 @@ class _ProductListPageState extends State<ProductListPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Delivered Quantity: ${(productList[index].deliveryQuantity ?? 0).toInt().toString()}",
+                                        'Delivered Quantity: ${(productList[index].deliveryQuantity ?? 0).toInt().toString()}',
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                       Text(
-                                        "Delivered Returned: ${(productList[index].returnQuantity ?? 0).toInt().toString()}",
+                                        'Delivered Returned: ${(productList[index].returnQuantity ?? 0).toInt().toString()}',
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
@@ -423,8 +423,8 @@ class _ProductListPageState extends State<ProductListPage> {
                                           autovalidateMode: AutovalidateMode
                                               .onUserInteraction,
                                           validator: (value) {
-                                            value ??= "";
-                                            if (value.isEmpty) value = "0";
+                                            value ??= '';
+                                            if (value.isEmpty) value = '0';
                                             int? recQuantity =
                                                 int.tryParse(value);
                                             if (recQuantity != null) {
@@ -439,12 +439,12 @@ class _ProductListPageState extends State<ProductListPage> {
                                                   (productList[index]
                                                           .quantity ??
                                                       0)) {
-                                                return "Not valid";
+                                                return 'Not valid';
                                               }
 
                                               return null;
                                             } else {
-                                              return "Not a valid digit";
+                                              return 'Not a valid digit';
                                             }
                                           },
                                           onChanged: (value) {
@@ -460,8 +460,8 @@ class _ProductListPageState extends State<ProductListPage> {
                                               receiveTextEditingControllerList[
                                                   index],
                                           decoration: InputDecoration(
-                                            hintText: "Received Qty.",
-                                            labelText: "Received Qty.",
+                                            hintText: 'Received Qty.',
+                                            labelText: 'Received Qty.',
                                             border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(10),
@@ -476,8 +476,8 @@ class _ProductListPageState extends State<ProductListPage> {
                                           autovalidateMode: AutovalidateMode
                                               .onUserInteraction,
                                           validator: (value) {
-                                            value ??= "";
-                                            if (value.isEmpty) value = "0";
+                                            value ??= '';
+                                            if (value.isEmpty) value = '0';
                                             int? retQuantity =
                                                 int.tryParse(value);
                                             if (retQuantity != null) {
@@ -492,12 +492,12 @@ class _ProductListPageState extends State<ProductListPage> {
                                                   (productList[index]
                                                           .quantity ??
                                                       0)) {
-                                                return "Not valid";
+                                                return 'Not valid';
                                               }
 
                                               return null;
                                             } else {
-                                              return "Not a valid digit";
+                                              return 'Not a valid digit';
                                             }
                                           },
                                           onChanged: (value) {
@@ -513,8 +513,8 @@ class _ProductListPageState extends State<ProductListPage> {
                                               returnTextEditingControllerList[
                                                   index],
                                           decoration: InputDecoration(
-                                            hintText: "Return Qty.",
-                                            labelText: "Return Qty.",
+                                            hintText: 'Return Qty.',
+                                            labelText: 'Return Qty.',
                                             border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(10),
@@ -532,13 +532,13 @@ class _ProductListPageState extends State<ProductListPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Rec. Amount :  ${receiveAmountList[index].toPrecision(2).toStringAsFixed(2)}",
+                                        'Rec. Amount :  ${receiveAmountList[index].toPrecision(2).toStringAsFixed(2)}',
                                         style: style.copyWith(
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                       Text(
-                                        "Ret. Amount :  ${returnAmountList[index].toPrecision(2).toStringAsFixed(2)}",
+                                        'Ret. Amount :  ${returnAmountList[index].toPrecision(2).toStringAsFixed(2)}',
                                         style: style.copyWith(
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -552,13 +552,13 @@ class _ProductListPageState extends State<ProductListPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Rec. Amount :  ${(productList[index].deliveryNetVal ?? 0).toPrecision(2).toStringAsFixed(2)}",
+                                        'Rec. Amount :  ${(productList[index].deliveryNetVal ?? 0).toPrecision(2).toStringAsFixed(2)}',
                                         style: style.copyWith(
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                       Text(
-                                        "Ret. Amount :  ${(productList[index].returnNetVal ?? 0).toPrecision(2).toStringAsFixed(2)}",
+                                        'Ret. Amount :  ${(productList[index].returnNetVal ?? 0).toPrecision(2).toStringAsFixed(2)}',
                                         style: style.copyWith(
                                           fontWeight: FontWeight.w500,
                                         ),
@@ -592,7 +592,7 @@ class _ProductListPageState extends State<ProductListPage> {
                           height: 40,
                           child: Center(
                             child: Text(
-                                "Total Rec.: ${totalReceiveAmount.toPrecision(2).toStringAsFixed(2)}",
+                                'Total Rec.: ${totalReceiveAmount.toPrecision(2).toStringAsFixed(2)}',
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -611,7 +611,7 @@ class _ProductListPageState extends State<ProductListPage> {
                           height: 40,
                           child: Center(
                             child: Text(
-                              "Total Ret.: ${totalReturnAmount.toPrecision(2).toStringAsFixed(2)}",
+                              'Total Ret.: ${totalReturnAmount.toPrecision(2).toStringAsFixed(2)}',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -630,7 +630,7 @@ class _ProductListPageState extends State<ProductListPage> {
                           width: MediaQuery.of(context).size.width * 0.45,
                           child: ElevatedButton(
                             onPressed: () {},
-                            child: const Text("Cancel"),
+                            child: const Text('Cancel'),
                           ),
                         ),
                         SizedBox(
@@ -639,7 +639,7 @@ class _ProductListPageState extends State<ProductListPage> {
                             onPressed: () async {
                               await onDeliveredButtonPressed(context);
                             },
-                            child: const Text("Delivered"),
+                            child: const Text('Delivered'),
                           ),
                         ),
                       ],
@@ -657,7 +657,7 @@ class _ProductListPageState extends State<ProductListPage> {
     double perProduct,
     int realQty,
   ) {
-    if (value.isEmpty) value = "0";
+    if (value.isEmpty) value = '0';
     int? retQuantity = int.tryParse(value);
     if (retQuantity != null) {
       int? recQuantity =
@@ -704,7 +704,7 @@ class _ProductListPageState extends State<ProductListPage> {
     double perProduct,
     int realQty,
   ) {
-    if (value.isEmpty) value = "0";
+    if (value.isEmpty) value = '0';
     int? recQuantity = int.tryParse(value);
     if (recQuantity != null) {
       int? retQuantity =
@@ -763,8 +763,8 @@ class _ProductListPageState extends State<ProductListPage> {
           final e = productList[i];
           String returnText = returnTextEditingControllerList[i].text.trim();
           String receiveText = receiveTextEditingControllerList[i].text;
-          if (returnText.isEmpty) returnText = "0";
-          if (receiveText.isEmpty) receiveText = "0";
+          if (returnText.isEmpty) returnText = '0';
+          if (receiveText.isEmpty) receiveText = '0';
           listOfDelivery.add(
             Delivery(
               matnr: e.matnr,
@@ -799,8 +799,8 @@ class _ProductListPageState extends State<ProductListPage> {
           deliveryLongitude: position.longitude.toString(),
           transportType: widget.invoice.transportType,
           deliveryStatus: 'Done',
-          lastStatus: "delivery",
-          type: "delivery",
+          lastStatus: 'delivery',
+          type: 'delivery',
           cashCollection: 0.00,
           cashCollectionLatitude: null,
           cashCollectionLongitude: null,
@@ -810,21 +810,21 @@ class _ProductListPageState extends State<ProductListPage> {
         loadingTextController.loadingText.value =
             'Your Location Accessed\nSending data to server\nPlease wait...';
         final uri = Uri.parse(base + saveDeliveryList);
-        log("Attempting to post ${deliveryData.toJson()}");
+        log('Attempting to post ${deliveryData.toJson()}');
         final response = await http.post(
           uri,
-          headers: {"Content-Type": "application/json"},
+          headers: {'Content-Type': 'application/json'},
           body: deliveryData.toJson(),
         );
-        log("Successfully post : ${response.statusCode}");
-        log("Got response data :${response.body}");
+        log('Successfully post : ${response.statusCode}');
+        log('Got response data :${response.body}');
 
         if (response.statusCode == 200) {
           final decoded = Map<String, dynamic>.from(jsonDecode(response.body));
           if (decoded['success'] == true) {
-            log("Awaiting a 1 second");
+            log('Awaiting a 1 second');
             await Future.delayed(Duration(seconds: 1));
-            log("done awaiting a 1 second");
+            log('done awaiting a 1 second');
 
             try {
               final box = Hive.box('info');
@@ -836,7 +836,7 @@ class _ProductListPageState extends State<ProductListPage> {
 
               if (response.statusCode == 200) {
                 if (kDebugMode) {
-                  print("Got Delivery Remaining List");
+                  print('Got Delivery Remaining List');
                   print(response.body);
                 }
 

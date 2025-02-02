@@ -34,7 +34,7 @@ class _MyMapViewState extends State<MyMapView> {
   void initState() {
     super.initState();
     addMarkers(
-      "customer_location",
+      'customer_location',
       LatLng(widget.lat, widget.lng),
       colorValue: BitmapDescriptor.hueGreen,
       infoWindow: InfoWindow(
@@ -54,11 +54,11 @@ class _MyMapViewState extends State<MyMapView> {
         if (!isDisposed) {
           myLatLng = LatLng(event.latitude, event.longitude);
           addMarkers(
-            "my_location",
+            'my_location',
             myLatLng!,
             colorValue: BitmapDescriptor.hueRed,
             infoWindow: InfoWindow(
-              title: "Your Location",
+              title: 'Your Location',
             ),
           );
         }
@@ -94,7 +94,7 @@ class _MyMapViewState extends State<MyMapView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Maps"),
+        title: const Text('Maps'),
         // actions: const [
         //   Text(
         //     "Lat Lon is not available.\nShowing demo data.",
@@ -134,15 +134,15 @@ class _MyMapViewState extends State<MyMapView> {
               containerVerticalPadding: 0,
               inputDecoration: const InputDecoration(
                   icon: Icon(Icons.search),
-                  hintText: "Search places",
+                  hintText: 'Search places',
                   border: OutlineInputBorder(borderSide: BorderSide.none)),
               textEditingController: googleMapSearchTextField,
               googleAPIKey: googleMapsApiKey,
               debounceTime: 800,
-              countries: const ["bd"],
+              countries: const ['bd'],
               isLatLngRequired: true,
               getPlaceDetailWithLatLng: (Prediction prediction) {
-                log("placeDetails${prediction.lng}, ${prediction.lat}");
+                log('placeDetails${prediction.lng}, ${prediction.lat}');
               },
               itemClick: (Prediction prediction) {
                 googleMapSearchTextField.text = prediction.description!;
@@ -160,7 +160,7 @@ class _MyMapViewState extends State<MyMapView> {
                         width: 7,
                       ),
                       Expanded(
-                        child: Text(prediction.description ?? ""),
+                        child: Text(prediction.description ?? ''),
                       ),
                       Container(
                         height: 25,
@@ -254,7 +254,7 @@ class _MyMapViewState extends State<MyMapView> {
   }
 
   void generatePolylinesFormsPoints(List<LatLng> points) {
-    PolylineId id = const PolylineId("destination");
+    PolylineId id = const PolylineId('destination');
     Polyline polyline = Polyline(
       polylineId: id,
       color: Colors.deepOrange,

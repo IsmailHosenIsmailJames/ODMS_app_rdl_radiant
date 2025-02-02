@@ -16,7 +16,7 @@ class _ReportsPageWebviewState extends State<ReportsPageWebview> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Reports"),
+        title: Text('Reports'),
       ),
       body: InAppWebView(
         onDownloadStartRequest: (controller, downloadStartRequest) async {

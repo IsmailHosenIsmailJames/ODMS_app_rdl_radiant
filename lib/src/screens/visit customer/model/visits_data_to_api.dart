@@ -45,22 +45,22 @@ class VisitsDataToApiModel {
 
   factory VisitsDataToApiModel.fromMap(Map<String, dynamic> json) =>
       VisitsDataToApiModel(
-        daCode: json["da_code"],
-        routeCode: json["route_code"],
-        partner: json["partner"],
-        visitType: json["visit_type"],
-        visitLatitude: json["visit_latitude"],
-        visitLongitude: json["visit_longitude"],
-        comment: json["comment"],
+        daCode: json['da_code'],
+        routeCode: json['route_code'],
+        partner: json['partner'],
+        visitType: json['visit_type'],
+        visitLatitude: json['visit_latitude'],
+        visitLongitude: json['visit_longitude'],
+        comment: json['comment'],
       );
 
   Map<String, dynamic> toMap() => {
-        "da_code": daCode,
-        "route_code": routeCode,
-        "partner": partner,
-        "visit_type": visitType,
-        "visit_latitude": visitLatitude,
-        "visit_longitude": visitLongitude,
-        "comment": comment,
+        'da_code': daCode,
+        'route_code': routeCode,
+        'partner': partner,
+        'visit_type': visitType,
+        'visit_latitude': visitLatitude,
+        'visit_longitude': visitLongitude,
+        'comment': comment,
       };
 }

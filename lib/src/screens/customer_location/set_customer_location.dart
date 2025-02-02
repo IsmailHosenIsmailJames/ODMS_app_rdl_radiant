@@ -46,13 +46,13 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
     String? searchPartner,
   }) async {
     try {
-      String queryParams = "";
+      String queryParams = '';
       if (searchName != null && searchPartner != null) {
-        queryParams += "?name1=$searchName &partner=$searchPartner";
+        queryParams += '?name1=$searchName &partner=$searchPartner';
       } else if (searchName != null) {
-        queryParams += "?name1=$searchName";
+        queryParams += '?name1=$searchName';
       } else if (searchPartner != null) {
-        queryParams += "?partner=$searchPartner";
+        queryParams += '?partner=$searchPartner';
       }
       setState(() {
         isLoadingMore = true;
@@ -96,7 +96,7 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
           .copyWith(textScaler: TextScaler.linear(textScalerValue)),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Set Customer Location"),
+          title: const Text('Set Customer Location'),
         ),
         body: customerListModel == null
             ? Center(
@@ -129,7 +129,7 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
                   const Padding(
                     padding: EdgeInsets.only(top: 50),
                     child: Center(
-                      child: Text("No Data found"),
+                      child: Text('No Data found'),
                     ),
                   ),
                 Expanded(
@@ -161,16 +161,16 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
                         child: Column(
                           children: [
                             getRowWidgetForDetailsBox(
-                                "Partner ID", current.partner),
+                                'Partner ID', current.partner),
                             dividerWhite,
                             getRowWidgetForDetailsBox(
-                                "Pharmacy Name", current.name1),
+                                'Pharmacy Name', current.name1),
                             dividerWhite,
                             getRowWidgetForDetailsBox(
-                                "Customer Name", current.contactPerson),
+                                'Customer Name', current.contactPerson),
                             dividerWhite,
                             getRowWidgetForDetailsBox(
-                              "Customer Mobile",
+                              'Customer Mobile',
                               current.mobileNo,
                               optionalWidgetsAtLast: SizedBox(
                                 height: 23,
@@ -179,10 +179,10 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
                                   padding: EdgeInsets.zero,
                                   onPressed: () {
                                     FlutterClipboard.copy(
-                                      current.mobileNo ?? "",
+                                      current.mobileNo ?? '',
                                     ).then((value) {
                                       Fluttertoast.showToast(
-                                          msg: current.mobileNo ?? "");
+                                          msg: current.mobileNo ?? '');
                                     });
                                   },
                                   icon: const Icon(
@@ -193,32 +193,32 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
                               ),
                             ),
                             dividerWhite,
-                            getRowWidgetForDetailsBox("Street", current.street),
-                            if ((current.street1 ?? "").isNotEmpty)
+                            getRowWidgetForDetailsBox('Street', current.street),
+                            if ((current.street1 ?? '').isNotEmpty)
                               const Divider(
                                 color: Colors.white,
                                 height: 1,
                               ),
-                            if ((current.street1 ?? "").isNotEmpty)
+                            if ((current.street1 ?? '').isNotEmpty)
                               getRowWidgetForDetailsBox(
-                                  "Street 1", current.street1),
-                            if ((current.street2 ?? "").isNotEmpty)
+                                  'Street 1', current.street1),
+                            if ((current.street2 ?? '').isNotEmpty)
                               const Divider(
                                 color: Colors.white,
                                 height: 1,
                               ),
-                            if ((current.street2 ?? "").isNotEmpty)
+                            if ((current.street2 ?? '').isNotEmpty)
                               getRowWidgetForDetailsBox(
-                                  "Street 2", current.street2),
+                                  'Street 2', current.street2),
                             dividerWhite,
                             getRowWidgetForDetailsBox(
-                                "District", current.district),
+                                'District', current.district),
                             dividerWhite,
                             getRowWidgetForDetailsBox(
-                                "Upazila", current.upazilla),
+                                'Upazila', current.upazilla),
                             dividerWhite,
                             getRowWidgetForDetailsBox(
-                                "Trans. P. zone", current.transPZone),
+                                'Trans. P. zone', current.transPZone),
                             const Gap(10),
                             SizedBox(
                               width: MediaQuery.of(context).size.width,
@@ -233,7 +233,7 @@ class _SetCustomerLocationState extends State<SetCustomerLocation> {
                                   Icons.location_on,
                                 ),
                                 label: const Text(
-                                  "Set Location",
+                                  'Set Location',
                                   style: TextStyle(
                                     fontSize: 16,
                                   ),

@@ -49,7 +49,7 @@ Future<void> inAppUpdateAndroid(BuildContext context) async {
           }
         }
         if (apkDownloadLink != null) {
-          log("Update Available on $apkDownloadLink");
+          log('Update Available on $apkDownloadLink');
           await showUpdatePopup(
             context,
             latestAppInfoAPIModel: latestAppInfo,
@@ -58,12 +58,12 @@ Future<void> inAppUpdateAndroid(BuildContext context) async {
           );
         } else {
           // ignore
-          log("No Update");
+          log('No Update');
         }
       } else {
         // ignore
         isUpdateChecked = true;
-        log("No Update");
+        log('No Update');
       }
     }
   } catch (e) {

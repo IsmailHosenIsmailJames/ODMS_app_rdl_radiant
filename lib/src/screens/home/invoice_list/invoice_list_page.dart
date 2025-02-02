@@ -44,19 +44,19 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
   final invoiceListController = Get.put(InvoiceListController());
   final DeliveryRemainingController deliveryRemainingController = Get.find();
   final LoadingTextController loadingTextController = Get.find();
-  late final routeName = invoiceListController.invoiceList[0].routeName ?? "";
-  late final daName = invoiceListController.invoiceList[0].daName ?? "";
-  late final partner = invoiceListController.invoiceList[0].partner ?? "";
+  late final routeName = invoiceListController.invoiceList[0].routeName ?? '';
+  late final daName = invoiceListController.invoiceList[0].daName ?? '';
+  late final partner = invoiceListController.invoiceList[0].partner ?? '';
   late final customerName =
-      invoiceListController.invoiceList[0].customerName ?? "";
+      invoiceListController.invoiceList[0].customerName ?? '';
   late final customerAddress =
-      invoiceListController.invoiceList[0].customerAddress ?? "";
+      invoiceListController.invoiceList[0].customerAddress ?? '';
 
   String pageType = '';
   late double due = invoiceListController.invoiceList[0].previousDueAmount ?? 0;
   late final customerMobile =
-      invoiceListController.invoiceList[0].customerMobile ?? "";
-  late final gatePassNo = invoiceListController.invoiceList[0].gatePassNo ?? "";
+      invoiceListController.invoiceList[0].customerMobile ?? '';
+  late final gatePassNo = invoiceListController.invoiceList[0].gatePassNo ?? '';
 
   @override
   void initState() {
@@ -77,16 +77,16 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
           .copyWith(textScaler: TextScaler.linear(textScalerValue)),
       child: Scaffold(
         appBar: AppBar(
-          title: deliveryRemainingController.pageType.value != ""
-              ? Text("${deliveryRemainingController.pageType.value} Details")
-              : const Text("Delivery Details"),
+          title: deliveryRemainingController.pageType.value != ''
+              ? Text('${deliveryRemainingController.pageType.value} Details')
+              : const Text('Delivery Details'),
         ),
         floatingActionButton: widget.result.customerLatitude != null &&
                 widget.result.customerLongitude != null
             ? FloatingActionButton(
                 onPressed: () async {
-                  log("Lat:${widget.result.customerLatitude} ");
-                  log("Lat:${widget.result.customerLongitude} ");
+                  log('Lat:${widget.result.customerLatitude} ');
+                  log('Lat:${widget.result.customerLongitude} ');
                   Get.to(
                     () => MyMapView(
                       lat: widget.result.customerLatitude,
@@ -141,28 +141,28 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                   child: Column(
                     children: [
                       getRowWidgetForDetailsBox(
-                        "Route Name",
+                        'Route Name',
                         routeName,
                       ),
 
                       divider,
                       getRowWidgetForDetailsBox(
-                        "Da Name",
+                        'Da Name',
                         daName,
                       ),
                       divider,
                       getRowWidgetForDetailsBox(
-                        "Partner ID",
+                        'Partner ID',
                         partner,
                       ),
                       divider,
                       getRowWidgetForDetailsBox(
-                        "Customer Name",
+                        'Customer Name',
                         customerName,
                       ),
                       divider,
                       getRowWidgetForDetailsBox(
-                        "Customer Address",
+                        'Customer Address',
                         customerAddress,
                       ),
                       // divider,
@@ -177,7 +177,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                       // ),
                       divider,
                       getRowWidgetForDetailsBox(
-                        "Customer Mobile",
+                        'Customer Mobile',
                         customerMobile,
                         optionalWidgetsAtLast: SizedBox(
                           height: 23,
@@ -188,7 +188,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                               FlutterClipboard.copy(
                                 customerMobile,
                               ).then((value) {
-                                Fluttertoast.showToast(msg: "Number Copied");
+                                Fluttertoast.showToast(msg: 'Number Copied');
                               });
                             },
                             icon: const Icon(
@@ -200,12 +200,12 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                       ),
                       divider,
                       getRowWidgetForDetailsBox(
-                        "Gate Pass",
+                        'Gate Pass',
                         gatePassNo,
                       ),
                       divider,
                       getRowWidgetForDetailsBox(
-                        "Total Amount",
+                        'Total Amount',
                         calculateTotalAmount()
                             .toPrecision(2)
                             .toStringAsFixed(2),
@@ -213,7 +213,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                       divider,
 
                       getRowWidgetForDetailsBox(
-                        "Previous Due",
+                        'Previous Due',
                         due.toStringAsFixed(2),
                         optionalWidgetsAtLast: Row(
                           children: [
@@ -227,7 +227,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                         onPreviousDueCollectButtonPressed(
                                             context);
                                       },
-                                child: const Text("Collect"),
+                                child: const Text('Collect'),
                               ),
                             ),
                           ],
@@ -322,7 +322,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       const Text(
-                                        "Invoice No:",
+                                        'Invoice No:',
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -342,7 +342,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                       ),
                                       const Spacer(),
                                       Text(
-                                        invoiceList[index].deliveryStatus ?? "",
+                                        invoiceList[index].deliveryStatus ?? '',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyLarge
@@ -377,21 +377,21 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                         SizedBox(
                                           width: width / 3.5,
                                           child: Text(
-                                            "Type",
+                                            'Type',
                                             style: style,
                                           ),
                                         ),
                                         SizedBox(
                                           width: width / 3.5,
                                           child: Text(
-                                            "Quantity",
+                                            'Quantity',
                                             style: style,
                                           ),
                                         ),
                                         SizedBox(
                                           width: width / 3.5,
                                           child: Text(
-                                            "Amount",
+                                            'Amount',
                                             style: style,
                                           ),
                                         ),
@@ -417,7 +417,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                         SizedBox(
                                           width: width / 3.5,
                                           child: Text(
-                                            "Invoice",
+                                            'Invoice',
                                             style: style.copyWith(
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -466,7 +466,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                           SizedBox(
                                             width: width / 3.5,
                                             child: Text(
-                                              "Delivered",
+                                              'Delivered',
                                               style: style.copyWith(
                                                 fontWeight: FontWeight.w500,
                                               ),
@@ -510,7 +510,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
                                           SizedBox(
                                             width: width / 3.5,
                                             child: Text(
-                                              "Returned",
+                                              'Returned',
                                               style: style.copyWith(
                                                 fontWeight: FontWeight.w500,
                                               ),
@@ -571,7 +571,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
 
     final response = await get(url);
 
-    log("Got Overdue List");
+    log('Got Overdue List');
     log(response.statusCode.toString());
     log(response.body);
 
@@ -625,7 +625,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
           final response = await get(url);
 
           if (response.statusCode == 200) {
-            log("Got Delivery Remaining List");
+            log('Got Delivery Remaining List');
             log(response.body);
 
             final controller = Get.put(
@@ -641,7 +641,7 @@ class _InvoiceListPageState extends State<InvoiceListPage> {
             controller.constDeliveryRemaining.value.result ??= [];
           }
         } catch (e) {
-          log("Failed when try to reload the data");
+          log('Failed when try to reload the data');
         }
       }
 

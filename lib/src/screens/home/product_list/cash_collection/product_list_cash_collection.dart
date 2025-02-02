@@ -93,7 +93,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-            "Product List",
+            'Product List',
           ),
           actions: pageType == pagesState[1]
               ? null
@@ -108,7 +108,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               color: Colors.deepOrange,
                             ),
                             Gap(10),
-                            Text("Deselect All"),
+                            Text('Deselect All'),
                           ],
                         ),
                         onTap: () {
@@ -155,18 +155,18 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                           child: Column(
                             children: [
                               getRowWidgetForDetailsBox(
-                                "Customer Name",
-                                widget.invoice.customerName ?? "",
+                                'Customer Name',
+                                widget.invoice.customerName ?? '',
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Customer Address",
-                                widget.invoice.customerAddress ?? "",
+                                'Customer Address',
+                                widget.invoice.customerAddress ?? '',
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Customer Mobile",
-                                widget.invoice.customerMobile ?? "",
+                                'Customer Mobile',
+                                widget.invoice.customerMobile ?? '',
                                 optionalWidgetsAtLast: SizedBox(
                                   height: 23,
                                   width: 50,
@@ -174,10 +174,10 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                     padding: EdgeInsets.zero,
                                     onPressed: () {
                                       FlutterClipboard.copy(
-                                        widget.invoice.customerMobile ?? "",
+                                        widget.invoice.customerMobile ?? '',
                                       ).then((value) {
                                         Fluttertoast.showToast(
-                                            msg: "Number Copied");
+                                            msg: 'Number Copied');
                                       });
                                     },
                                     icon: const Icon(
@@ -189,31 +189,31 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Gate Pass",
-                                widget.invoice.gatePassNo ?? "",
+                                'Gate Pass',
+                                widget.invoice.gatePassNo ?? '',
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Vehicle No",
-                                widget.invoice.vehicleNo ?? "",
+                                'Vehicle No',
+                                widget.invoice.vehicleNo ?? '',
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Total Amount",
+                                'Total Amount',
                                 double.parse(widget.totalAmount)
                                     .toPrecision(2)
                                     .toStringAsFixed(2),
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Return Amount",
+                                'Return Amount',
                                 totalReturnAmount
                                     .toPrecision(2)
                                     .toStringAsFixed(2),
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "To pay",
+                                'To pay',
                                 calculateFloatValueWithHighPrecision(
                                   double.parse(widget.totalAmount),
                                   totalReturnAmount,
@@ -221,7 +221,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               ),
                               divider,
                               getRowWidgetForDetailsBox(
-                                "Due Amount",
+                                'Due Amount',
                                 calculateFloatValueWithHighPrecision(
                                         dueAmount, null)
                                     .toPrecision(2)
@@ -243,7 +243,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                       deliveryRemainingController.pageType.value ==
                           pagesState[3]))
                     const Text(
-                      "Received amount",
+                      'Received amount',
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
@@ -262,7 +262,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                       keyboardType: TextInputType.number,
                       controller: receivedAmountController,
                       validator: (value) {
-                        value ??= "";
+                        value ??= '';
                         final x = double.tryParse(value);
                         if (x != null) {
                           final totalAmount =
@@ -275,7 +275,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                           }
                           return null;
                         } else {
-                          return "Not a valid number";
+                          return 'Not a valid number';
                         }
                       },
                       onChanged: (_) {
@@ -283,8 +283,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                       },
                       autovalidateMode: AutovalidateMode.always,
                       decoration: InputDecoration(
-                        hintText: "Receive amount",
-                        labelText: "Receive amount",
+                        hintText: 'Receive amount',
+                        labelText: 'Receive amount',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -327,14 +327,14 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "ID: ${productList[index].matnr}",
+                                      'ID: ${productList[index].matnr}',
                                       style: TextStyle(
                                         color: Colors.grey.shade700,
                                       ),
                                     ),
                                     const Gap(20),
                                     Text(
-                                      "Batch: ${productList[index].batch}",
+                                      'Batch: ${productList[index].batch}',
                                       style: TextStyle(
                                         color: Colors.grey.shade700,
                                       ),
@@ -346,7 +346,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                   child: Row(
                                     children: [
                                       Text(
-                                        "Product Name: ",
+                                        'Product Name: ',
                                         style: style,
                                       ),
                                       const Gap(5),
@@ -368,7 +368,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                 Row(
                                   children: [
                                     Text(
-                                      "Quantity : ",
+                                      'Quantity : ',
                                       style: style,
                                     ),
                                     const Gap(5),
@@ -383,7 +383,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                     ),
                                     const Spacer(),
                                     Text(
-                                      "Invoice Amount : ",
+                                      'Invoice Amount : ',
                                       style: style,
                                     ),
                                     const Gap(5),
@@ -414,7 +414,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                   Row(
                                     children: [
                                       Text(
-                                        "Return : ",
+                                        'Return : ',
                                         style:
                                             style.copyWith(color: Colors.red),
                                       ),
@@ -453,24 +453,24 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                     autovalidateMode:
                                         AutovalidateMode.onUserInteraction,
                                     validator: (value) {
-                                      if ((value ?? "") == "") return null;
+                                      if ((value ?? '') == '') return null;
                                       int? retQuantity =
-                                          int.tryParse(value ?? "");
+                                          int.tryParse(value ?? '');
                                       if (retQuantity != null) {
                                         if (retQuantity >
                                             (productList[index]
                                                     .deliveryQuantity ??
                                                 0)) {
-                                          return "Not valid";
+                                          return 'Not valid';
                                         }
 
                                         return null;
                                       } else {
-                                        return "Not a valid digit";
+                                        return 'Not a valid digit';
                                       }
                                     },
                                     onChanged: (value) {
-                                      if (value.isEmpty) value = "0";
+                                      if (value.isEmpty) value = '0';
                                       int? retQuantity = int.tryParse(value);
                                       if (retQuantity != null) {
                                         int? recQuantity = int.tryParse(
@@ -532,8 +532,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                     controller:
                                         returnTextEditingControllerList[index],
                                     decoration: InputDecoration(
-                                      hintText: "Return Qty.",
-                                      labelText: "Return Qty.",
+                                      hintText: 'Return Qty.',
+                                      labelText: 'Return Qty.',
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
@@ -544,7 +544,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                         .pageType.value ==
                                     pagesState[4])
                                   Text(
-                                    "Return Qty. : ${(productList[index].quantity ?? 0).toInt()}",
+                                    'Return Qty. : ${(productList[index].quantity ?? 0).toInt()}',
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -654,7 +654,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                           width: MediaQuery.of(context).size.width * 0.45,
                           child: ElevatedButton(
                             onPressed: () {},
-                            child: const Text("Cancel"),
+                            child: const Text('Cancel'),
                           ),
                         ),
                         SizedBox(
@@ -664,7 +664,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                               await onCashCollectedButtonPressed(
                                   context, totalReturnAmount);
                             },
-                            child: const Text("Cash Collected"),
+                            child: const Text('Cash Collected'),
                           ),
                         ),
                       ],
@@ -715,7 +715,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
     }
     if (isValidate == false) {
       Fluttertoast.showToast(
-        msg: "Received amount is not valid",
+        msg: 'Received amount is not valid',
       );
     }
 
@@ -734,7 +734,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
         for (int i = 0; i < productList.length; i++) {
           final e = productList[i];
           String returnText = returnTextEditingControllerList[i].text.trim();
-          if (returnText.isEmpty) returnText = "0";
+          if (returnText.isEmpty) returnText = '0';
           // final unitVat = (e.vat ?? 0) / (e.quantity!);
           final returnQty =
               int.parse(returnText) + (e.returnQuantity ?? 0).toInt();
@@ -747,8 +747,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
         }
         final toSendCashDataModel = ToSendCashDataModel(
           billingDocNo: widget.invoice.billingDocNo,
-          lastStatus: "cash_collection",
-          type: "cash_collection",
+          lastStatus: 'cash_collection',
+          type: 'cash_collection',
           billingDate: widget.invoice.billingDate == null
               ? null
               : DateFormat('yyyy-MM-dd').format(widget.invoice.billingDate!),
@@ -759,12 +759,12 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
           cashCollection: double.tryParse(receivedAmountController.text),
           cashCollectionLatitude: position.latitude.toString(),
           cashCollectionLongitude: position.longitude.toString(),
-          cashCollectionStatus: "Done",
+          cashCollectionStatus: 'Done',
           delivers: listOfDeliveryCash,
         );
 
         if (kDebugMode) {
-          log("Sending to api: ");
+          log('Sending to api: ');
           log(toSendCashDataModel.toJson());
         }
         loadingTextController.loadingText.value =
@@ -773,12 +773,12 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
         final uri = Uri.parse("$base$cashCollectionSave/${widget.invoice.id}");
         final response = await http.put(
           uri,
-          headers: {"Content-Type": "application/json"},
+          headers: {'Content-Type': 'application/json'},
           body: toSendCashDataModel.toJson(),
         );
         if (kDebugMode) {
           log("$base$cashCollectionSave/${widget.invoice.id}");
-          log("received form api: ");
+          log('received form api: ');
           log(response.body);
         }
         if (kDebugMode) {
@@ -788,9 +788,9 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
         if (response.statusCode == 200) {
           final decoded = Map<String, dynamic>.from(jsonDecode(response.body));
           if (decoded['success'] == true) {
-            log("Awaiting a 1 second");
+            log('Awaiting a 1 second');
             await Future.delayed(Duration(seconds: 1));
-            log("done awaiting a 1 second");
+            log('done awaiting a 1 second');
             try {
               final box = Hive.box('info');
               final url = Uri.parse(
@@ -801,7 +801,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
 
               if (response.statusCode == 200) {
                 if (kDebugMode) {
-                  print("Got Delivery Remaining List");
+                  print('Got Delivery Remaining List');
                   print(response.body);
                 }
 
@@ -855,7 +855,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
 
   void calculateDependOnReceivedAmount() {
     String receivedText = receivedAmountController.text;
-    if (receivedText.isEmpty) receivedText = "0";
+    if (receivedText.isEmpty) receivedText = '0';
     double? receivedAmount = double.tryParse(receivedText);
     if (receivedAmount != null) {
       double totalAmountPrevious = double.parse(widget.totalAmount);

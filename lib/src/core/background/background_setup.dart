@@ -19,7 +19,7 @@ Future<void> requestPermissions() async {
 
 Future<void> initService() async {
   final SharedPreferences info = await SharedPreferences.getInstance();
-  final timeInterval = info.getInt("time_interval");
+  final timeInterval = info.getInt('time_interval');
   // final minimumDistance = info.getInt("minimum_distance");
 
   FlutterForegroundTask.init(

@@ -71,10 +71,10 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
   Future<void> getLocationDetailsFormLatLon(LatLng latlng) async {
     destination = latlng;
     markers['destination'] = Marker(
-        markerId: const MarkerId("destination"),
+        markerId: const MarkerId('destination'),
         position: latlng,
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-        infoWindow: const InfoWindow(title: "Destination"));
+        infoWindow: const InfoWindow(title: 'Destination'));
 
     setState(() {
       destination = LatLng(latlng.latitude, latlng.longitude);
@@ -123,7 +123,7 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Start Journey"),
+        title: const Text('Start Journey'),
       ),
       body: Stack(
         children: [
@@ -135,7 +135,7 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
                     children: [
                       LoadingAnimationWidget.threeRotatingDots(
                           color: Colors.blue.shade900, size: 30),
-                      const Text("Loading your location..."),
+                      const Text('Loading your location...'),
                     ],
                   ),
                 )
@@ -162,7 +162,7 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
                         'My Location',
                         LatLng(initMyLocation!.latitude,
                             initMyLocation!.longitude),
-                        infoWindow: const InfoWindow(title: "My Location"),
+                        infoWindow: const InfoWindow(title: 'My Location'),
                       );
                     }
                   },
@@ -185,11 +185,11 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
               inputDecoration: const InputDecoration(
                   contentPadding: EdgeInsets.zero,
                   icon: Icon(Icons.search),
-                  hintText: "Search places",
+                  hintText: 'Search places',
                   border: OutlineInputBorder(borderSide: BorderSide.none)),
               textEditingController: googleMapSearchTextField,
               googleAPIKey: googleMapsApiKey,
-              countries: const ["bd"],
+              countries: const ['bd'],
               isLatLngRequired: true,
               getPlaceDetailWithLatLng: (Prediction prediction) async {
                 focusNode.unfocus();
@@ -218,7 +218,7 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
                         width: 7,
                       ),
                       Expanded(
-                        child: Text(prediction.description ?? ""),
+                        child: Text(prediction.description ?? ''),
                       ),
                       Container(
                         height: 25,
@@ -273,7 +273,7 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
                           fontSize: 14, fontWeight: FontWeight.w500),
                     ),
                     Text(
-                      "$subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country",
+                      '$subLocality, $locality, $subAdministrativeArea, $administrativeArea, $country',
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -282,7 +282,7 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
                     Row(
                       children: [
                         const Text(
-                          "Lat: ",
+                          'Lat: ',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -291,7 +291,7 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
                         Text(destination!.latitude.toStringAsFixed(4)),
                         const Gap(15),
                         const Text(
-                          "Lon: ",
+                          'Lon: ',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -303,7 +303,7 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
                     Row(
                       children: [
                         const Text(
-                          "Distance: ",
+                          'Distance: ',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -311,7 +311,7 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
                         ),
                         const Gap(2),
                         Text(
-                          "${(distance / 1000).toStringAsFixed(2)} km",
+                          '${(distance / 1000).toStringAsFixed(2)} km',
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
@@ -327,7 +327,7 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
                           await launchUrl(Uri.parse(
                               'google.navigation:q=${destination!.latitude}, ${destination!.latitude}&key=$googleMapsApiKey'));
                         },
-                        child: const Text("Start Journey"),
+                        child: const Text('Start Journey'),
                       ),
                     ),
                   ],
@@ -352,7 +352,7 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
     double distance = Geolocator.distanceBetween(
             pos1.latitude, pos1.longitude, pos2.latitude, pos2.longitude) /
         1000;
-    log("distance: $distance");
+    log('distance: $distance');
 
     if (distance > 100) {
       return 11;
@@ -410,7 +410,7 @@ class _MyMapViewState extends State<SelectJourneyEndLocation> {
   }
 
   void generatePolylinesFormsPoints(List<LatLng> points) {
-    PolylineId id = const PolylineId("destination");
+    PolylineId id = const PolylineId('destination');
     Polyline polyline = Polyline(
       polylineId: id,
       color: Colors.deepOrange,

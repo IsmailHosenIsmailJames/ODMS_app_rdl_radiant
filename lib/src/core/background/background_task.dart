@@ -31,9 +31,9 @@ class MyTaskHandler extends TaskHandler {
         .listen(
       (event) async {
         if (event.type != activity_recognition.ActivityType.UNKNOWN) {
-          log("Activity: ${event.type.name}");
+          log('Activity: ${event.type.name}');
           final SharedPreferences info = await SharedPreferences.getInstance();
-          await info.setString("last_activity", event.type.name);
+          await info.setString('last_activity', event.type.name);
         }
       },
     );
@@ -42,20 +42,20 @@ class MyTaskHandler extends TaskHandler {
   // Called every [ForegroundTaskOptions.interval] milliseconds.
   @override
   Future<void> onRepeatEvent(DateTime timestamp) async {
-    log("count: $count");
+    log('count: $count');
     final SharedPreferences info = await SharedPreferences.getInstance();
-    final minimumDistance = info.getInt("minimum_distance");
-    final lastActivity = info.getString("last_activity");
-    double? lastPositionLat = info.getDouble("last_position_lat");
-    double? lastPositionLon = info.getDouble("last_position_lon");
+    final minimumDistance = info.getInt('minimum_distance');
+    final lastActivity = info.getString('last_activity');
+    double? lastPositionLat = info.getDouble('last_position_lat');
+    double? lastPositionLon = info.getDouble('last_position_lon');
     if (SocketManager().isConnected()) {
       await Geolocator.getCurrentPosition().then(
         (position) async {
           if (lastPositionLon == null || lastPositionLat == null) {
             lastPositionLon = position.longitude;
             lastPositionLat = position.latitude;
-            await info.setDouble("last_position_lat", position.latitude);
-            await info.setDouble("last_position_lon", position.longitude);
+            await info.setDouble('last_position_lat', position.latitude);
+            await info.setDouble('last_position_lon', position.longitude);
           }
           double distance = Geolocator.distanceBetween(
             lastPositionLat ?? position.latitude,
@@ -64,8 +64,8 @@ class MyTaskHandler extends TaskHandler {
             position.longitude,
           );
           if (distance > (minimumDistance ?? 5)) {
-            await info.setDouble("last_position_lat", position.latitude);
-            await info.setDouble("last_position_lon", position.longitude);
+            await info.setDouble('last_position_lat', position.latitude);
+            await info.setDouble('last_position_lon', position.longitude);
             count++;
             await SocketManager().sendLocationViaSocket(
               latitude: position.latitude,
@@ -76,10 +76,10 @@ class MyTaskHandler extends TaskHandler {
               speed: position.speed,
               activity: lastActivity,
             );
-            log("Send and saved as distance is $distance > $minimumDistance");
+            log('Send and saved as distance is $distance > $minimumDistance');
           } else {
             // ignore
-            log("Ignored as distance is $distance < $minimumDistance");
+            log('Ignored as distance is $distance < $minimumDistance');
           }
         },
       );

@@ -25,15 +25,15 @@ class OverdueResponseModel {
 
   factory OverdueResponseModel.fromMap(Map<String, dynamic> json) =>
       OverdueResponseModel(
-        success: json["success"],
-        result: json["result"] == null
+        success: json['success'],
+        result: json['result'] == null
             ? null
-            : List<Result>.from(json["result"].map((x) => Result.fromMap(x))),
+            : List<Result>.from(json['result'].map((x) => Result.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
-        "success": success,
-        "result": result == null
+        'success': success,
+        'result': result == null
             ? null
             : List<dynamic>.from(result!.map((x) => x.toMap())),
       };
@@ -90,28 +90,28 @@ class Result {
   String toJson() => json.encode(toMap());
 
   factory Result.fromMap(Map<String, dynamic> json) => Result(
-        partnerId: json["partner_id"],
-        customerName: json["customer_name"],
-        customerAddress: json["customer_address"],
-        customerLatitude: json["customer_latitude"],
-        customerLongitude: json["customer_longitude"],
-        customerMobile: json["customer_mobile"],
-        daFullName: json["da_full_name"],
-        daMobileNo: json["da_mobile_no"],
+        partnerId: json['partner_id'],
+        customerName: json['customer_name'],
+        customerAddress: json['customer_address'],
+        customerLatitude: json['customer_latitude'],
+        customerLongitude: json['customer_longitude'],
+        customerMobile: json['customer_mobile'],
+        daFullName: json['da_full_name'],
+        daMobileNo: json['da_mobile_no'],
         billingDocs: List<BillingDoc>.from(
-            json["billing_docs"].map((x) => BillingDoc.fromMap(x))),
+            json['billing_docs'].map((x) => BillingDoc.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
-        "partner_id": partnerId,
-        "customer_name": customerName,
-        "customer_address": customerAddress,
-        "customer_latitude": customerLatitude,
-        "customer_longitude": customerLongitude,
-        "customer_mobile": customerMobile,
-        "da_full_name": daFullName,
-        "da_mobile_no": daMobileNo,
-        "billing_docs": billingDocs == null
+        'partner_id': partnerId,
+        'customer_name': customerName,
+        'customer_address': customerAddress,
+        'customer_latitude': customerLatitude,
+        'customer_longitude': customerLongitude,
+        'customer_mobile': customerMobile,
+        'da_full_name': daFullName,
+        'da_mobile_no': daMobileNo,
+        'billing_docs': billingDocs == null
             ? null
             : List<dynamic>.from(billingDocs!.map((x) => x.toMap())),
       };
@@ -165,27 +165,27 @@ class BillingDoc {
   String toJson() => json.encode(toMap());
 
   factory BillingDoc.fromMap(Map<String, dynamic> json) => BillingDoc(
-        billingDocNo: json["billing_doc_no"],
-        billingDate: DateTime.parse(json["billing_date"]),
-        gatePassNo: json["gate_pass_no"],
-        daCode: json["da_code"],
-        dueAmount: json["due_amount"],
-        netVal: json["net_val"],
-        returnAmount: json["return_amount"],
+        billingDocNo: json['billing_doc_no'],
+        billingDate: DateTime.parse(json['billing_date']),
+        gatePassNo: json['gate_pass_no'],
+        daCode: json['da_code'],
+        dueAmount: json['due_amount'],
+        netVal: json['net_val'],
+        returnAmount: json['return_amount'],
         materials: List<MaterialModel>.from(
-            json["materials"].map((x) => MaterialModel.fromMap(x))),
+            json['materials'].map((x) => MaterialModel.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
-        "billing_doc_no": billingDocNo,
-        "billing_date":
+        'billing_doc_no': billingDocNo,
+        'billing_date':
             "${billingDate.year.toString().padLeft(4, '0')}-${billingDate.month.toString().padLeft(2, '0')}-${billingDate.day.toString().padLeft(2, '0')}",
-        "gate_pass_no": gatePassNo,
-        "da_code": daCode,
-        "due_amount": dueAmount,
-        "net_val": netVal,
-        "return_amount": returnAmount,
-        "materials": materials == null
+        'gate_pass_no': gatePassNo,
+        'da_code': daCode,
+        'due_amount': dueAmount,
+        'net_val': netVal,
+        'return_amount': returnAmount,
+        'materials': materials == null
             ? null
             : List<dynamic>.from(materials!.map((x) => x.toMap())),
       };
@@ -239,24 +239,24 @@ class MaterialModel {
   String toJson() => json.encode(toMap());
 
   factory MaterialModel.fromMap(Map<String, dynamic> json) => MaterialModel(
-        matnr: json["matnr"],
-        materialName: json["material_name"],
-        producerCompany: json["producer_company"],
-        batch: json["batch"],
-        deliveryQuantity: json["delivery_quantity"],
-        deliveryNetVal: json["delivery_net_val"],
-        returnQuantity: json["return_quantity"],
-        returnNetVal: json["return_net_val"]?.toDouble(),
+        matnr: json['matnr'],
+        materialName: json['material_name'],
+        producerCompany: json['producer_company'],
+        batch: json['batch'],
+        deliveryQuantity: json['delivery_quantity'],
+        deliveryNetVal: json['delivery_net_val'],
+        returnQuantity: json['return_quantity'],
+        returnNetVal: json['return_net_val']?.toDouble(),
       );
 
   Map<String, dynamic> toMap() => {
-        "matnr": matnr,
-        "material_name": materialName,
-        "producer_company": producerCompany,
-        "batch": batch,
-        "delivery_quantity": deliveryQuantity,
-        "delivery_net_val": deliveryNetVal,
-        "return_quantity": returnQuantity,
-        "return_net_val": returnNetVal,
+        'matnr': matnr,
+        'material_name': materialName,
+        'producer_company': producerCompany,
+        'batch': batch,
+        'delivery_quantity': deliveryQuantity,
+        'delivery_net_val': deliveryNetVal,
+        'return_quantity': returnQuantity,
+        'return_net_val': returnNetVal,
       };
 }

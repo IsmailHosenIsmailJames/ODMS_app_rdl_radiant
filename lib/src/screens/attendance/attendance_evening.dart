@@ -170,7 +170,7 @@ class _AttendanceEveningState extends State<AttendanceEvening> {
                 ),
                 if (isEveningDoneToday)
                   Text(
-                    "Your attendance for today is already done",
+                    'Your attendance for today is already done',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

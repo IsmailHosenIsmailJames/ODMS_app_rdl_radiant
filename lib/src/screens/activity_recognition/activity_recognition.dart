@@ -93,7 +93,7 @@ class _ActivityRecognitionState extends State<ActivityRecognition> {
       ),
       body: isPermissionGranted == true
           ? listOfActivityWithTime.isEmpty
-              ? Center(child: Text("Waiting for Activity Detected...."))
+              ? Center(child: Text('Waiting for Activity Detected....'))
               : ListView.builder(
                   padding: EdgeInsets.all(10),
                   itemCount: listOfActivityWithTime.length,
@@ -136,7 +136,7 @@ class _ActivityRecognitionState extends State<ActivityRecognition> {
                               iconsOfActivity[current.activity.type]
                                       ?.name
                                       .toUpperCase() ??
-                                  "UNKNOWN",
+                                  'UNKNOWN',
                               style: Theme.of(context).textTheme.titleMedium,
                             ),
                             Spacer(),
@@ -156,21 +156,21 @@ class _ActivityRecognitionState extends State<ActivityRecognition> {
                   ),
                 )
               : Center(
-                  child: Text("Permission is Not granted"),
+                  child: Text('Permission is Not granted'),
                 ),
     );
   }
 
   Map<ActivityType, ActivityIconWithName> iconsOfActivity = {
     ActivityType.IN_VEHICLE:
-        ActivityIconWithName(Icons.directions_car, "In Vehicle"),
+        ActivityIconWithName(Icons.directions_car, 'In Vehicle'),
     ActivityType.ON_BICYCLE:
-        ActivityIconWithName(Icons.directions_bike, "On Bicycle"),
-    ActivityType.RUNNING: ActivityIconWithName(Icons.directions_run, "Running"),
-    ActivityType.STILL: ActivityIconWithName(Icons.person, "Still"),
+        ActivityIconWithName(Icons.directions_bike, 'On Bicycle'),
+    ActivityType.RUNNING: ActivityIconWithName(Icons.directions_run, 'Running'),
+    ActivityType.STILL: ActivityIconWithName(Icons.person, 'Still'),
     ActivityType.WALKING:
-        ActivityIconWithName(Icons.directions_walk, "Walking"),
-    ActivityType.UNKNOWN: ActivityIconWithName(Icons.device_unknown, "Unknown"),
+        ActivityIconWithName(Icons.directions_walk, 'Walking'),
+    ActivityType.UNKNOWN: ActivityIconWithName(Icons.device_unknown, 'Unknown'),
   };
 
   @override

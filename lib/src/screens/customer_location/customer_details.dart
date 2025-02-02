@@ -70,7 +70,7 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
           .copyWith(textScaler: TextScaler.linear(textScalerValue)),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Customer Details"),
+          title: const Text('Customer Details'),
         ),
         body: customerDetailsModel == null || isUnsuccessful
             ? Center(
@@ -92,16 +92,16 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                     child: Column(
                       children: [
                         getRowWidgetForDetailsBox(
-                            "Partner ID", customerDetailsModel?.partner),
+                            'Partner ID', customerDetailsModel?.partner),
                         dividerWhite,
                         getRowWidgetForDetailsBox(
-                            "Pharmacy Name", customerDetailsModel?.name1),
+                            'Pharmacy Name', customerDetailsModel?.name1),
                         dividerWhite,
-                        getRowWidgetForDetailsBox("Customer Name",
+                        getRowWidgetForDetailsBox('Customer Name',
                             customerDetailsModel?.contactPerson),
                         dividerWhite,
                         getRowWidgetForDetailsBox(
-                          "Customer Mobile",
+                          'Customer Mobile',
                           customerDetailsModel?.mobileNo,
                           optionalWidgetsAtLast: SizedBox(
                             height: 23,
@@ -110,11 +110,11 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                               padding: EdgeInsets.zero,
                               onPressed: () {
                                 FlutterClipboard.copy(
-                                  customerDetailsModel?.mobileNo ?? "",
+                                  customerDetailsModel?.mobileNo ?? '',
                                 ).then((value) {
                                   Fluttertoast.showToast(
                                       msg:
-                                          customerDetailsModel?.mobileNo ?? "");
+                                          customerDetailsModel?.mobileNo ?? '');
                                 });
                               },
                               icon: const Icon(
@@ -126,42 +126,42 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                         ),
                         dividerWhite,
                         getRowWidgetForDetailsBox(
-                            "Street", customerDetailsModel?.street),
-                        if ((customerDetailsModel?.street1 ?? "").isNotEmpty)
+                            'Street', customerDetailsModel?.street),
+                        if ((customerDetailsModel?.street1 ?? '').isNotEmpty)
                           const Divider(
                             color: Colors.white,
                             height: 1,
                           ),
-                        if ((customerDetailsModel?.street1 ?? "").isNotEmpty)
+                        if ((customerDetailsModel?.street1 ?? '').isNotEmpty)
                           getRowWidgetForDetailsBox(
-                              "Street 1", customerDetailsModel?.street1),
-                        if ((customerDetailsModel?.street2 ?? "").isNotEmpty)
+                              'Street 1', customerDetailsModel?.street1),
+                        if ((customerDetailsModel?.street2 ?? '').isNotEmpty)
                           const Divider(
                             color: Colors.white,
                             height: 1,
                           ),
-                        if ((customerDetailsModel?.street2 ?? "").isNotEmpty)
+                        if ((customerDetailsModel?.street2 ?? '').isNotEmpty)
                           getRowWidgetForDetailsBox(
-                              "Street 2", customerDetailsModel?.street2),
+                              'Street 2', customerDetailsModel?.street2),
                         dividerWhite,
                         getRowWidgetForDetailsBox(
-                            "District", customerDetailsModel?.district),
+                            'District', customerDetailsModel?.district),
                         dividerWhite,
                         getRowWidgetForDetailsBox(
-                            "Upazila", customerDetailsModel?.upazilla),
+                            'Upazila', customerDetailsModel?.upazilla),
                         dividerWhite,
                         getRowWidgetForDetailsBox(
-                            "Trans. P. zone", customerDetailsModel?.transPZone),
+                            'Trans. P. zone', customerDetailsModel?.transPZone),
                         dividerWhite,
                         getRowWidgetForDetailsBox(
-                            "Latitude",
-                            (customerDetailsModel?.latitude ?? "Not Data Found")
+                            'Latitude',
+                            (customerDetailsModel?.latitude ?? 'Not Data Found')
                                 .toString()),
                         dividerWhite,
                         getRowWidgetForDetailsBox(
-                            "Longitude",
+                            'Longitude',
                             (customerDetailsModel?.longitude ??
-                                    "Not Data Found")
+                                    'Not Data Found')
                                 .toString()),
                       ],
                     ),
@@ -171,8 +171,8 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                     child: Text(
                       (customerDetailsModel?.longitude == null ||
                               customerDetailsModel?.latitude == null)
-                          ? "Location data not found."
-                          : "Already have location data.",
+                          ? 'Location data not found.'
+                          : 'Already have location data.',
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -213,7 +213,7 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: const Text("Are you sure?"),
+                              title: const Text('Are you sure?'),
                               content: getAddressWidget(
                                   placeMarkImportantData,
                                   LatLng(
@@ -229,7 +229,7 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    child: const Text("Cancel"),
+                                    child: const Text('Cancel'),
                                   ),
                                 ),
                                 SizedBox(
@@ -243,7 +243,7 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                                           box.get('sap_id').toString(),
                                           customerDetailsModel!);
                                     },
-                                    child: const Text("Yes"),
+                                    child: const Text('Yes'),
                                   ),
                                 ),
                               ],
@@ -255,8 +255,8 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                       label: Text(
                         (customerDetailsModel?.longitude == null ||
                                 customerDetailsModel?.latitude == null)
-                            ? "Set Location now!"
-                            : "Update Location now!",
+                            ? 'Set Location now!'
+                            : 'Update Location now!',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
@@ -282,12 +282,12 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
 
     final uri = Uri.parse(base + setCustomerLatLon);
     final response = await http.post(uri,
-        headers: {"Content-Type": "application/json"},
+        headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'work_area_t': box.get('sap_id').toString(),
-          "customer_id": widget.partnerID,
-          "latitude": position.latitude,
-          "longitude": position.longitude,
+          'customer_id': widget.partnerID,
+          'latitude': position.latitude,
+          'longitude': position.longitude,
         }));
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
