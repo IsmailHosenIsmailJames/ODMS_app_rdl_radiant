@@ -264,7 +264,7 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                       validator: (value) {
                         value ??= '';
                         final x = double.tryParse(value);
-                        if (x != null) {
+                        if (x != null && x >= 0) {
                           final totalAmount =
                               calculateFloatValueWithHighPrecision(
                             double.parse(widget.totalAmount),
@@ -456,7 +456,8 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                       if ((value ?? '') == '') return null;
                                       int? retQuantity =
                                           int.tryParse(value ?? '');
-                                      if (retQuantity != null) {
+                                      if (retQuantity != null &&
+                                          retQuantity >= 0) {
                                         if (retQuantity >
                                             (productList[index]
                                                     .deliveryQuantity ??

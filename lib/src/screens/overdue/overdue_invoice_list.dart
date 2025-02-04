@@ -416,7 +416,7 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                   autovalidateMode: AutovalidateMode.always,
                   validator: (value) {
                     double? doubleValue = double.tryParse(value ?? '');
-                    if (doubleValue != null) {
+                    if (doubleValue != null && doubleValue >= 0) {
                       if (doubleValue > dueController.previousDue.value) {
                         return "amount can't be bigger than due amount";
                       } else {

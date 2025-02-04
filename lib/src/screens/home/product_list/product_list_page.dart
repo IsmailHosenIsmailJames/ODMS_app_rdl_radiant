@@ -427,7 +427,8 @@ class _ProductListPageState extends State<ProductListPage> {
                                             if (value.isEmpty) value = '0';
                                             int? recQuantity =
                                                 int.tryParse(value);
-                                            if (recQuantity != null) {
+                                            if (recQuantity != null &&
+                                                recQuantity >= 0) {
                                               int? retQuantity = int.tryParse(
                                                   returnTextEditingControllerList[
                                                           index]
@@ -480,7 +481,8 @@ class _ProductListPageState extends State<ProductListPage> {
                                             if (value.isEmpty) value = '0';
                                             int? retQuantity =
                                                 int.tryParse(value);
-                                            if (retQuantity != null) {
+                                            if (retQuantity != null &&
+                                                retQuantity >= 0) {
                                               int? recQuantity = int.tryParse(
                                                   receiveTextEditingControllerList[
                                                           index]
