@@ -395,14 +395,14 @@ class _ProductListPageState extends State<ProductListPage> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'Delivered Quantity: ${(productList[index].deliveryQuantity ?? 0).toInt().toString()}',
+                                        'Delivered Qty.: ${(productList[index].deliveryQuantity ?? 0).toInt().toString()}',
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
                                         ),
                                       ),
                                       Text(
-                                        'Delivered Returned: ${(productList[index].returnQuantity ?? 0).toInt().toString()}',
+                                        'Return Qty.: ${(productList[index].returnQuantity ?? 0).toInt().toString()}',
                                         style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
@@ -884,7 +884,7 @@ class _ProductListPageState extends State<ProductListPage> {
     }
   }
 
-  TextStyle style = const TextStyle(fontSize: 17, fontWeight: FontWeight.bold);
+  TextStyle style = const TextStyle(fontSize: 15, fontWeight: FontWeight.bold);
 
   TextStyle topContainerTextStyle = const TextStyle(
     fontSize: 16,

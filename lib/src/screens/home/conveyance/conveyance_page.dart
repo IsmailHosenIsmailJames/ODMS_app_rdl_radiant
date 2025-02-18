@@ -41,7 +41,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
           .copyWith(textScaler: TextScaler.linear(textScalerValue)),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Conveyance'),
+          title: const Text('Transportation'),
           actions: [
             GetX<ConveyanceDataController>(
               builder: (controller) => ElevatedButton(
@@ -90,7 +90,7 @@ class _ConveyancePageState extends State<ConveyancePage> {
                 children: [
                   const Spacer(),
                   const Center(
-                    child: Text('Conveyance list is empty'),
+                    child: Text('Transportation list is empty'),
                   ),
                   const Spacer(),
                   widgetForNewStart(),
