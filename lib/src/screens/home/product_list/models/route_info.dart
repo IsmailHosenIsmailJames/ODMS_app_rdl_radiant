@@ -1,52 +1,86 @@
 import 'dart:convert';
 
-class RouteInfo {
-  String? routeId;
-  String? routeName;
+class RoutesInfo {
   int? totalGatePass;
   double? totalGatePassAmount;
   int? totalCustomer;
+  List<RouteModel>? routes;
 
-  RouteInfo({
-    this.routeId,
-    this.routeName,
+  RoutesInfo({
     this.totalGatePass,
     this.totalGatePassAmount,
     this.totalCustomer,
+    this.routes,
   });
 
-  RouteInfo copyWith({
-    String? routeId,
-    String? routeName,
+  RoutesInfo copyWith({
     int? totalGatePass,
     double? totalGatePassAmount,
     int? totalCustomer,
+    List<RouteModel>? routes,
   }) =>
-      RouteInfo(
-        routeId: routeId ?? this.routeId,
-        routeName: routeName ?? this.routeName,
+      RoutesInfo(
         totalGatePass: totalGatePass ?? this.totalGatePass,
         totalGatePassAmount: totalGatePassAmount ?? this.totalGatePassAmount,
         totalCustomer: totalCustomer ?? this.totalCustomer,
+        routes: routes ?? this.routes,
       );
 
-  factory RouteInfo.fromJson(String str) => RouteInfo.fromMap(json.decode(str));
+  factory RoutesInfo.fromJson(String str) =>
+      RoutesInfo.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 
-  factory RouteInfo.fromMap(Map<String, dynamic> json) => RouteInfo(
-        routeId: json['route_id'],
-        routeName: json['route_name'],
-        totalGatePass: json['total_gate_pass'],
-        totalGatePassAmount: json['total_gate_pass_amount'],
-        totalCustomer: json['total_customer'],
+  factory RoutesInfo.fromMap(Map<String, dynamic> json) => RoutesInfo(
+        totalGatePass: json["total_gate_pass"],
+        totalGatePassAmount: json["total_gate_pass_amount"],
+        totalCustomer: json["total_customer"],
+        routes: json["routes"] == null
+            ? []
+            : List<RouteModel>.from(
+                json["routes"]!.map((x) => RouteModel.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
-        'route_id': routeId,
-        'route_name': routeName,
-        'total_gate_pass': totalGatePass,
-        'total_gate_pass_amount': totalGatePassAmount,
-        'total_customer': totalCustomer,
+        "total_gate_pass": totalGatePass,
+        "total_gate_pass_amount": totalGatePassAmount,
+        "total_customer": totalCustomer,
+        "routes": routes == null
+            ? []
+            : List<dynamic>.from(routes!.map((x) => x.toMap())),
+      };
+}
+
+class RouteModel {
+  String? route;
+  String? routeName;
+
+  RouteModel({
+    this.route,
+    this.routeName,
+  });
+
+  RouteModel copyWith({
+    String? route,
+    String? routeName,
+  }) =>
+      RouteModel(
+        route: route ?? this.route,
+        routeName: routeName ?? this.routeName,
+      );
+
+  factory RouteModel.fromJson(String str) =>
+      RouteModel.fromMap(json.decode(str));
+
+  String toJson() => json.encode(toMap());
+
+  factory RouteModel.fromMap(Map<String, dynamic> json) => RouteModel(
+        route: json["route"],
+        routeName: json["route_name"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "route": route,
+        "route_name": routeName,
       };
 }

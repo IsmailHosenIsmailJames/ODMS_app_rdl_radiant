@@ -421,20 +421,22 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                                   Row(
                                     children: [
                                       Text(
-                                        'Return : ',
-                                        style:
-                                            style.copyWith(color: Colors.red),
-                                      ),
-                                      const Gap(5),
-                                      Text(
-                                        (productList[index].returnQuantity ?? 0)
-                                            .toString(),
+                                        'Return Qty.: ${(productList[index].returnQuantity ?? 0).toInt().toString()}',
                                         style: const TextStyle(
-                                          fontSize: 16,
+                                          fontSize: 15,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.red,
                                         ),
                                       ),
+                                      Spacer(),
+                                      Text(
+                                        'Return Amount: ${productList[index].returnNetVal ?? 0}',
+                                        style: const TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.red,
+                                        ),
+                                      )
                                     ],
                                   ),
                               ],
@@ -784,10 +786,10 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
     }
   }
 
-  TextStyle style = const TextStyle(fontSize: 17, fontWeight: FontWeight.bold);
+  TextStyle style = const TextStyle(fontSize: 15, fontWeight: FontWeight.bold);
 
   TextStyle topContainerTextStyle = const TextStyle(
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: FontWeight.bold,
   );
 
