@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_activity_recognition/flutter_activity_recognition.dart';
@@ -9,7 +10,6 @@ import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:simple_icons/simple_icons.dart';
 import 'package:permission_handler/permission_handler.dart'
     as permission_handler;
 
@@ -54,13 +54,49 @@ class _CheckAndRequestPermissionsState
             ),
           ),
           const Gap(20),
-          const Text(
-            'Allow Background Location Access',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ListTile(
+            title: Text('Allow Activity Recognition'),
+            minTileHeight: 20,
+            leading: SizedBox(
+              height: 25,
+              width: 25,
+              child: Image.asset(
+                'assets/activity.png',
+                color: Colors.black,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          ListTile(
+            title: Text('Allow Always Location Access'),
+            minTileHeight: 20,
+            leading: SizedBox(
+              height: 25,
+              width: 25,
+              child: Icon(Icons.location_on),
+            ),
+          ),
+          ListTile(
+            title: Text('Allow Push Notification'),
+            minTileHeight: 20,
+            leading: SizedBox(
+              height: 25,
+              width: 25,
+              child: Icon(Icons.notifications),
+            ),
+          ),
+          ListTile(
+            title: Text('Allow Ignore Battery Optimization'),
+            minTileHeight: 20,
+            leading: SizedBox(
+              height: 25,
+              width: 25,
+              child: Icon(Icons.battery_charging_full),
+            ),
           ),
           const Gap(10),
           Text(
-            'We must need location data for running this\napp with essential features. Please allow location\naccess, then you can go next step.',
+            'We must need these permissions to work properly. Please allow them.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,
@@ -77,15 +113,37 @@ class _CheckAndRequestPermissionsState
               if (!serviceEnabled) {
                 return;
               }
+              var activityRecognition = await permission_handler
+                  .Permission.activityRecognition.status;
+              if (activityRecognition !=
+                  permission_handler.PermissionStatus.granted) {
+                activityRecognition = await permission_handler
+                    .Permission.activityRecognition
+                    .request();
+              }
 
               var locationPermissionStatus =
+                  await permission_handler.Permission.locationWhenInUse.status;
+
+              if (locationPermissionStatus !=
+                  permission_handler.PermissionStatus.granted) {
+                locationPermissionStatus = await permission_handler
+                    .Permission.locationWhenInUse
+                    .request();
+                log(locationPermissionStatus.toString(),
+                    name: 'Location checking');
+              }
+
+              locationPermissionStatus =
                   await permission_handler.Permission.locationAlways.status;
 
-              if (locationPermissionStatus ==
+              if (locationPermissionStatus !=
                   permission_handler.PermissionStatus.granted) {
                 locationPermissionStatus = await permission_handler
                     .Permission.locationAlways
                     .request();
+                log(locationPermissionStatus.toString(),
+                    name: 'Location checking');
               }
 
               var notificationPermissionStatus =
@@ -102,6 +160,7 @@ class _CheckAndRequestPermissionsState
               if (activityPermission != ActivityPermission.GRANTED) {
                 activityPermission = await FlutterActivityRecognition.instance
                     .requestPermission();
+                log(activityPermission.name.toString());
               }
 
               var ignoreBatteryOpt = await permission_handler
@@ -161,9 +220,8 @@ class _CheckAndRequestPermissionsState
                 setState(() {
                   accessStatusText = 'You denied notification access';
                 });
-              } else if (locationPermissionStatus ==
-                      LocationPermission.denied ||
-                  activityPermission != ActivityPermission.GRANTED) {
+              } else if (locationPermissionStatus !=
+                  permission_handler.PermissionStatus.granted) {
                 unawaited(
                   Fluttertoast.showToast(
                     msg: 'You denied location or activity access',
@@ -173,18 +231,15 @@ class _CheckAndRequestPermissionsState
                 setState(() {
                   accessStatusText = 'You denied location or activity access';
                 });
-              } else if (locationPermissionStatus ==
-                      LocationPermission.deniedForever ||
-                  activityPermission != ActivityPermission.GRANTED) {
+              } else if (activityPermission != ActivityPermission.GRANTED) {
                 unawaited(
                   Fluttertoast.showToast(
-                    msg: 'You permanently denied location or activity access',
+                    msg: 'Please allow activity recognition',
                     toastLength: Toast.LENGTH_LONG,
                   ),
                 );
                 setState(() {
-                  accessStatusText =
-                      'You permanently denied location or activity access';
+                  accessStatusText = 'Please allow activity recognition';
                 });
               } else {
                 unawaited(
@@ -200,7 +255,7 @@ class _CheckAndRequestPermissionsState
             },
             label: const Text('All the time location access'),
             icon: const Icon(
-              SimpleIcons.googlemaps,
+              Icons.done,
             ),
           ),
           const Gap(30),
@@ -209,7 +264,7 @@ class _CheckAndRequestPermissionsState
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'Go to app settings and allow all the time location access',
+                'Go to app settings and allow all the permissions',
                 style: TextStyle(
                   color: Colors.grey.shade800,
                   fontWeight: FontWeight.bold,

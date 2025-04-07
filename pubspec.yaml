@@ -64,6 +64,7 @@ flutter:
     - assets/app_logo_big.png
     - assets/visit.png
     - assets/icons/
+    - assets/activity.png
 
 
 flutter_native_splash:
