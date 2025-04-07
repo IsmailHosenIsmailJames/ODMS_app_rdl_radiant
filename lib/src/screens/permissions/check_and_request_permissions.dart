@@ -10,6 +10,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:simple_icons/simple_icons.dart';
+import 'package:permission_handler/permission_handler.dart'
+    as permission_handler;
 
 import '../attendance/attendance_page.dart';
 import '../home/home_page.dart';
@@ -76,10 +78,14 @@ class _CheckAndRequestPermissionsState
                 return;
               }
 
-              var locationPermissionStatus = await Geolocator.checkPermission();
+              var locationPermissionStatus =
+                  await permission_handler.Permission.locationAlways.status;
 
-              if (locationPermissionStatus == LocationPermission.denied) {
-                locationPermissionStatus = await Geolocator.requestPermission();
+              if (locationPermissionStatus ==
+                  permission_handler.PermissionStatus.granted) {
+                locationPermissionStatus = await permission_handler
+                    .Permission.locationAlways
+                    .request();
               }
 
               var notificationPermissionStatus =
@@ -98,11 +104,22 @@ class _CheckAndRequestPermissionsState
                     .requestPermission();
               }
 
-              if ((locationPermissionStatus == LocationPermission.whileInUse ||
-                      locationPermissionStatus == LocationPermission.always) &&
+              var ignoreBatteryOpt = await permission_handler
+                  .Permission.ignoreBatteryOptimizations.status;
+              if (ignoreBatteryOpt !=
+                  permission_handler.PermissionStatus.granted) {
+                ignoreBatteryOpt = await permission_handler
+                    .Permission.ignoreBatteryOptimizations
+                    .request();
+              }
+
+              if (locationPermissionStatus ==
+                      permission_handler.PermissionStatus.granted &&
                   notificationPermissionStatus ==
                       NotificationPermission.granted &&
-                  activityPermission == ActivityPermission.GRANTED) {
+                  activityPermission == ActivityPermission.GRANTED &&
+                  ignoreBatteryOpt ==
+                      permission_handler.PermissionStatus.granted) {
                 unawaited(
                   Fluttertoast.showToast(
                     msg: 'You did allow location & activity access',

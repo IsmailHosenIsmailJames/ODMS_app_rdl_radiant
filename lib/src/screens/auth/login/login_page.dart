@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -16,6 +17,7 @@ import 'package:odms/src/core/login/login_function.dart';
 import 'package:odms/src/screens/attendance/attendance_page.dart';
 import 'package:odms/src/screens/home/home_page.dart';
 import 'package:odms/src/screens/permissions/unable_to_connect.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../theme/textfield_theme.dart';
@@ -285,26 +287,32 @@ Future<void> analyzeResponseLogin(
           return;
         }
 
-        final locationAlwaysStatus = await Geolocator.checkPermission();
-
-        if (locationAlwaysStatus == LocationPermission.whileInUse ||
-            locationAlwaysStatus == LocationPermission.always) {
-          if ((jsonMapData['is_start_work'] ?? false) == true) {
-            unawaited(
-              Get.offAll(
-                () => const HomePage(),
-              ),
-            );
+        try {
+          final ignoreBatteryOpt =
+              await Permission.ignoreBatteryOptimizations.status;
+          final alwaysLocation = await Permission.locationAlways.status;
+          if (ignoreBatteryOpt == PermissionStatus.granted ||
+              alwaysLocation == PermissionStatus.granted) {
+            if ((jsonMapData['is_start_work'] ?? false) == true) {
+              unawaited(
+                Get.offAll(
+                  () => const HomePage(),
+                ),
+              );
+            } else {
+              unawaited(
+                Get.offAll(
+                  () => const AttendancePage(),
+                ),
+              );
+            }
           } else {
-            unawaited(
-              Get.offAll(
-                () => const AttendancePage(),
-              ),
-            );
+            await Get.off(() => const CheckAndRequestPermissions());
           }
-        } else {
-          await Get.off(() => const CheckAndRequestPermissions());
+        } catch (e) {
+          log(e.toString(), name: 'Location check error');
         }
+
         if (kDebugMode) {
           print(response.body);
         }

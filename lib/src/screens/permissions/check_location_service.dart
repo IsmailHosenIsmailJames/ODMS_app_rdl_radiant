@@ -9,6 +9,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart'
+    as permission_handler;
 
 import '../attendance/attendance_page.dart';
 import '../home/home_page.dart';
@@ -37,15 +39,18 @@ class _CheckLocationServiceState extends State<CheckLocationService> {
   }
 
   void nextStep() async {
-    final locationAlwaysStatus = await Geolocator.checkPermission();
+    final locationStatus =
+        await permission_handler.Permission.locationAlways.status;
+    final ignoreBatteryOpt =
+        await permission_handler.Permission.ignoreBatteryOptimizations.status;
     ActivityPermission permission =
         await FlutterActivityRecognition.instance.checkPermission();
 
     final notificationPermissionStatus =
         await FlutterForegroundTask.checkNotificationPermission();
 
-    if ((locationAlwaysStatus == LocationPermission.whileInUse ||
-            locationAlwaysStatus == LocationPermission.always) &&
+    if ((locationStatus == permission_handler.PermissionStatus.granted ||
+            ignoreBatteryOpt == permission_handler.PermissionStatus.granted) &&
         permission == ActivityPermission.GRANTED &&
         notificationPermissionStatus != NotificationPermission.granted) {
       if ((widget.responseMapData['is_start_work'] ?? false) == true) {
