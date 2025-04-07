@@ -83,10 +83,13 @@ class MyTaskHandler extends TaskHandler {
           }
         },
       );
+    } else {
+      SocketManager().connect();
+      FlutterForegroundTask.updateService(
+        notificationTitle: '${DateTime.now().minute} Socket -> false',
+      );
     }
-    await FlutterForegroundTask.updateService(
-      notificationText: 'Your location is tracking!',
-    );
+
     FlutterForegroundTask.sendDataToMain(count);
   }
 
