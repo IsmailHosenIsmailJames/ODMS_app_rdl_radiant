@@ -54,6 +54,15 @@ class MyTaskHandler extends TaskHandler {
     try {
       log('onRepeatEvent triggered at $timestamp');
       final SharedPreferences info = await SharedPreferences.getInstance();
+      bool? isOnWorking = info.getBool('isOnWorking');
+      if (isOnWorking == null || !isOnWorking) {
+        log('Service is not working, stopping task.');
+        _socketManager?.disconnect();
+        _activitySubscription?.cancel();
+        FlutterForegroundTask.stopService();
+        log('Service stopped.');
+        return;
+      }
       final minimumDistance = info.getInt('minimum_distance');
       final lastActivity = info.getString('last_activity');
       double? lastPositionLat = info.getDouble('last_position_lat');

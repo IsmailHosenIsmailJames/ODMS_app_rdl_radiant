@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:odms/src/apis/apis.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/login/login_function.dart';
 import '../../theme/text_scaler_theme.dart';
@@ -203,6 +204,9 @@ class _AttendancePageState extends State<AttendancePage> {
                         sendingData = false;
                       });
                       if (response.statusCode == 200) {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        await prefs.setBool('isOnWorking', true);
                         unawaited(Fluttertoast.showToast(msg: 'Successful'));
                         final userLoginDataCredential =
                             Map<String, dynamic>.from(
