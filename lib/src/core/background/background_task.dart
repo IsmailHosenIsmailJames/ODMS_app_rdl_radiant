@@ -62,7 +62,7 @@ class MyTaskHandler extends TaskHandler {
       // <--- Add try
       log('onRepeatEvent triggered at $timestamp'); // Log entry point
       final SharedPreferences info = await SharedPreferences.getInstance();
-      // final minimumDistance = info.getInt('minimum_distance');
+      final minimumDistance = info.getInt('minimum_distance');
       final lastActivity = info.getString('last_activity');
       double? lastPositionLat = info.getDouble('last_position_lat');
       double? lastPositionLon = info.getDouble('last_position_lon');
@@ -97,31 +97,31 @@ class MyTaskHandler extends TaskHandler {
 
       // log('Calculated distance: $distance meters. Minimum: ${minimumDistance ?? 5}');
 
-      // if (distance > (minimumDistance ?? 5)) {
-      await info.setDouble('last_position_lat', position.latitude);
-      await info.setDouble('last_position_lon', position.longitude);
-      count++;
-      log('Distance threshold exceeded. Sending location via socket...');
-      // Re-check socket connection just before sending
-      if (SocketManager().isConnected()) {
-        await SocketManager().sendLocationViaSocket(
-          latitude: position.latitude,
-          longitude: position.longitude,
-          altitude: position.altitude,
-          accuracy: position.accuracy,
-          bearing: 0, // Consider using position.heading if available/needed
-          speed: position.speed,
-          activity: lastActivity,
-        );
+      if (distance > (minimumDistance ?? 5)) {
+        await info.setDouble('last_position_lat', position.latitude);
+        await info.setDouble('last_position_lon', position.longitude);
         count++;
-        log('Location sent and saved. count : $count');
+        log('Distance threshold exceeded. Sending location via socket...');
+        // Re-check socket connection just before sending
+        if (SocketManager().isConnected()) {
+          await SocketManager().sendLocationViaSocket(
+            latitude: position.latitude,
+            longitude: position.longitude,
+            altitude: position.altitude,
+            accuracy: position.accuracy,
+            bearing: 0, // Consider using position.heading if available/needed
+            speed: position.speed,
+            activity: lastActivity,
+          );
+          count++;
+          log('Location sent and saved. count : $count');
+        } else {
+          log('Socket disconnected before sending location.');
+          // Optionally attempt reconnect again here
+        }
       } else {
-        log('Socket disconnected before sending location.');
-        // Optionally attempt reconnect again here
+        log('Distance threshold not met. Ignoring.');
       }
-      // } else {
-      //   log('Distance threshold not met. Ignoring.');
-      // }
 
       FlutterForegroundTask.sendDataToMain(count);
       log('onRepeatEvent finished successfully.');
