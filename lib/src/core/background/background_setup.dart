@@ -28,8 +28,8 @@ Future<void> initService() async {
       channelName: 'Foreground Service Notification',
       channelDescription:
           'This notification appears when the foreground location service is running.',
-      channelImportance: NotificationChannelImportance.MAX,
-      priority: NotificationPriority.MAX,
+      channelImportance: NotificationChannelImportance.LOW,
+      priority: NotificationPriority.LOW,
     ),
     iosNotificationOptions: const IOSNotificationOptions(
       showNotification: true,
@@ -40,7 +40,7 @@ Future<void> initService() async {
       autoRunOnMyPackageReplaced: true,
       allowWakeLock: true,
       allowWifiLock: true,
-      eventAction: ForegroundTaskEventAction.repeat(10000),
+      eventAction: ForegroundTaskEventAction.repeat(timeInterval ?? 30000),
     ),
   );
 }

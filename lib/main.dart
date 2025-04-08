@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
       ),
       defaultTransition: Transition.leftToRight,
       home: const InitPage(),
+      routes: {'/': (context) => InitPage()},
       onInit: () async {
         FlutterNativeSplash.remove();
         Get.put(LoadingTextController());

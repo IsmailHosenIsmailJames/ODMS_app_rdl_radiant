@@ -31,15 +31,6 @@ class MyTaskHandler extends TaskHandler {
   // Called when the task is started.
   @override
   Future<void> onStart(DateTime timestamp, TaskStarter starter) async {
-    Timer.periodic(
-      Duration(seconds: 5),
-      (timer) {
-        FlutterForegroundTask.updateService(
-          notificationTitle: 'Foreground Task',
-          notificationText: 'on background : ${DateTime.now().second}',
-        );
-      },
-    );
     log('MyTaskHandler onStart');
     _socketManager = SocketManager(); // Initialize here
     _socketManager?.connect(); // Attempt initial connection
@@ -67,9 +58,6 @@ class MyTaskHandler extends TaskHandler {
   @override
   Future<void> onRepeatEvent(DateTime timestamp) async {
     count++;
-    FlutterForegroundTask.updateService(
-      notificationTitle: 'onRepeatEvent',
-    );
     try {
       // <--- Add try
       log('onRepeatEvent triggered at $timestamp'); // Log entry point
@@ -83,15 +71,6 @@ class MyTaskHandler extends TaskHandler {
       if (!SocketManager().isConnected()) {
         log('Socket disconnected, attempting reconnect...');
         SocketManager().connect();
-        FlutterForegroundTask.updateService(
-          notificationTitle: '${DateTime.now().minute} Socket -> Disconnected',
-        );
-        // Decide if you want to proceed with location check even if socket is down
-        // return; // Maybe exit early if socket is required?
-      } else {
-        FlutterForegroundTask.updateService(
-          notificationTitle: '${DateTime.now().minute} Socket -> Connected',
-        );
       }
 
       log('Attempting to get current position...');
@@ -134,11 +113,8 @@ class MyTaskHandler extends TaskHandler {
           speed: position.speed,
           activity: lastActivity,
         );
-        FlutterForegroundTask.updateService(
-          notificationText:
-              'Send ${DateTime.now().minute}, L:${position.latitude},${position.longitude} }',
-        );
-        log('Location sent and saved.');
+        count++;
+        log('Location sent and saved. count : $count');
       } else {
         log('Socket disconnected before sending location.');
         // Optionally attempt reconnect again here
