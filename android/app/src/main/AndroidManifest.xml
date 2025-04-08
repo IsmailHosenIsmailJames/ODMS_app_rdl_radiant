@@ -22,7 +22,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
-    
+
     <application
         android:label="ODMS"
         android:name="${applicationName}"
@@ -46,6 +46,8 @@
         <service android:name="com.gdelataillade.alarm.services.NotificationOnKillService" />
         <service 
             android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
+            android:enabled="true"
+            android:stopWithTask="false"
             android:foregroundServiceType="location|dataSync"
             android:exported="false" />
 
