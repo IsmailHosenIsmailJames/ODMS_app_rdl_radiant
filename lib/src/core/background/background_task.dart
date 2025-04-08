@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
@@ -36,8 +37,9 @@ class MyTaskHandler extends TaskHandler {
       if (event.type != activity_recognition.ActivityType.UNKNOWN) {
         log('Activity Update: ${event.type.name}');
         try {
-          final SharedPreferences info = await SharedPreferences.getInstance();
-          await info.setString('last_activity', event.type.name);
+          final SharedPreferences sharedPrefs =
+              await SharedPreferences.getInstance();
+          await sharedPrefs.setString('last_activity', event.type.name);
         } catch (e) {
           log('Error saving activity: $e');
         }
@@ -53,9 +55,11 @@ class MyTaskHandler extends TaskHandler {
     count++;
     try {
       log('onRepeatEvent triggered at $timestamp');
-      final SharedPreferences info = await SharedPreferences.getInstance();
-      bool? isOnWorking = info.getBool('isOnWorking');
-      if (isOnWorking == null || !isOnWorking) {
+      final SharedPreferences sharedPrefs =
+          await SharedPreferences.getInstance();
+      await sharedPrefs.reload();
+      bool? isOnWorking = sharedPrefs.getBool('isOnWorking');
+      if (isOnWorking == false) {
         log('Service is not working, stopping task.');
         _socketManager?.disconnect();
         _activitySubscription?.cancel();
@@ -63,10 +67,10 @@ class MyTaskHandler extends TaskHandler {
         log('Service stopped.');
         return;
       }
-      final minimumDistance = info.getInt('minimum_distance');
-      final lastActivity = info.getString('last_activity');
-      double? lastPositionLat = info.getDouble('last_position_lat');
-      double? lastPositionLon = info.getDouble('last_position_lon');
+      final minimumDistance = sharedPrefs.getInt('minimum_distance');
+      final lastActivity = sharedPrefs.getString('last_activity');
+      double? lastPositionLat = sharedPrefs.getDouble('last_position_lat');
+      double? lastPositionLon = sharedPrefs.getDouble('last_position_lon');
 
       if (!SocketManager().isConnected()) {
         log('Socket disconnected, attempting reconnect...');
@@ -75,13 +79,33 @@ class MyTaskHandler extends TaskHandler {
 
       log('Attempting to get current position...');
       final position = await Geolocator.getCurrentPosition();
+      bool? conveyanceStatus = sharedPrefs.getBool('conveyance_status');
+      if (conveyanceStatus == true) {
+        List<String> conveyanceLocationPoints =
+            (sharedPrefs.getStringList('conveyance_location_points')) ?? [];
+        conveyanceLocationPoints.add(jsonEncode(position.toJson()));
+        sharedPrefs.setStringList(
+            'conveyance_location_points', conveyanceLocationPoints);
+        log('Conveyance location point saved: ${position.toJson()} Len${conveyanceLocationPoints.length}',
+            name: 'conveyance_location_points_background');
+      }
+
+      List<String> entireWorkingDayPosition =
+          sharedPrefs.getStringList('entire_working_day_position') ?? [];
+      entireWorkingDayPosition.add(jsonEncode(position.toJson()));
+      await sharedPrefs.setStringList(
+          'entire_working_day_position', entireWorkingDayPosition);
+      log('Len : ${entireWorkingDayPosition.length}',
+          name: 'entireWorkingDayPosition');
       log('Position obtained: ${position.latitude}, ${position.longitude}');
+
+      sharedPrefs.get('conveyance_status');
 
       if (lastPositionLon == null || lastPositionLat == null) {
         lastPositionLon = position.longitude;
         lastPositionLat = position.latitude;
-        await info.setDouble('last_position_lat', position.latitude);
-        await info.setDouble('last_position_lon', position.longitude);
+        await sharedPrefs.setDouble('last_position_lat', position.latitude);
+        await sharedPrefs.setDouble('last_position_lon', position.longitude);
         log('Initial position saved.');
       }
 
@@ -93,8 +117,8 @@ class MyTaskHandler extends TaskHandler {
       );
 
       if (distance > (minimumDistance ?? 5)) {
-        await info.setDouble('last_position_lat', position.latitude);
-        await info.setDouble('last_position_lon', position.longitude);
+        await sharedPrefs.setDouble('last_position_lat', position.latitude);
+        await sharedPrefs.setDouble('last_position_lon', position.longitude);
         count++;
         log('Distance threshold exceeded. Sending location via socket...');
 
