@@ -15,6 +15,7 @@ import 'package:odms/src/apis/apis.dart';
 import 'package:odms/src/screens/home/conveyance/controller/conveyance_data_controller.dart';
 import 'package:http/http.dart' as http;
 import 'package:odms/src/screens/home/conveyance/finish_conveyance/finish_conveyance.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../theme/text_scaler_theme.dart';
 import '../../../widgets/loading/loading_popup_widget.dart';
 import '../../../widgets/loading/loading_text_controller.dart';
@@ -558,13 +559,14 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                     SizedBox(
                                       width: double.infinity,
                                       child: ElevatedButton(
-                                        onPressed: () {
-                                          Get.to(
+                                        onPressed: () async {
+                                          await Get.to(
                                             () => FinishConveyance(
                                               conveyanceData:
                                                   convinceData.value[index],
                                             ),
                                           );
+                                          setState(() {});
                                         },
                                         child: const Text('Next'),
                                       ),
@@ -740,6 +742,14 @@ class _ConveyancePageState extends State<ConveyancePage> {
     if (response.statusCode == 200) {
       final decode = jsonDecode(response.body);
       if (decode['success'] == true) {
+        SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+        await sharedPreferences.setBool(
+          'conveyance_status',
+          true,
+        );
+        (await sharedPreferences.setStringList(
+            'conveyance_location_points', [jsonEncode(position.toJson())]));
         final url = Uri.parse(
           "$base$conveyanceList?da_code=$sapID&date=${DateFormat('yyyy-MM-dd').format(dateTime)}",
         );

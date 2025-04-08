@@ -21,6 +21,7 @@ String conveyanceStart = '/api/$version/conveyance/start';
 String conveyanceList = '/api/$version/conveyance/list';
 String conveyanceEnd = '/api/$version/conveyance/end';
 String conveyanceTransportMode = '/api/$version/conveyance/transport_modes';
+String saveMovementInfo = '/api/$version/conveyance/movement_info';
 String getOverdueList = '/api/$version/cash_collection/overdue/list';
 String getOverdueListV2 = '/api/$version/overdue/list';
 String collectOverdue = '/api/$version/overdue/collect';
