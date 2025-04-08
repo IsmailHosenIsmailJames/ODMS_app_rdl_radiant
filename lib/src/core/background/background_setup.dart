@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_redundant_argument_values
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,9 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'background_task.dart';
 
 Future<void> requestPermissions() async {
-  // Android 13+, you need to allow notification permission to display foreground service notification.
-  //
-  // iOS: If you need notification, ask for permission.
   final notificationPermissionStatus =
       await FlutterForegroundTask.checkNotificationPermission();
   if (notificationPermissionStatus != NotificationPermission.granted) {
@@ -20,7 +15,6 @@ Future<void> requestPermissions() async {
 Future<void> initService() async {
   final SharedPreferences info = await SharedPreferences.getInstance();
   final timeInterval = info.getInt('time_interval');
-  // final minimumDistance = info.getInt("minimum_distance");
 
   FlutterForegroundTask.init(
     androidNotificationOptions: AndroidNotificationOptions(

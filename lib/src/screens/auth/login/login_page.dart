@@ -291,8 +291,12 @@ Future<void> analyzeResponseLogin(
           final ignoreBatteryOpt =
               await Permission.ignoreBatteryOptimizations.status;
           final alwaysLocation = await Permission.locationAlways.status;
-          if (ignoreBatteryOpt == PermissionStatus.granted ||
-              alwaysLocation == PermissionStatus.granted) {
+          final activityRecognition =
+              await Permission.activityRecognition.status;
+
+          if (ignoreBatteryOpt == PermissionStatus.granted &&
+              alwaysLocation == PermissionStatus.granted &&
+              activityRecognition == PermissionStatus.granted) {
             if ((jsonMapData['is_start_work'] ?? false) == true) {
               unawaited(
                 Get.offAll(
