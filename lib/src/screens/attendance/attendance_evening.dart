@@ -263,6 +263,13 @@ class _AttendanceEveningState extends State<AttendanceEvening> {
                                   }),
                                 );
                                 if (response.statusCode == 200) {
+                                  await prefs.setStringList(
+                                      'entire_working_day_position', []);
+                                  await prefs.setString(
+                                      'date_of_upload_day_activity',
+                                      DateFormat('yyyy-MM-dd')
+                                          .format(DateTime.now()));
+
                                   log('Successfully saved movement info');
                                 }
                               } catch (e) {

@@ -8,8 +8,12 @@ import 'package:flutter_activity_recognition/flutter_activity_recognition.dart'
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
+import 'package:intl/intl.dart';
+import 'package:odms/src/apis/apis.dart';
 import 'package:odms/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
 import 'package:odms/src/core/background/socket_manager/socket_manager.dart';
+import 'package:odms/src/core/distance_calculator/calculate_distance_with_filter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @pragma('vm:entry-point')
@@ -107,6 +111,50 @@ class MyTaskHandler extends TaskHandler {
         await sharedPrefs.setDouble('last_position_lat', position.latitude);
         await sharedPrefs.setDouble('last_position_lon', position.longitude);
         log('Initial position saved.');
+      }
+
+      if (DateTime.now().hour > 22) {
+        if (sharedPrefs.getString('date_of_upload_day_activity') !=
+            DateFormat('yyyy-MM-dd').format(DateTime.now())) {
+          List<String> entireDayPositionRaw =
+              sharedPrefs.getStringList('entire_working_day_position') ?? [];
+
+          List<Position> listOfPositionOfEntireDay = entireDayPositionRaw
+              .map((e) => Position.fromMap(jsonDecode(e)))
+              .toList();
+          PositionCalculationResult positionCalculationResult =
+              PositionPointsCalculator(rawPositions: listOfPositionOfEntireDay)
+                  .processData();
+
+          try {
+            int? sapID = sharedPrefs.getInt('user_sap_id');
+            final response = await post(
+              Uri.parse('$base$saveMovementInfo'),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: jsonEncode({
+                {
+                  'da_code': sapID,
+                  'mv_date': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                  'time_duration': positionCalculationResult.totalDistance,
+                  'distance':
+                      positionCalculationResult.totalDuration.inMilliseconds
+                }
+              }),
+            );
+            if (response.statusCode == 200) {
+              await sharedPrefs
+                  .setStringList('entire_working_day_position', []);
+              await sharedPrefs.setString('date_of_upload_day_activity',
+                  DateFormat('yyyy-MM-dd').format(DateTime.now()));
+
+              log('Successfully saved movement info');
+            }
+          } catch (e) {
+            log(e.toString());
+          }
+        }
       }
 
       double distance = Geolocator.distanceBetween(
