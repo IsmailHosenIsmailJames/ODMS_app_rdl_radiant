@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,10 @@ import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:odms/src/apis/apis.dart';
+import 'package:odms/src/core/distance_calculator/calculate_distance_with_filter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/login/login_function.dart';
 import '../../theme/text_scaler_theme.dart';
@@ -216,8 +220,61 @@ class _AttendanceEveningState extends State<AttendanceEvening> {
                             final response = await request.send();
 
                             if (response.statusCode == 200) {
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              await prefs.reload();
+                              await prefs.setBool('isOnWorking', false);
                               await box.put('lastEveningAttendanceDate',
                                   DateTime.now().day);
+
+                              List<String> entireDayPositionRaw =
+                                  prefs.getStringList(
+                                          'entire_working_day_position') ??
+                                      [];
+
+                              List<Position> listOfPositionOfEntireDay =
+                                  entireDayPositionRaw
+                                      .map((e) =>
+                                          Position.fromMap(jsonDecode(e)))
+                                      .toList();
+                              PositionCalculationResult
+                                  positionCalculationResult =
+                                  PositionPointsCalculator(
+                                          rawPositions:
+                                              listOfPositionOfEntireDay)
+                                      .processData();
+
+                              try {
+                                final response = await http.post(
+                                  Uri.parse('$base$saveMovementInfo'),
+                                  headers: {
+                                    'Content-Type': 'application/json',
+                                  },
+                                  body: jsonEncode({
+                                    {
+                                      'da_code': decodeData['result']['sap_id'],
+                                      'mv_date': DateFormat('yyyy-MM-dd')
+                                          .format(DateTime.now()),
+                                      'time_duration': positionCalculationResult
+                                          .totalDistance,
+                                      'distance': positionCalculationResult
+                                          .totalDuration.inMilliseconds
+                                    }
+                                  }),
+                                );
+                                if (response.statusCode == 200) {
+                                  await prefs.setStringList(
+                                      'entire_working_day_position', []);
+                                  await prefs.setString(
+                                      'date_of_upload_day_activity',
+                                      DateFormat('yyyy-MM-dd')
+                                          .format(DateTime.now()));
+
+                                  log('Successfully saved movement info');
+                                }
+                              } catch (e) {
+                                log(e.toString());
+                              }
 
                               unawaited(
                                   Fluttertoast.showToast(msg: 'Successful'));

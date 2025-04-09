@@ -32,20 +32,20 @@ class RoutesInfo {
   String toJson() => json.encode(toMap());
 
   factory RoutesInfo.fromMap(Map<String, dynamic> json) => RoutesInfo(
-        totalGatePass: json["total_gate_pass"],
-        totalGatePassAmount: json["total_gate_pass_amount"],
-        totalCustomer: json["total_customer"],
-        routes: json["routes"] == null
+        totalGatePass: json['total_gate_pass'],
+        totalGatePassAmount: json['total_gate_pass_amount'],
+        totalCustomer: json['total_customer'],
+        routes: json['routes'] == null
             ? []
             : List<RouteModel>.from(
-                json["routes"]!.map((x) => RouteModel.fromMap(x))),
+                json['routes']!.map((x) => RouteModel.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
-        "total_gate_pass": totalGatePass,
-        "total_gate_pass_amount": totalGatePassAmount,
-        "total_customer": totalCustomer,
-        "routes": routes == null
+        'total_gate_pass': totalGatePass,
+        'total_gate_pass_amount': totalGatePassAmount,
+        'total_customer': totalCustomer,
+        'routes': routes == null
             ? []
             : List<dynamic>.from(routes!.map((x) => x.toMap())),
       };
@@ -75,12 +75,12 @@ class RouteModel {
   String toJson() => json.encode(toMap());
 
   factory RouteModel.fromMap(Map<String, dynamic> json) => RouteModel(
-        route: json["route"],
-        routeName: json["route_name"],
+        route: json['route'],
+        routeName: json['route_name'],
       );
 
   Map<String, dynamic> toMap() => {
-        "route": route,
-        "route_name": routeName,
+        'route': route,
+        'route_name': routeName,
       };
 }

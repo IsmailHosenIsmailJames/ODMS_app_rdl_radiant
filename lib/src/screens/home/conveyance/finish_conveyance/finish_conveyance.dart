@@ -2,10 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:geocoding/geocoding.dart';
@@ -17,9 +15,10 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:odms/src/apis/apis.dart';
+import 'package:odms/src/core/distance_calculator/calculate_distance_with_filter.dart';
 import 'package:odms/src/screens/home/conveyance/controller/conveyance_data_controller.dart';
 import 'package:odms/src/screens/home/conveyance/conveyance_page.dart';
-import 'package:odms/src/screens/maps/keys/google_maps_api_key.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../theme/text_scaler_theme.dart';
 import '../../../../widgets/loading/loading_popup_widget.dart';
@@ -40,6 +39,7 @@ class FinishConveyance extends StatefulWidget {
 class _MyMapViewState extends State<FinishConveyance> {
   final ConveyanceDataController conveyanceDataController = Get.find();
   final LoadingTextController loadingTextController = Get.find();
+  PositionCalculationResult? positionCalculationResult;
 
   LatLng? initMyLocation;
   LatLng? destination;
@@ -59,20 +59,44 @@ class _MyMapViewState extends State<FinishConveyance> {
         setState(() {
           destination = LatLng(value.latitude, value.longitude);
         });
-
-        getLocationDetailsFormLatLon(destination!);
-
+        setLocationDetailsFormLatLon(destination!);
+        List<Position> entirePosition = await getPositionOfEntireConveyance();
+        entirePosition.add(value);
+        positionCalculationResult =
+            await getPointsCalculationResult(listOfPositions: entirePosition);
+        setState(() {});
         await cameraPositionUpdater(
           LatLng(value.latitude, value.longitude),
-          zoom: 12,
+          zoom: 16,
         );
       },
     );
   }
 
-  double zoomLabel = 13;
+  Future<List<Position>> getPositionOfEntireConveyance() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.reload();
+    List<String> locationPointsRaw =
+        preferences.getStringList('conveyance_location_points') ?? [];
+    final List<Position> locationPoints = locationPointsRaw
+        .map(
+          (e) => Position.fromMap(jsonDecode(e)),
+        )
+        .toList();
+    log('Position List Len : ${locationPoints.length}',
+        name: 'Position List Len');
+    return locationPoints;
+  }
 
-  Map<PolylineId, Polyline> polynlies = {};
+  Future<PositionCalculationResult> getPointsCalculationResult(
+      {List<Position>? listOfPositions}) async {
+    listOfPositions ??= await getPositionOfEntireConveyance();
+    PositionCalculationResult result =
+        PositionPointsCalculator(rawPositions: listOfPositions).processData();
+    return result;
+  }
+
+  double zoomLabel = 16;
 
   Map<String, Marker> markers = {};
   final Completer<GoogleMapController> googleMapController =
@@ -95,41 +119,25 @@ class _MyMapViewState extends State<FinishConveyance> {
   String country = '';
   String subLocality = '';
 
-  double distance = 0;
-
-  Future<void> getLocationDetailsFormLatLon(LatLng latlng) async {
-    destination = latlng;
-    markers['destination'] = Marker(
-        markerId: const MarkerId('destination'),
-        position: latlng,
+  Future<void> setLocationDetailsFormLatLon(LatLng latLng) async {
+    destination = latLng;
+    markers['Current Location'] = Marker(
+        markerId: const MarkerId('Current Location'),
+        position: latLng,
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-        infoWindow: const InfoWindow(title: 'Destination'));
+        infoWindow: const InfoWindow(title: 'Current Location'));
 
-    setState(() {
-      destination = LatLng(latlng.latitude, latlng.longitude);
-    });
+    setState(() {});
 
     cameraPositionUpdater(
-        destination = LatLng(latlng.latitude, latlng.longitude),
+        destination = LatLng(latLng.latitude, latLng.longitude),
         zoom: zoomLabel);
 
-    getPoliLinePoints(
-            LatLng(initMyLocation!.latitude, initMyLocation!.longitude),
-            destination = LatLng(latlng.latitude, latlng.longitude))
-        .then(
-      (value) {
-        for (int i = 1; i < value.length; i++) {
-          distance += Geolocator.distanceBetween(value[i - 1].latitude,
-              value[i - 1].longitude, value[i].latitude, value[i].longitude);
-        }
-
-        generatePolylinesFormsPoints(value);
-      },
-    );
     List<Placemark> placeMarks = await placemarkFromCoordinates(
-      latlng.latitude,
-      latlng.longitude,
+      latLng.latitude,
+      latLng.longitude,
     );
+
     final listOfAddress = analyzePlaceMark(placeMarks);
     street = listOfAddress[0];
     name = listOfAddress[1];
@@ -144,6 +152,13 @@ class _MyMapViewState extends State<FinishConveyance> {
 
   @override
   Widget build(BuildContext context) {
+    log(initMyLocation.toString(), name: 'init loc');
+    log(positionCalculationResult?.filteredPath.length.toString() ?? '0',
+        name: 'filtered points');
+    log(positionCalculationResult?.totalDistance.toString() ?? '0',
+        name: 'filtered dis');
+    log(positionCalculationResult?.totalDuration.toString() ?? '0',
+        name: 'filtered dur');
     return MediaQuery(
       data: MediaQuery.of(context)
           .copyWith(textScaler: TextScaler.linear(textScalerValue)),
@@ -185,14 +200,24 @@ class _MyMapViewState extends State<FinishConveyance> {
 
                       if (initMyLocation != null) {
                         addMarkers(
-                          'My Location',
+                          'Starting Location',
                           LatLng(initMyLocation!.latitude,
                               initMyLocation!.longitude),
-                          infoWindow: const InfoWindow(title: 'My Location'),
+                          infoWindow:
+                              const InfoWindow(title: 'Starting Location'),
                         );
                       }
                     },
-                    polylines: Set<Polyline>.of(polynlies.values),
+                    polylines: positionCalculationResult != null
+                        ? {
+                            Polyline(
+                              polylineId: PolylineId('conveyance_points'),
+                              points: positionCalculationResult!.filteredPath,
+                              color: Colors.red,
+                              width: 5,
+                            )
+                          }
+                        : {},
                   ),
             Container(
               alignment: Alignment.bottomCenter,
@@ -290,7 +315,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                                   ),
                                   const Gap(2),
                                   Text(
-                                    '${(distance / 1000).toStringAsFixed(2)} km',
+                                    '${((positionCalculationResult?.totalDistance ?? 0) / 1000).toStringAsFixed(3)} km',
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
@@ -302,7 +327,15 @@ class _MyMapViewState extends State<FinishConveyance> {
                                 width: double.infinity,
                                 child: ElevatedButton.icon(
                                   onPressed: () {
-                                    finishTheJourney(context, distance);
+                                    if (positionCalculationResult != null) {
+                                      finishTheJourney(
+                                        context: context,
+                                        distance: positionCalculationResult!
+                                            .totalDistance,
+                                        time: positionCalculationResult!
+                                            .totalDuration,
+                                      );
+                                    }
                                   },
                                   icon: const Icon(Icons.done),
                                   label: const Text('Finish the journey'),
@@ -320,7 +353,11 @@ class _MyMapViewState extends State<FinishConveyance> {
     );
   }
 
-  void finishTheJourney(BuildContext context, double distance) async {
+  void finishTheJourney({
+    required BuildContext context,
+    required double distance,
+    required Duration time,
+  }) async {
     TextEditingController controller = TextEditingController();
     showDialog(
       context: context,
@@ -469,7 +506,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                 ),
                 const Gap(5),
                 Text(
-                  'Distance : ${(distance / 1000).toStringAsFixed(2)} km',
+                  'Distance : ${(distance / 1000).toStringAsFixed(3)} km',
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -496,6 +533,8 @@ class _MyMapViewState extends State<FinishConveyance> {
                           'transport_mode': jsonEncode(
                               conveyanceDataController.transportModes.value),
                           'transport_cost': controller.text,
+                          'distance': distance,
+                          'time_duration': time.inMilliseconds,
                         });
                         final response = await put(
                           Uri.parse(
@@ -505,6 +544,15 @@ class _MyMapViewState extends State<FinishConveyance> {
                         );
 
                         if (response.statusCode == 200) {
+                          SharedPreferences sharedPreferences =
+                              await SharedPreferences.getInstance();
+                          await sharedPreferences.setBool(
+                            'conveyance_status',
+                            false,
+                          );
+                          await sharedPreferences
+                              .setStringList('conveyance_location_points', []);
+
                           final decoded = jsonDecode(response.body);
                           log('Message with success: ${response.body}');
                           if (decoded['success'] == true) {
@@ -536,6 +584,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                                 }
                                 conveyanceDataController.convinceData.value =
                                     temList.reversed.toList();
+                                Get.back();
                               }
                             } catch (e) {
                               log(e.toString());
@@ -543,18 +592,6 @@ class _MyMapViewState extends State<FinishConveyance> {
                             loadingTextController.currentState.value = 1;
                             loadingTextController.loadingText.value =
                                 'Successful';
-
-                            await Future.delayed(
-                                const Duration(milliseconds: 100));
-                            if (Navigator.canPop(context)) {
-                              Navigator.pop(context);
-                            }
-                            if (Navigator.canPop(context)) {
-                              Navigator.pop(context);
-                            }
-                            if (Navigator.canPop(context)) {
-                              Navigator.pop(context);
-                            }
                           }
                         } else {
                           Fluttertoast.showToast(
@@ -573,10 +610,10 @@ class _MyMapViewState extends State<FinishConveyance> {
     );
   }
 
-  Future<void> cameraPositionUpdater(LatLng latlon, {double? zoom}) async {
+  Future<void> cameraPositionUpdater(LatLng latLon, {double? zoom}) async {
     final GoogleMapController controller = await googleMapController.future;
     CameraPosition cameraPosition =
-        CameraPosition(target: latlon, zoom: zoomLabel);
+        CameraPosition(target: latLon, zoom: zoomLabel);
     await controller.animateCamera(
       CameraUpdate.newCameraPosition(cameraPosition),
     );
@@ -610,49 +647,5 @@ class _MyMapViewState extends State<FinishConveyance> {
       markers.remove(id);
       setState(() {});
     }
-  }
-
-  Future<List<LatLng>> getPoliLinePoints(LatLng pos1, pos2) async {
-    List<LatLng> polyLinePointsList = [];
-    PolylinePoints polylinePoints = PolylinePoints();
-    try {
-      PolylineResult polylineResult =
-          await polylinePoints.getRouteBetweenCoordinates(
-        googleApiKey: googleMapsApiKey,
-        request: PolylineRequest(
-          origin: PointLatLng(pos1.latitude, pos1.longitude),
-          destination: PointLatLng(pos2.latitude, pos2.longitude),
-          mode: TravelMode.driving,
-        ),
-      );
-      if (polylineResult.points.isNotEmpty) {
-        for (int i = 0; i < polylineResult.points.length; i++) {
-          polyLinePointsList.add(LatLng(polylineResult.points[i].latitude,
-              polylineResult.points[i].longitude));
-        }
-      } else {
-        if (kDebugMode) {
-          print(polylineResult.errorMessage);
-        }
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print(e);
-      }
-    }
-    return polyLinePointsList;
-  }
-
-  void generatePolylinesFormsPoints(List<LatLng> points) {
-    PolylineId id = const PolylineId('destination');
-    Polyline polyline = Polyline(
-      polylineId: id,
-      color: Colors.deepOrange,
-      points: points,
-      width: 7,
-    );
-    setState(() {
-      polynlies[id] = polyline;
-    });
   }
 }

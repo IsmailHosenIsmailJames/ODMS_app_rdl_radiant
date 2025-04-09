@@ -264,6 +264,10 @@ Future<void> analyzeResponseLogin(
         final box = Hive.box('info');
         await box.put('userData', response.body);
         await box.put('sap_id', jsonMapData['result']['sap_id']);
+        SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+        await sharedPreferences.setInt(
+            'user_sap_id', int.parse("${jsonMapData['result']['sap_id']}"));
         await box.put(
           'userLoginCradintial',
           userCredential,

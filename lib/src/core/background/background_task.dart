@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
@@ -7,8 +8,12 @@ import 'package:flutter_activity_recognition/flutter_activity_recognition.dart'
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
+import 'package:intl/intl.dart';
+import 'package:odms/src/apis/apis.dart';
 import 'package:odms/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
 import 'package:odms/src/core/background/socket_manager/socket_manager.dart';
+import 'package:odms/src/core/distance_calculator/calculate_distance_with_filter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @pragma('vm:entry-point')
@@ -36,8 +41,9 @@ class MyTaskHandler extends TaskHandler {
       if (event.type != activity_recognition.ActivityType.UNKNOWN) {
         log('Activity Update: ${event.type.name}');
         try {
-          final SharedPreferences info = await SharedPreferences.getInstance();
-          await info.setString('last_activity', event.type.name);
+          final SharedPreferences sharedPrefs =
+              await SharedPreferences.getInstance();
+          await sharedPrefs.setString('last_activity', event.type.name);
         } catch (e) {
           log('Error saving activity: $e');
         }
@@ -53,11 +59,22 @@ class MyTaskHandler extends TaskHandler {
     count++;
     try {
       log('onRepeatEvent triggered at $timestamp');
-      final SharedPreferences info = await SharedPreferences.getInstance();
-      final minimumDistance = info.getInt('minimum_distance');
-      final lastActivity = info.getString('last_activity');
-      double? lastPositionLat = info.getDouble('last_position_lat');
-      double? lastPositionLon = info.getDouble('last_position_lon');
+      final SharedPreferences sharedPrefs =
+          await SharedPreferences.getInstance();
+      await sharedPrefs.reload();
+      bool? isOnWorking = sharedPrefs.getBool('isOnWorking');
+      if (isOnWorking == false) {
+        log('Service is not working, stopping task.');
+        _socketManager?.disconnect();
+        _activitySubscription?.cancel();
+        FlutterForegroundTask.stopService();
+        log('Service stopped.');
+        return;
+      }
+      final minimumDistance = sharedPrefs.getInt('minimum_distance');
+      final lastActivity = sharedPrefs.getString('last_activity');
+      double? lastPositionLat = sharedPrefs.getDouble('last_position_lat');
+      double? lastPositionLon = sharedPrefs.getDouble('last_position_lon');
 
       if (!SocketManager().isConnected()) {
         log('Socket disconnected, attempting reconnect...');
@@ -66,14 +83,78 @@ class MyTaskHandler extends TaskHandler {
 
       log('Attempting to get current position...');
       final position = await Geolocator.getCurrentPosition();
+      bool? conveyanceStatus = sharedPrefs.getBool('conveyance_status');
+      if (conveyanceStatus == true) {
+        List<String> conveyanceLocationPoints =
+            (sharedPrefs.getStringList('conveyance_location_points')) ?? [];
+        conveyanceLocationPoints.add(jsonEncode(position.toJson()));
+        sharedPrefs.setStringList(
+            'conveyance_location_points', conveyanceLocationPoints);
+        log('Conveyance location point saved: ${position.toJson()} Len${conveyanceLocationPoints.length}',
+            name: 'conveyance_location_points_background');
+      }
+
+      List<String> entireWorkingDayPosition =
+          sharedPrefs.getStringList('entire_working_day_position') ?? [];
+      entireWorkingDayPosition.add(jsonEncode(position.toJson()));
+      await sharedPrefs.setStringList(
+          'entire_working_day_position', entireWorkingDayPosition);
+      log('Len : ${entireWorkingDayPosition.length}',
+          name: 'entireWorkingDayPosition');
       log('Position obtained: ${position.latitude}, ${position.longitude}');
+
+      sharedPrefs.get('conveyance_status');
 
       if (lastPositionLon == null || lastPositionLat == null) {
         lastPositionLon = position.longitude;
         lastPositionLat = position.latitude;
-        await info.setDouble('last_position_lat', position.latitude);
-        await info.setDouble('last_position_lon', position.longitude);
+        await sharedPrefs.setDouble('last_position_lat', position.latitude);
+        await sharedPrefs.setDouble('last_position_lon', position.longitude);
         log('Initial position saved.');
+      }
+
+      if (DateTime.now().hour > 22) {
+        if (sharedPrefs.getString('date_of_upload_day_activity') !=
+            DateFormat('yyyy-MM-dd').format(DateTime.now())) {
+          List<String> entireDayPositionRaw =
+              sharedPrefs.getStringList('entire_working_day_position') ?? [];
+
+          List<Position> listOfPositionOfEntireDay = entireDayPositionRaw
+              .map((e) => Position.fromMap(jsonDecode(e)))
+              .toList();
+          PositionCalculationResult positionCalculationResult =
+              PositionPointsCalculator(rawPositions: listOfPositionOfEntireDay)
+                  .processData();
+
+          try {
+            int? sapID = sharedPrefs.getInt('user_sap_id');
+            final response = await post(
+              Uri.parse('$base$saveMovementInfo'),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: jsonEncode({
+                {
+                  'da_code': sapID,
+                  'mv_date': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                  'time_duration': positionCalculationResult.totalDistance,
+                  'distance':
+                      positionCalculationResult.totalDuration.inMilliseconds
+                }
+              }),
+            );
+            if (response.statusCode == 200) {
+              await sharedPrefs
+                  .setStringList('entire_working_day_position', []);
+              await sharedPrefs.setString('date_of_upload_day_activity',
+                  DateFormat('yyyy-MM-dd').format(DateTime.now()));
+
+              log('Successfully saved movement info');
+            }
+          } catch (e) {
+            log(e.toString());
+          }
+        }
       }
 
       double distance = Geolocator.distanceBetween(
@@ -84,8 +165,8 @@ class MyTaskHandler extends TaskHandler {
       );
 
       if (distance > (minimumDistance ?? 5)) {
-        await info.setDouble('last_position_lat', position.latitude);
-        await info.setDouble('last_position_lon', position.longitude);
+        await sharedPrefs.setDouble('last_position_lat', position.latitude);
+        await sharedPrefs.setDouble('last_position_lon', position.longitude);
         count++;
         log('Distance threshold exceeded. Sending location via socket...');
 
