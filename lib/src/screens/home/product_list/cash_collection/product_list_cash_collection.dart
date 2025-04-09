@@ -710,14 +710,14 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
         loadingTextController.loadingText.value =
             'Your Location Accessed\nSending data to server\nPlease wait...';
 
-        final uri = Uri.parse("$base$cashCollectionSave/${widget.invoice.id}");
+        final uri = Uri.parse('$base$cashCollectionSave/${widget.invoice.id}');
         final response = await http.put(
           uri,
           headers: {'Content-Type': 'application/json'},
           body: toSendCashDataModel.toJson(),
         );
         if (kDebugMode) {
-          log("$base$cashCollectionSave/${widget.invoice.id}");
+          log('$base$cashCollectionSave/${widget.invoice.id}');
           log('received form api: ');
           log(response.body);
         }

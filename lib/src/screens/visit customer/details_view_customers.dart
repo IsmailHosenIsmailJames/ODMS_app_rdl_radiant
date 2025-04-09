@@ -60,7 +60,7 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
   Future<void> getData() async {
     String partnerID = widget.partnerID;
     http.Response response = await http
-        .get(Uri.parse("$base$getCustomerDetailsByPartnerID/$partnerID"));
+        .get(Uri.parse('$base$getCustomerDetailsByPartnerID/$partnerID'));
     if (response.statusCode == 200) {
       Map decodedData = jsonDecode(response.body);
       if (decodedData['success'] == true) {
@@ -277,9 +277,9 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                   Gap(5),
                   TextFormField(
                     controller: commentsController,
-                    decoration: InputDecoration(border: OutlineInputBorder(),
-                    hintText: 'type your comment here...'
-                    ),
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'type your comment here...'),
                   ),
                   Gap(15),
                   SizedBox(
