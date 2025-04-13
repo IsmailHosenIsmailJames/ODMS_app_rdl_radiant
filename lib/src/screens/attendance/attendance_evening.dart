@@ -268,8 +268,14 @@ class _AttendanceEveningState extends State<AttendanceEvening> {
                                       'date_of_upload_day_activity',
                                       DateFormat('yyyy-MM-dd')
                                           .format(DateTime.now()));
+                                  Fluttertoast.showToast(
+                                      msg: 'Movement Data Send Successful');
 
                                   log('Successfully saved movement info');
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg:
+                                          'Movement Data Send -> ${response.statusCode}');
                                 }
                               } on DioException catch (e) {
                                 log(e.message?.toString() ?? 'Not found');
@@ -277,6 +283,8 @@ class _AttendanceEveningState extends State<AttendanceEvening> {
                                     'Not found');
                                 log(e.response?.data?.toString() ??
                                     'Not found');
+                                Fluttertoast.showToast(
+                                    msg: 'Failed to send movement data');
                               }
 
                               unawaited(
