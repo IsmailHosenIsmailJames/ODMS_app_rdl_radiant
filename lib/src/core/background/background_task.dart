@@ -136,7 +136,8 @@ class MyTaskHandler extends TaskHandler {
               body: jsonEncode({
                 'da_code': sapID,
                 'mv_date': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                'time_duration': positionCalculationResult.totalDistance,
+                'time_duration':
+                    positionCalculationResult.totalDistance.toInt(),
                 'distance':
                     positionCalculationResult.totalDuration.inMilliseconds
               }),

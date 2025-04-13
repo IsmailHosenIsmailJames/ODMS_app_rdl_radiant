@@ -252,30 +252,40 @@ class _AttendanceEveningState extends State<AttendanceEvening> {
                                     'da_code': decodeData['result']['sap_id'],
                                     'mv_date': DateFormat('yyyy-MM-dd')
                                         .format(DateTime.now()),
-                                    'time_duration':
-                                        positionCalculationResult.totalDistance,
+                                    'time_duration': positionCalculationResult
+                                        .totalDistance
+                                        .toInt(),
                                     'distance': positionCalculationResult
                                         .totalDuration.inMilliseconds
                                   }),
                                 );
                                 if (response.statusCode == 200) {
-                                  await prefs.setBool('isOnWorking', false);
-                                  await box.put('lastEveningAttendanceDate',
-                                      DateTime.now().day);
-                                  await prefs.setStringList(
-                                      'entire_working_day_position', []);
-                                  await prefs.setString(
-                                      'date_of_upload_day_activity',
-                                      DateFormat('yyyy-MM-dd')
-                                          .format(DateTime.now()));
-                                  Fluttertoast.showToast(
-                                      msg: 'Movement Data Send Successful');
+                                  if (jsonDecode(response.body)['success'] ==
+                                      true) {
+                                    await prefs.setBool('isOnWorking', false);
+                                    await box.put('lastEveningAttendanceDate',
+                                        DateTime.now().day);
+                                    await prefs.setStringList(
+                                        'entire_working_day_position', []);
+                                    await prefs.setString(
+                                        'date_of_upload_day_activity',
+                                        DateFormat('yyyy-MM-dd')
+                                            .format(DateTime.now()));
+                                    Fluttertoast.showToast(
+                                        msg: 'Movement Data Send Successful');
 
-                                  log('Successfully saved movement info');
+                                    log('Successfully saved movement info');
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg:
+                                            'Movement Data Send Success -> False');
+                                    log('Success -> False',
+                                        name: 'Save Movement');
+                                  }
                                 } else {
                                   Fluttertoast.showToast(
                                       msg:
-                                          'Movement Data Send -> ${response.statusCode}');
+                                          'Movement Data Send Failed:${response.statusCode}');
                                 }
                               } on DioException catch (e) {
                                 log(e.message?.toString() ?? 'Not found');
