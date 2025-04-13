@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -207,6 +208,7 @@ class _AttendancePageState extends State<AttendancePage> {
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         await prefs.setBool('isOnWorking', true);
+                        log('isOnWorking -> true', name: 'Set Value');
                         unawaited(Fluttertoast.showToast(msg: 'Successful'));
                         final userLoginDataCredential =
                             Map<String, dynamic>.from(

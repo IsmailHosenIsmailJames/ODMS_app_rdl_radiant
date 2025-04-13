@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -223,9 +224,6 @@ class _AttendanceEveningState extends State<AttendanceEvening> {
                               SharedPreferences prefs =
                                   await SharedPreferences.getInstance();
                               await prefs.reload();
-                              await prefs.setBool('isOnWorking', false);
-                              await box.put('lastEveningAttendanceDate',
-                                  DateTime.now().day);
 
                               List<String> entireDayPositionRaw =
                                   prefs.getStringList(
@@ -251,18 +249,19 @@ class _AttendanceEveningState extends State<AttendanceEvening> {
                                     'Content-Type': 'application/json',
                                   },
                                   body: jsonEncode({
-                                    {
-                                      'da_code': decodeData['result']['sap_id'],
-                                      'mv_date': DateFormat('yyyy-MM-dd')
-                                          .format(DateTime.now()),
-                                      'time_duration': positionCalculationResult
-                                          .totalDistance,
-                                      'distance': positionCalculationResult
-                                          .totalDuration.inMilliseconds
-                                    }
+                                    'da_code': decodeData['result']['sap_id'],
+                                    'mv_date': DateFormat('yyyy-MM-dd')
+                                        .format(DateTime.now()),
+                                    'time_duration':
+                                        positionCalculationResult.totalDistance,
+                                    'distance': positionCalculationResult
+                                        .totalDuration.inMilliseconds
                                   }),
                                 );
                                 if (response.statusCode == 200) {
+                                  await prefs.setBool('isOnWorking', false);
+                                  await box.put('lastEveningAttendanceDate',
+                                      DateTime.now().day);
                                   await prefs.setStringList(
                                       'entire_working_day_position', []);
                                   await prefs.setString(
@@ -272,8 +271,12 @@ class _AttendanceEveningState extends State<AttendanceEvening> {
 
                                   log('Successfully saved movement info');
                                 }
-                              } catch (e) {
-                                log(e.toString());
+                              } on DioException catch (e) {
+                                log(e.message?.toString() ?? 'Not found');
+                                log(e.response?.statusCode?.toString() ??
+                                    'Not found');
+                                log(e.response?.data?.toString() ??
+                                    'Not found');
                               }
 
                               unawaited(

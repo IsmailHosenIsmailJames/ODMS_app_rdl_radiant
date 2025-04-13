@@ -134,13 +134,11 @@ class MyTaskHandler extends TaskHandler {
                 'Content-Type': 'application/json',
               },
               body: jsonEncode({
-                {
-                  'da_code': sapID,
-                  'mv_date': DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                  'time_duration': positionCalculationResult.totalDistance,
-                  'distance':
-                      positionCalculationResult.totalDuration.inMilliseconds
-                }
+                'da_code': sapID,
+                'mv_date': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                'time_duration': positionCalculationResult.totalDistance,
+                'distance':
+                    positionCalculationResult.totalDuration.inMilliseconds
               }),
             );
             if (response.statusCode == 200) {
