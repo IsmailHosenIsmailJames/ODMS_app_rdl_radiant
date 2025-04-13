@@ -252,10 +252,10 @@ class _AttendanceEveningState extends State<AttendanceEvening> {
                                     'da_code': decodeData['result']['sap_id'],
                                     'mv_date': DateFormat('yyyy-MM-dd')
                                         .format(DateTime.now()),
-                                    'time_duration': positionCalculationResult
+                                    'distance': positionCalculationResult
                                         .totalDistance
                                         .toInt(),
-                                    'distance': positionCalculationResult
+                                    'time_duration': positionCalculationResult
                                         .totalDuration.inMilliseconds
                                   }),
                                 );
