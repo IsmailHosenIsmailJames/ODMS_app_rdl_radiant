@@ -16,6 +16,7 @@ import 'package:odms/src/screens/overdue/models/overdue_response_model.dart';
 import 'package:odms/src/screens/overdue/overdue_customer_list.dart';
 import 'package:odms/src/screens/visit%20customer/visits_customer_page.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../apis/apis.dart';
@@ -268,6 +269,8 @@ class _MyDrawerState extends State<MyDrawer> {
                 Navigator.pop(context);
                 await Hive.deleteBoxFromDisk('info');
                 await Hive.openBox('info');
+                final pref = await SharedPreferences.getInstance();
+                await pref.clear();
                 unawaited(
                   Get.offAll(
                     () => const LoginPage(),
