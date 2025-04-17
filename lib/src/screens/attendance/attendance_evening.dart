@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:odms/src/apis/apis.dart';
 import 'package:odms/src/core/distance_calculator/calculate_distance_with_filter.dart';
+import 'package:odms/src/core/distance_calculator/custom_position_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/login/login_function.dart';
@@ -239,7 +240,14 @@ class _AttendanceEveningState extends State<AttendanceEvening> {
                                   positionCalculationResult =
                                   PositionPointsCalculator(
                                           rawPositions:
-                                              listOfPositionOfEntireDay)
+                                              listOfPositionOfEntireDay
+                                                  .map(
+                                                    (e) => CustomPositionModel(
+                                                        latitude: e.latitude,
+                                                        longitude: e.longitude,
+                                                        timestamp: e.timestamp),
+                                                  )
+                                                  .toList())
                                       .processData();
 
                               try {

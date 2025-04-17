@@ -580,31 +580,11 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                         current.endJourneyLongitude != null)
                                       Row(
                                         children: [
-                                          const Text(
-                                            'Distance: ',
+                                          Text(
+                                            'Distance: ${current.distance} km',
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                          const Gap(5),
-                                          Text(
-                                            '${(Geolocator.distanceBetween(
-                                                  double.parse(current
-                                                          .startJourneyLatitude ??
-                                                      '0'),
-                                                  double.parse(current
-                                                          .startJourneyLongitude ??
-                                                      '0'),
-                                                  double.parse(current
-                                                          .endJourneyLatitude ??
-                                                      '0'),
-                                                  double.parse(current
-                                                          .endJourneyLongitude ??
-                                                      '0'),
-                                                ) / 1000).toStringAsFixed(2)} km',
-                                            style: const TextStyle(
-                                              fontSize: 16,
                                             ),
                                           ),
                                         ],

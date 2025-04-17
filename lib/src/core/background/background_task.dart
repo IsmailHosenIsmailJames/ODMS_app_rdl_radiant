@@ -14,6 +14,7 @@ import 'package:odms/src/apis/apis.dart';
 import 'package:odms/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
 import 'package:odms/src/core/background/socket_manager/socket_manager.dart';
 import 'package:odms/src/core/distance_calculator/calculate_distance_with_filter.dart';
+import 'package:odms/src/core/distance_calculator/custom_position_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 @pragma('vm:entry-point')
@@ -119,8 +120,8 @@ class MyTaskHandler extends TaskHandler {
           List<String> entireDayPositionRaw =
               sharedPrefs.getStringList('entire_working_day_position') ?? [];
 
-          List<Position> listOfPositionOfEntireDay = entireDayPositionRaw
-              .map((e) => Position.fromMap(jsonDecode(e)))
+          List<CustomPositionModel> listOfPositionOfEntireDay = entireDayPositionRaw
+              .map((e) => CustomPositionModel.fromMap(jsonDecode(e)))
               .toList();
           PositionCalculationResult positionCalculationResult =
               PositionPointsCalculator(rawPositions: listOfPositionOfEntireDay)

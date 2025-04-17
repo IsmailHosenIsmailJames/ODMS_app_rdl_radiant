@@ -12,6 +12,7 @@ class SavePharmaceuticalsLocationData {
   dynamic transportMode;
   dynamic transportCost;
   String? journeyStatus;
+  String? distance;
   String? createdAt;
   String? updatedAt;
 
@@ -27,6 +28,7 @@ class SavePharmaceuticalsLocationData {
     this.transportMode,
     this.transportCost,
     this.journeyStatus,
+    this.distance,
     this.createdAt,
     this.updatedAt,
   });
@@ -43,6 +45,7 @@ class SavePharmaceuticalsLocationData {
     dynamic transportMode,
     dynamic transportCost,
     String? journeyStatus,
+    String? distance,
     String? createdAt,
     String? updatedAt,
   }) =>
@@ -59,6 +62,7 @@ class SavePharmaceuticalsLocationData {
         transportMode: transportMode ?? this.transportMode,
         transportCost: transportCost ?? this.transportCost,
         journeyStatus: journeyStatus ?? this.journeyStatus,
+        distance: distance ?? this.distance,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );
@@ -81,6 +85,7 @@ class SavePharmaceuticalsLocationData {
         transportMode: json['transport_mode'],
         transportCost: json['transport_cost'],
         journeyStatus: json['journey_status'],
+        distance: json['distance'],
         createdAt: json['created_at'],
         updatedAt: json['updated_at'],
       );
@@ -97,6 +102,7 @@ class SavePharmaceuticalsLocationData {
         'transport_mode': transportMode,
         'transport_cost': transportCost,
         'journey_status': journeyStatus,
+        'distance': distance,
         'created_at': createdAt,
         'updated_at': updatedAt,
       };

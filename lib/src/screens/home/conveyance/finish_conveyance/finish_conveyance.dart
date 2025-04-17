@@ -16,6 +16,7 @@ import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:odms/src/apis/apis.dart';
 import 'package:odms/src/core/distance_calculator/calculate_distance_with_filter.dart';
+import 'package:odms/src/core/distance_calculator/custom_position_model.dart';
 import 'package:odms/src/screens/home/conveyance/controller/conveyance_data_controller.dart';
 import 'package:odms/src/screens/home/conveyance/conveyance_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,8 +61,27 @@ class _MyMapViewState extends State<FinishConveyance> {
           destination = LatLng(value.latitude, value.longitude);
         });
         setLocationDetailsFormLatLon(destination!);
-        List<Position> entirePosition = await getPositionOfEntireConveyance();
-        entirePosition.add(value);
+        List<CustomPositionModel> entirePosition =
+            (await getPositionOfEntireConveyance())
+                .map((e) => CustomPositionModel(
+                    latitude: e.latitude,
+                    longitude: e.longitude,
+                    timestamp: e.timestamp))
+                .toList();
+        entirePosition.insert(
+            0,
+            CustomPositionModel(
+                latitude: initMyLocation!.latitude,
+                longitude: initMyLocation!.longitude,
+                timestamp: DateTime.parse(
+                    widget.conveyanceData.startJourneyDateTime!)));
+        entirePosition.add(
+          CustomPositionModel(
+            latitude: value.latitude,
+            longitude: value.longitude,
+            timestamp: value.timestamp,
+          ),
+        );
         positionCalculationResult =
             await getPointsCalculationResult(listOfPositions: entirePosition);
         setState(() {});
@@ -89,8 +109,15 @@ class _MyMapViewState extends State<FinishConveyance> {
   }
 
   Future<PositionCalculationResult> getPointsCalculationResult(
-      {List<Position>? listOfPositions}) async {
-    listOfPositions ??= await getPositionOfEntireConveyance();
+      {List<CustomPositionModel>? listOfPositions}) async {
+    listOfPositions ??= (await getPositionOfEntireConveyance())
+        .map(
+          (e) => CustomPositionModel(
+              latitude: e.latitude,
+              longitude: e.longitude,
+              timestamp: e.timestamp),
+        )
+        .toList();
     PositionCalculationResult result =
         PositionPointsCalculator(rawPositions: listOfPositions).processData();
     return result;
@@ -153,8 +180,6 @@ class _MyMapViewState extends State<FinishConveyance> {
   @override
   Widget build(BuildContext context) {
     log(initMyLocation.toString(), name: 'init loc');
-    log(positionCalculationResult?.filteredPath.length.toString() ?? '0',
-        name: 'filtered points');
     log(positionCalculationResult?.totalDistance.toString() ?? '0',
         name: 'filtered dis');
     log(positionCalculationResult?.totalDuration.toString() ?? '0',
@@ -212,7 +237,7 @@ class _MyMapViewState extends State<FinishConveyance> {
                         ? {
                             Polyline(
                               polylineId: PolylineId('conveyance_points'),
-                              points: positionCalculationResult!.filteredPath,
+                              points: positionCalculationResult!.paths,
                               color: Colors.red,
                               width: 5,
                             )
