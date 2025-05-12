@@ -12,7 +12,7 @@ import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart'
     as permission_handler;
 
-import '../attendance/attendance_page.dart';
+// import '../attendance/attendance_page.dart';
 import '../home/home_page.dart';
 import 'check_and_request_permissions.dart';
 
@@ -62,7 +62,7 @@ class _CheckLocationServiceState extends State<CheckLocationService> {
       } else {
         unawaited(
           Get.offAll(
-            () => const AttendancePage(),
+            () => const HomePage(),
           ),
         );
       }

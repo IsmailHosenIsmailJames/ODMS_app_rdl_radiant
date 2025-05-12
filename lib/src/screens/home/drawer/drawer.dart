@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-import 'package:odms/src/screens/attendance/attendance_evening.dart';
+// import 'package:odms/src/screens/attendance/attendance_evening.dart';
 import 'package:odms/src/screens/auth/login/login_page.dart';
 import 'package:odms/src/screens/customer_location/set_customer_location.dart';
 import 'package:odms/src/screens/overdue/models/overdue_response_model.dart';
@@ -95,15 +95,17 @@ class _MyDrawerState extends State<MyDrawer> {
           const Gap(10),
           SizedBox(
             child: TextButton(
-              onPressed: () {
-                if (Navigator.canPop(context)) {
-                  Navigator.pop(context);
-                }
+              onPressed:
+                  //  () {
+                  //   if (Navigator.canPop(context)) {
+                  //     Navigator.pop(context);
+                  //   }
 
-                Get.to(
-                  () => const AttendanceEvening(),
-                );
-              },
+                  //   Get.to(
+                  //     () => const AttendanceEvening(),
+                  //   );
+                  // },
+                  null,
               child: const Row(
                 children: [
                   Gap(20),

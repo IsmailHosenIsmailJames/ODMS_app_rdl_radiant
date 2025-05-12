@@ -13,7 +13,7 @@ import 'package:hive/hive.dart';
 import 'package:permission_handler/permission_handler.dart'
     as permission_handler;
 
-import '../attendance/attendance_page.dart';
+// import '../attendance/attendance_page.dart';
 import '../home/home_page.dart';
 
 class CheckAndRequestPermissions extends StatefulWidget {
@@ -203,7 +203,7 @@ class _CheckAndRequestPermissionsState
                 } else {
                   unawaited(
                     Get.offAll(
-                      () => const AttendancePage(),
+                      () => const HomePage(),
                     ),
                   );
                 }
