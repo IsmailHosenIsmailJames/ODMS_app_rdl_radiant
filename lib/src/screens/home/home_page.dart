@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+// import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -13,8 +13,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:odms/src/apis/apis.dart';
-import 'package:odms/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
-import 'package:odms/src/core/background/socket_manager/socket_manager.dart';
+// import 'package:odms/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
+// import 'package:odms/src/core/background/socket_manager/socket_manager.dart';
 import 'package:odms/src/screens/home/dash_board_controller/dash_board_model.dart';
 import 'package:odms/src/screens/home/dash_board_controller/dashboard_controller_getx.dart';
 import 'package:odms/src/screens/home/delivery_remaining/delivery_remaining_page.dart';
@@ -25,7 +25,7 @@ import 'package:odms/src/widgets/loading/loading_popup_widget.dart';
 import 'package:odms/src/widgets/loading/loading_text_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../core/background/background_setup.dart';
+// import '../../core/background/background_setup.dart';
 import 'delivery_remaining/controller/delivery_remaining_controller.dart';
 import 'page_sate_definition.dart';
 
@@ -37,7 +37,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final socketConnectionStateGetx = Get.put(SocketConnectionState());
+  // final socketConnectionStateGetx = Get.put(SocketConnectionState());
   final dashboardController = Get.put(DashboardControllerGetx());
   final LoadingTextController loadingTextController = Get.find();
   Map<String, dynamic> jsonUserData = {};
@@ -53,17 +53,17 @@ class _HomePageState extends State<HomePage> {
     );
     jsonUserData = Map<String, dynamic>.from(jsonUserData['result'] as Map);
 
-    FlutterForegroundTask.addTaskDataCallback(onReceiveTaskData);
-    SocketManager().connect();
+    // FlutterForegroundTask.addTaskDataCallback(onReceiveTaskData);
+    // SocketManager().connect();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Request permissions and initialize the service.
-      requestPermissions().then((value) {
-        initService().then((value) {
-          startService();
-        });
-      });
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   // Request permissions and initialize the service.
+    //   requestPermissions().then((value) {
+    //     initService().then((value) {
+    //       startService();
+    //     });
+    //   });
+    // });
 
     getDashBoardData();
     super.initState();
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     // Remove a callback to receive data sent from the TaskHandler.
-    FlutterForegroundTask.removeTaskDataCallback(onReceiveTaskData);
+    // FlutterForegroundTask.removeTaskDataCallback(onReceiveTaskData);
     super.dispose();
   }
 
