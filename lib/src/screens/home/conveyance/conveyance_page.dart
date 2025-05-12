@@ -14,7 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:odms/src/apis/apis.dart';
 import 'package:odms/src/screens/home/conveyance/controller/conveyance_data_controller.dart';
 import 'package:http/http.dart' as http;
-import 'package:odms/src/screens/home/conveyance/finish_conveyance/finish_conveyance.dart';
+// import 'package:odms/src/screens/home/conveyance/finish_conveyance/finish_conveyance.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../theme/text_scaler_theme.dart';
 import '../../../widgets/loading/loading_popup_widget.dart';
@@ -559,15 +559,16 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                     SizedBox(
                                       width: double.infinity,
                                       child: ElevatedButton(
-                                        onPressed: () async {
-                                          await Get.to(
-                                            () => FinishConveyance(
-                                              conveyanceData:
-                                                  convinceData.value[index],
-                                            ),
-                                          );
-                                          setState(() {});
-                                        },
+                                        onPressed: null,
+                                        //  () async {
+                                        //   await Get.to(
+                                        //     () => FinishConveyance(
+                                        //       conveyanceData:
+                                        //           convinceData.value[index],
+                                        //     ),
+                                        //   );
+                                        //   setState(() {});
+                                        // },
                                         child: const Text('Next'),
                                       ),
                                     ),
@@ -636,66 +637,67 @@ class _ConveyancePageState extends State<ConveyancePage> {
       child: SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: () async {
-            loadingTextController.currentState.value = 0;
-            loadingTextController.loadingText.value =
-                'Getting your Location\nPlease wait...';
+          onPressed: null,
+          //  () async {
+          //   loadingTextController.currentState.value = 0;
+          //   loadingTextController.loadingText.value =
+          //       'Getting your Location\nPlease wait...';
 
-            showCustomPopUpLoadingDialog(context, isCupertino: true);
+          //   showCustomPopUpLoadingDialog(context, isCupertino: true);
 
-            Position position = await Geolocator.getCurrentPosition();
-            List<Placemark> placeMarks = await placemarkFromCoordinates(
-              position.latitude,
-              position.longitude,
-            );
-            List<String> placeMarkImportantData = analyzePlaceMark(placeMarks);
+          //   Position position = await Geolocator.getCurrentPosition();
+          //   List<Placemark> placeMarks = await placemarkFromCoordinates(
+          //     position.latitude,
+          //     position.longitude,
+          //   );
+          //   List<String> placeMarkImportantData = analyzePlaceMark(placeMarks);
 
-            if (Navigator.canPop(context)) {
-              Navigator.pop(context);
-            }
+          //   if (Navigator.canPop(context)) {
+          //     Navigator.pop(context);
+          //   }
 
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                insetPadding: EdgeInsets.all(8),
-                contentPadding: EdgeInsets.all(10),
-                titlePadding: EdgeInsets.all(10),
-                buttonPadding: EdgeInsets.all(10),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)),
-                title: const Text('Are you sure?'),
-                content: getAddressWidget(placeMarkImportantData,
-                    LatLng(position.latitude, position.longitude)),
-                actions: [
-                  SizedBox(
-                    width: 120,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey.shade300,
-                        foregroundColor: Colors.blue.shade900,
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text('Cancel'),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 120,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final box = Hive.box('info');
+          //   showDialog(
+          //     context: context,
+          //     builder: (context) => AlertDialog(
+          //       insetPadding: EdgeInsets.all(8),
+          //       contentPadding: EdgeInsets.all(10),
+          //       titlePadding: EdgeInsets.all(10),
+          //       buttonPadding: EdgeInsets.all(10),
+          //       shape: RoundedRectangleBorder(
+          //           borderRadius: BorderRadius.circular(10)),
+          //       title: const Text('Are you sure?'),
+          //       content: getAddressWidget(placeMarkImportantData,
+          //           LatLng(position.latitude, position.longitude)),
+          //       actions: [
+          //         SizedBox(
+          //           width: 120,
+          //           child: ElevatedButton(
+          //             style: ElevatedButton.styleFrom(
+          //               backgroundColor: Colors.grey.shade300,
+          //               foregroundColor: Colors.blue.shade900,
+          //             ),
+          //             onPressed: () {
+          //               Navigator.pop(context);
+          //             },
+          //             child: const Text('Cancel'),
+          //           ),
+          //         ),
+          //         SizedBox(
+          //           width: 120,
+          //           child: ElevatedButton(
+          //             onPressed: () {
+          //               final box = Hive.box('info');
 
-                        callStartConveyance(
-                            position, box.get('sap_id').toString());
-                      },
-                      child: const Text('Yes'),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
+          //               callStartConveyance(
+          //                   position, box.get('sap_id').toString());
+          //             },
+          //             child: const Text('Yes'),
+          //           ),
+          //         ),
+          //       ],
+          //     ),
+          //   );
+          // },
           child: const Text('Start New Conveyance'),
         ),
       ),
