@@ -568,7 +568,12 @@ class _ConveyancePageState extends State<ConveyancePage> {
                                           );
                                           setState(() {});
                                         },
-                                        child: const Text('Next'),
+                                        child: const Text(
+                                          'Finish it',
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500),
+                                        ),
                                       ),
                                     ),
                                   if (!isLive)

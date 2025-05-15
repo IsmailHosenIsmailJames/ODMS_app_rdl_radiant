@@ -45,6 +45,8 @@ class _MyMapViewState extends State<FinishConveyance> {
   LatLng? initMyLocation;
   LatLng? destination;
 
+  late List<CustomPositionModel> entirePosition;
+
   @override
   void initState() {
     super.initState();
@@ -61,13 +63,12 @@ class _MyMapViewState extends State<FinishConveyance> {
           destination = LatLng(value.latitude, value.longitude);
         });
         setLocationDetailsFormLatLon(destination!);
-        List<CustomPositionModel> entirePosition =
-            (await getPositionOfEntireConveyance())
-                .map((e) => CustomPositionModel(
-                    latitude: e.latitude,
-                    longitude: e.longitude,
-                    timestamp: e.timestamp))
-                .toList();
+        entirePosition = (await getPositionOfEntireConveyance())
+            .map((e) => CustomPositionModel(
+                latitude: e.latitude,
+                longitude: e.longitude,
+                timestamp: e.timestamp))
+            .toList();
         entirePosition.insert(
             0,
             CustomPositionModel(
@@ -351,19 +352,46 @@ class _MyMapViewState extends State<FinishConveyance> {
                               SizedBox(
                                 width: double.infinity,
                                 child: ElevatedButton.icon(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     if (positionCalculationResult != null) {
+                                      loadingTextController.currentState.value =
+                                          0;
+                                      loadingTextController.loadingText.value =
+                                          'Getting your current Location\nPlease wait...';
+                                      showCustomPopUpLoadingDialog(context,
+                                          isCupertino: true);
+                                      final Position position =
+                                          await Geolocator.getCurrentPosition();
+                                      loadingTextController.currentState.value =
+                                          1;
+                                      loadingTextController.loadingText.value =
+                                          'Successful';
+                                      Navigator.pop(context);
+
+                                      entirePosition.add(CustomPositionModel(
+                                          latitude: position.latitude,
+                                          longitude: position.longitude,
+                                          timestamp: position.timestamp));
+                                      positionCalculationResult =
+                                          await getPointsCalculationResult(
+                                              listOfPositions: entirePosition);
+
                                       finishTheJourney(
-                                        context: context,
-                                        distance: positionCalculationResult!
-                                            .totalDistance,
-                                        time: positionCalculationResult!
-                                            .totalDuration,
-                                      );
+                                          context: context,
+                                          distance: positionCalculationResult!
+                                              .totalDistance,
+                                          time: positionCalculationResult!
+                                              .totalDuration,
+                                          position: position);
                                     }
                                   },
                                   icon: const Icon(Icons.done),
-                                  label: const Text('Finish the journey'),
+                                  label: const Text(
+                                    'Finish the journey',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500),
+                                  ),
                                 ),
                               ),
                             ],
@@ -382,8 +410,10 @@ class _MyMapViewState extends State<FinishConveyance> {
     required BuildContext context,
     required double distance,
     required Duration time,
+    required Position position,
   }) async {
     TextEditingController controller = TextEditingController();
+
     showDialog(
       context: context,
       builder: (context) {
@@ -552,9 +582,9 @@ class _MyMapViewState extends State<FinishConveyance> {
 
                         String toSendData = jsonEncode({
                           'end_journey_latitude':
-                              destination!.latitude.toStringAsFixed(9),
+                              position.latitude.toStringAsFixed(9),
                           'end_journey_longitude':
-                              destination!.longitude.toStringAsFixed(9),
+                              position.longitude.toStringAsFixed(9),
                           'transport_mode': jsonEncode(
                               conveyanceDataController.transportModes.value),
                           'transport_cost': controller.text,
