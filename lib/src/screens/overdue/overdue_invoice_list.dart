@@ -355,10 +355,11 @@ class _OverdueInvoiceListState extends State<OverdueInvoiceList> {
                                       height: 30,
                                       width: double.infinity,
                                       child: ElevatedButton(
-                                        onPressed: () {
-                                          callDueCollectionApi(
-                                              docsList, index, context);
-                                        },
+                                        onPressed: null,
+                                        //  () {
+                                        //   callDueCollectionApi(
+                                        //       docsList, index, context);
+                                        // },
                                         child: Text('Collect'),
                                       ),
                                     ),

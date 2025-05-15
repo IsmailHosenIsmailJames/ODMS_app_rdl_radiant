@@ -638,9 +638,10 @@ class _ProductListPageState extends State<ProductListPage> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.45,
                           child: ElevatedButton(
-                            onPressed: () async {
-                              await onDeliveredButtonPressed(context);
-                            },
+                            onPressed: null,
+                            //  () async {
+                            //   await onDeliveredButtonPressed(context);
+                            // },
                             child: const Text('Delivered'),
                           ),
                         ),

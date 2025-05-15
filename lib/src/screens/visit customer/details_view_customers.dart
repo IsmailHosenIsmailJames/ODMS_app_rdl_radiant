@@ -7,7 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
+// import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -285,108 +285,109 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: ElevatedButton.icon(
-                      onPressed: () async {
-                        if (visitTypeName != null) {
-                          loadingTextController.currentState.value = 0;
-                          loadingTextController.loadingText.value =
-                              'Getting your Location\nPlease wait...';
+                      onPressed: null,
+                      //  () async {
+                      //   if (visitTypeName != null) {
+                      //     loadingTextController.currentState.value = 0;
+                      //     loadingTextController.loadingText.value =
+                      //         'Getting your Location\nPlease wait...';
 
-                          showCustomPopUpLoadingDialog(context,
-                              isCupertino: true);
+                      //     showCustomPopUpLoadingDialog(context,
+                      //         isCupertino: true);
 
-                          Position position =
-                              await Geolocator.getCurrentPosition();
+                      //     Position position =
+                      //         await Geolocator.getCurrentPosition();
 
-                          log('Got user Location');
+                      //     log('Got user Location');
 
-                          if (Navigator.canPop(context)) {
-                            Navigator.pop(context);
-                          }
+                      //     if (Navigator.canPop(context)) {
+                      //       Navigator.pop(context);
+                      //     }
 
-                          if (customerDetailsModel != null) {
-                            showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                insetPadding: EdgeInsets.all(10),
-                                title: const Text('Are you sure?'),
-                                content: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      'Visit Type : ',
-                                      style: TextStyle(
-                                        color: Colors.grey.shade600,
-                                      ),
-                                    ),
-                                    Text((visitTypeName ?? '')
-                                        .replaceAll('_', ' ')),
-                                    Gap(7),
-                                    if (commentsController.text.isNotEmpty)
-                                      Text(
-                                        'Comments :',
-                                        style: TextStyle(
-                                          color: Colors.grey.shade600,
-                                        ),
-                                      ),
-                                    if (commentsController.text.isNotEmpty)
-                                      Text(commentsController.text),
-                                    Gap(7),
-                                    Text(
-                                      'Your Latitude : ${position.latitude.toPrecision(6)}',
-                                      style: TextStyle(
-                                          color: Colors.grey.shade600),
-                                    ),
-                                    Text(
-                                      'Your Longitude : ${position.longitude.toPrecision(6)}',
-                                      style: TextStyle(
-                                          color: Colors.grey.shade600),
-                                    ),
-                                  ],
-                                ),
-                                actions: [
-                                  SizedBox(
-                                    width: 120,
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.grey.shade300,
-                                        foregroundColor: Colors.blue.shade900,
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('Cancel'),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 120,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        final box = Hive.box('info');
+                      //     if (customerDetailsModel != null) {
+                      //       showDialog(
+                      //         context: context,
+                      //         builder: (context) => AlertDialog(
+                      //           insetPadding: EdgeInsets.all(10),
+                      //           title: const Text('Are you sure?'),
+                      //           content: Column(
+                      //             mainAxisAlignment: MainAxisAlignment.start,
+                      //             crossAxisAlignment: CrossAxisAlignment.start,
+                      //             mainAxisSize: MainAxisSize.min,
+                      //             children: [
+                      //               Text(
+                      //                 'Visit Type : ',
+                      //                 style: TextStyle(
+                      //                   color: Colors.grey.shade600,
+                      //                 ),
+                      //               ),
+                      //               Text((visitTypeName ?? '')
+                      //                   .replaceAll('_', ' ')),
+                      //               Gap(7),
+                      //               if (commentsController.text.isNotEmpty)
+                      //                 Text(
+                      //                   'Comments :',
+                      //                   style: TextStyle(
+                      //                     color: Colors.grey.shade600,
+                      //                   ),
+                      //                 ),
+                      //               if (commentsController.text.isNotEmpty)
+                      //                 Text(commentsController.text),
+                      //               Gap(7),
+                      //               Text(
+                      //                 'Your Latitude : ${position.latitude.toPrecision(6)}',
+                      //                 style: TextStyle(
+                      //                     color: Colors.grey.shade600),
+                      //               ),
+                      //               Text(
+                      //                 'Your Longitude : ${position.longitude.toPrecision(6)}',
+                      //                 style: TextStyle(
+                      //                     color: Colors.grey.shade600),
+                      //               ),
+                      //             ],
+                      //           ),
+                      //           actions: [
+                      //             SizedBox(
+                      //               width: 120,
+                      //               child: ElevatedButton(
+                      //                 style: ElevatedButton.styleFrom(
+                      //                   backgroundColor: Colors.grey.shade300,
+                      //                   foregroundColor: Colors.blue.shade900,
+                      //                 ),
+                      //                 onPressed: () {
+                      //                   Navigator.pop(context);
+                      //                 },
+                      //                 child: const Text('Cancel'),
+                      //               ),
+                      //             ),
+                      //             SizedBox(
+                      //               width: 120,
+                      //               child: ElevatedButton(
+                      //                 onPressed: () {
+                      //                   final box = Hive.box('info');
 
-                                        callSetLocationOfCustomer(
-                                          position,
-                                          box.get('sap_id').toString(),
-                                          customerDetailsModel!,
-                                          visitTypeName!,
-                                          commentsController.text,
-                                        );
-                                      },
-                                      child: const Text('Yes'),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                        } else {
-                          Fluttertoast.showToast(
-                            msg: 'Please select visit type',
-                            toastLength: Toast.LENGTH_SHORT,
-                          );
-                        }
-                      },
+                      //                   callSetLocationOfCustomer(
+                      //                     position,
+                      //                     box.get('sap_id').toString(),
+                      //                     customerDetailsModel!,
+                      //                     visitTypeName!,
+                      //                     commentsController.text,
+                      //                   );
+                      //                 },
+                      //                 child: const Text('Yes'),
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       );
+                      //     }
+                      //   } else {
+                      //     Fluttertoast.showToast(
+                      //       msg: 'Please select visit type',
+                      //       toastLength: Toast.LENGTH_SHORT,
+                      //     );
+                      //   }
+                      // },
                       label: Text(
                         'Save',
                         style: const TextStyle(

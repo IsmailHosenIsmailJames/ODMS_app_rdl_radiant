@@ -5,10 +5,10 @@ import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
-import 'package:geocoding/geocoding.dart';
+// import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -19,7 +19,7 @@ import '../../theme/text_scaler_theme.dart';
 import '../../widgets/common_widgets_function.dart';
 import '../../widgets/loading/loading_popup_widget.dart';
 import '../../widgets/loading/loading_text_controller.dart';
-import '../home/conveyance/conveyance_page.dart';
+// import '../home/conveyance/conveyance_page.dart';
 
 class CustomerDetailsPage extends StatefulWidget {
   final String partnerID;
@@ -42,7 +42,7 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
   Future<void> getData() async {
     String partnerID = widget.partnerID;
     http.Response response = await http
-        .get(Uri.parse('base$getCustomerDetailsByPartnerID/$partnerID'));
+        .get(Uri.parse('$base$getCustomerDetailsByPartnerID/$partnerID'));
     if (response.statusCode == 200) {
       Map decodedData = jsonDecode(response.body);
       if (decodedData['success'] == true) {
@@ -184,73 +184,74 @@ class _CustomerDetailsPageState extends State<CustomerDetailsPage> {
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
                     child: ElevatedButton.icon(
-                      onPressed: () async {
-                        loadingTextController.currentState.value = 0;
-                        loadingTextController.loadingText.value =
-                            'Getting your Location\nPlease wait...';
+                      onPressed: null,
+                      // () async {
+                      //   loadingTextController.currentState.value = 0;
+                      //   loadingTextController.loadingText.value =
+                      //       'Getting your Location\nPlease wait...';
 
-                        showCustomPopUpLoadingDialog(context,
-                            isCupertino: true);
+                      //   showCustomPopUpLoadingDialog(context,
+                      //       isCupertino: true);
 
-                        Position position = await Geolocator.getCurrentPosition(
-                            locationSettings: AndroidSettings(
-                          accuracy: LocationAccuracy.best,
-                          forceLocationManager: true,
-                        ));
-                        List<Placemark> placeMarks =
-                            await placemarkFromCoordinates(
-                          position.latitude,
-                          position.longitude,
-                        );
-                        List<String> placeMarkImportantData =
-                            analyzePlaceMark(placeMarks);
+                      //   Position position = await Geolocator.getCurrentPosition(
+                      //       locationSettings: AndroidSettings(
+                      //     accuracy: LocationAccuracy.best,
+                      //     forceLocationManager: true,
+                      //   ));
+                      //   List<Placemark> placeMarks =
+                      //       await placemarkFromCoordinates(
+                      //     position.latitude,
+                      //     position.longitude,
+                      //   );
+                      //   List<String> placeMarkImportantData =
+                      //       analyzePlaceMark(placeMarks);
 
-                        if (Navigator.canPop(context)) {
-                          Navigator.pop(context);
-                        }
+                      //   if (Navigator.canPop(context)) {
+                      //     Navigator.pop(context);
+                      //   }
 
-                        if (customerDetailsModel != null) {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text('Are you sure?'),
-                              content: getAddressWidget(
-                                  placeMarkImportantData,
-                                  LatLng(
-                                      position.latitude, position.longitude)),
-                              actions: [
-                                SizedBox(
-                                  width: 120,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.grey.shade300,
-                                      foregroundColor: Colors.blue.shade900,
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('Cancel'),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 120,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      final box = Hive.box('info');
+                      //   if (customerDetailsModel != null) {
+                      //     showDialog(
+                      //       context: context,
+                      //       builder: (context) => AlertDialog(
+                      //         title: const Text('Are you sure?'),
+                      //         content: getAddressWidget(
+                      //             placeMarkImportantData,
+                      //             LatLng(
+                      //                 position.latitude, position.longitude)),
+                      //         actions: [
+                      //           SizedBox(
+                      //             width: 120,
+                      //             child: ElevatedButton(
+                      //               style: ElevatedButton.styleFrom(
+                      //                 backgroundColor: Colors.grey.shade300,
+                      //                 foregroundColor: Colors.blue.shade900,
+                      //               ),
+                      //               onPressed: () {
+                      //                 Navigator.pop(context);
+                      //               },
+                      //               child: const Text('Cancel'),
+                      //             ),
+                      //           ),
+                      //           SizedBox(
+                      //             width: 120,
+                      //             child: ElevatedButton(
+                      //               onPressed: () {
+                      //                 final box = Hive.box('info');
 
-                                      callSetLocationOfCustomer(
-                                          position,
-                                          box.get('sap_id').toString(),
-                                          customerDetailsModel!);
-                                    },
-                                    child: const Text('Yes'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      },
+                      //                 callSetLocationOfCustomer(
+                      //                     position,
+                      //                     box.get('sap_id').toString(),
+                      //                     customerDetailsModel!);
+                      //               },
+                      //               child: const Text('Yes'),
+                      //             ),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     );
+                      //   }
+                      // },
                       icon: const Icon(Icons.location_on),
                       label: Text(
                         (customerDetailsModel?.longitude == null ||

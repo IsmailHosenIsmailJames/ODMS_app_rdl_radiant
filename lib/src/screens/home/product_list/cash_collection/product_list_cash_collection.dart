@@ -600,10 +600,11 @@ class _ProductListCashCollectionState extends State<ProductListCashCollection> {
                         SizedBox(
                           width: MediaQuery.of(context).size.width * 0.45,
                           child: ElevatedButton(
-                            onPressed: () async {
-                              await onCashCollectedButtonPressed(
-                                  context, totalReturnAmount);
-                            },
+                            onPressed: null,
+                            //  () async {
+                            //   await onCashCollectedButtonPressed(
+                            //       context, totalReturnAmount);
+                            // },
                             child: const Text('Cash Collected'),
                           ),
                         ),
