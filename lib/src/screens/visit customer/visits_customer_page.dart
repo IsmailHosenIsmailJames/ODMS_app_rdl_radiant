@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:odms/src/screens/visit%20customer/details_view_customers.dart';
+import 'package:delivery/src/screens/visit%20customer/details_view_customers.dart';
 
 import '../../apis/apis.dart';
 import '../../theme/text_scaler_theme.dart';

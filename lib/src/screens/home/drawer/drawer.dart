@@ -9,12 +9,12 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-// import 'package:odms/src/screens/attendance/attendance_evening.dart';
-import 'package:odms/src/screens/auth/login/login_page.dart';
-import 'package:odms/src/screens/customer_location/set_customer_location.dart';
-import 'package:odms/src/screens/overdue/models/overdue_response_model.dart';
-import 'package:odms/src/screens/overdue/overdue_customer_list.dart';
-import 'package:odms/src/screens/visit%20customer/visits_customer_page.dart';
+// import 'package:delivery/src/screens/attendance/attendance_evening.dart';
+import 'package:delivery/src/screens/auth/login/login_page.dart';
+import 'package:delivery/src/screens/customer_location/set_customer_location.dart';
+import 'package:delivery/src/screens/overdue/models/overdue_response_model.dart';
+import 'package:delivery/src/screens/overdue/overdue_customer_list.dart';
+import 'package:delivery/src/screens/visit%20customer/visits_customer_page.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -75,15 +75,15 @@ class _MyDrawerState extends State<MyDrawer> {
                   },
                 ),
                 const Text(
-                  'ODMS',
+                  'Delivery',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
-                    letterSpacing: 45,
+                    letterSpacing: 15,
                   ),
                 ),
                 Text(
-                  'Outbound Delivery Management System',
+                  'A Delivery Management System',
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey.shade700,

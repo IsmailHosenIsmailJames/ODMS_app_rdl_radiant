@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:odms/src/core/registration/registration.dart';
-import 'package:odms/src/screens/auth/login/login_page.dart';
+import 'package:delivery/src/core/registration/registration.dart';
+import 'package:delivery/src/screens/auth/login/login_page.dart';
 
 import '../../../theme/textfield_theme.dart';
 

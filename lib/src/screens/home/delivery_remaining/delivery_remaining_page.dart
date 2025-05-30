@@ -9,11 +9,11 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
-import 'package:odms/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
+import 'package:delivery/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:odms/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
-import 'package:odms/src/screens/home/invoice_list/invoice_list_page.dart';
-import 'package:odms/src/theme/text_scaler_theme.dart';
+import 'package:delivery/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
+import 'package:delivery/src/screens/home/invoice_list/invoice_list_page.dart';
+import 'package:delivery/src/theme/text_scaler_theme.dart';
 
 import '../../../apis/apis.dart';
 import '../page_sate_definition.dart';

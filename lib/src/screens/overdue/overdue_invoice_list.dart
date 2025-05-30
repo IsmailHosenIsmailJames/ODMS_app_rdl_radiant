@@ -10,9 +10,9 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-import 'package:odms/src/screens/overdue/controllers/overdue_controller_getx.dart';
-import 'package:odms/src/screens/overdue/models/overdue_response_model.dart';
-import 'package:odms/src/screens/overdue/overdue_product_list.dart';
+import 'package:delivery/src/screens/overdue/controllers/overdue_controller_getx.dart';
+import 'package:delivery/src/screens/overdue/models/overdue_response_model.dart';
+import 'package:delivery/src/screens/overdue/overdue_product_list.dart';
 import 'package:simple_icons/simple_icons.dart';
 
 import '../../apis/apis.dart';

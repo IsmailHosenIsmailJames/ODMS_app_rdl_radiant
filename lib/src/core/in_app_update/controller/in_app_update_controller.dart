@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:odms/src/core/in_app_update/model/latest_app_info.dart';
+import 'package:delivery/src/core/in_app_update/model/latest_app_info.dart';
 
 class InAppUpdateController extends GetxController {
   RxList<LatestAppInfoAPIModel> latestAppInfoApiModel =

@@ -2,11 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:odms/main.dart';
-import 'package:odms/src/core/in_app_update/controller/in_app_update_controller.dart';
-import 'package:odms/src/core/in_app_update/functions/get_device_info.dart';
-import 'package:odms/src/core/in_app_update/functions/get_info_form_api.dart';
-import 'package:odms/src/core/in_app_update/in_app_android_update/update_popup.dart';
+import 'package:delivery/main.dart';
+import 'package:delivery/src/core/in_app_update/controller/in_app_update_controller.dart';
+import 'package:delivery/src/core/in_app_update/functions/get_device_info.dart';
+import 'package:delivery/src/core/in_app_update/functions/get_info_form_api.dart';
+import 'package:delivery/src/core/in_app_update/in_app_android_update/update_popup.dart';
 
 import '../functions/compare_version.dart';
 import '../functions/get_app_info.dart';

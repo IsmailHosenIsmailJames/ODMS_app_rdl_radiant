@@ -12,8 +12,8 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:odms/src/apis/apis.dart';
-import 'package:odms/src/screens/customer_location/model/customer_details_model.dart';
+import 'package:delivery/src/apis/apis.dart';
+import 'package:delivery/src/screens/customer_location/model/customer_details_model.dart';
 
 import '../../theme/text_scaler_theme.dart';
 import '../../widgets/common_widgets_function.dart';

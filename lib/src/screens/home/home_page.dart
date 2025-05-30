@@ -12,17 +12,17 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:odms/src/apis/apis.dart';
-// import 'package:odms/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
-// import 'package:odms/src/core/background/socket_manager/socket_manager.dart';
-import 'package:odms/src/screens/home/dash_board_controller/dash_board_model.dart';
-import 'package:odms/src/screens/home/dash_board_controller/dashboard_controller_getx.dart';
-import 'package:odms/src/screens/home/delivery_remaining/delivery_remaining_page.dart';
-import 'package:odms/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
-import 'package:odms/src/screens/home/drawer/drawer.dart';
-import 'package:odms/src/screens/home/product_list/models/route_info.dart';
-import 'package:odms/src/widgets/loading/loading_popup_widget.dart';
-import 'package:odms/src/widgets/loading/loading_text_controller.dart';
+import 'package:delivery/src/apis/apis.dart';
+// import 'package:delivery/src/core/background/socket_connection_state.dart/socket_connection_state.dart';
+// import 'package:delivery/src/core/background/socket_manager/socket_manager.dart';
+import 'package:delivery/src/screens/home/dash_board_controller/dash_board_model.dart';
+import 'package:delivery/src/screens/home/dash_board_controller/dashboard_controller_getx.dart';
+import 'package:delivery/src/screens/home/delivery_remaining/delivery_remaining_page.dart';
+import 'package:delivery/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
+import 'package:delivery/src/screens/home/drawer/drawer.dart';
+import 'package:delivery/src/screens/home/product_list/models/route_info.dart';
+import 'package:delivery/src/widgets/loading/loading_popup_widget.dart';
+import 'package:delivery/src/widgets/loading/loading_text_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // import '../../core/background/background_setup.dart';
@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'ODMS',
+          'Delivery',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             letterSpacing: 2,

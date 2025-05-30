@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:odms/src/screens/overdue/controllers/overdue_controller_getx.dart';
-import 'package:odms/src/screens/overdue/models/overdue_response_model.dart';
-import 'package:odms/src/widgets/common_widgets_function.dart';
+import 'package:delivery/src/screens/overdue/controllers/overdue_controller_getx.dart';
+import 'package:delivery/src/screens/overdue/models/overdue_response_model.dart';
+import 'package:delivery/src/widgets/common_widgets_function.dart';
 
 import '../../theme/text_scaler_theme.dart';
 import '../../widgets/loading/loading_text_controller.dart';

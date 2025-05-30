@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:odms/src/screens/overdue/controllers/overdue_controller_getx.dart';
-import 'package:odms/src/screens/overdue/models/overdue_response_model.dart';
-import 'package:odms/src/screens/overdue/overdue_invoice_list.dart';
-import 'package:odms/src/theme/text_scaler_theme.dart';
+import 'package:delivery/src/screens/overdue/controllers/overdue_controller_getx.dart';
+import 'package:delivery/src/screens/overdue/models/overdue_response_model.dart';
+import 'package:delivery/src/screens/overdue/overdue_invoice_list.dart';
+import 'package:delivery/src/theme/text_scaler_theme.dart';
 
 class OverdueCustomerList extends StatefulWidget {
   const OverdueCustomerList({super.key});

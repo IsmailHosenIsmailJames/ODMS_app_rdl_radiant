@@ -4,7 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:odms/src/screens/auth/login/login_page.dart';
+import 'package:delivery/src/screens/auth/login/login_page.dart';
 
 class InternetConnectionOffNotify extends StatefulWidget {
   const InternetConnectionOffNotify({super.key});

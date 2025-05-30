@@ -9,7 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/place_type.dart';
 import 'package:google_places_flutter/model/prediction.dart';
-import 'package:odms/src/screens/maps/keys/google_maps_api_key.dart';
+import 'package:delivery/src/screens/maps/keys/google_maps_api_key.dart';
 
 class MyMapView extends StatefulWidget {
   final double lat;

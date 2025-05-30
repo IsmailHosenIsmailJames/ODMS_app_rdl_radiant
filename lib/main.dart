@@ -9,8 +9,8 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:odms/src/screens/permissions/internet_connection_off_notify.dart';
-import 'package:odms/src/widgets/loading/loading_text_controller.dart';
+import 'package:delivery/src/screens/permissions/internet_connection_off_notify.dart';
+import 'package:delivery/src/widgets/loading/loading_text_controller.dart';
 
 import 'src/core/in_app_update/in_app_android_update/in_app_update_android.dart';
 import 'src/core/login/login_function.dart';

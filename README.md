@@ -1,11 +1,11 @@
-# ODMS App - Radiant Pharmaceuticals Limited
+# delivery App - Radiant Pharmaceuticals Limited
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://your-build-pipeline-url)  <!-- Replace with your build pipeline URL if you have one -->
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) <!--  Add a LICENSE file and link it here -->
-[![Last Commit](https://img.shields.io/github/last-commit/IsmailHosenIsmailJames/ODMS_app_rdl_radiant)](https://github.com/IsmailHosenIsmailJames/ODMS_app_rdl_radiant/commits/main)
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/IsmailHosenIsmailJames/ODMS_app_rdl_radiant/releases) <!-- Update version number -->
+[![Last Commit](https://img.shields.io/github/last-commit/IsmailHosenIsmailJames/delivery_app_rdl_radiant)](https://github.com/IsmailHosenIsmailJames/delivery_app_rdl_radiant/commits/main)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/IsmailHosenIsmailJames/delivery_app_rdl_radiant/releases) <!-- Update version number -->
 
-This repository contains the source code for the **Order Delivery Management System (ODMS)** Android application, developed for **Radiant Pharmaceuticals Limited**. This app is a critical tool used by Radiant's delivery personnel (1000-2000+ daily users) to manage and track medicine deliveries to pharmacies and other customers.  It streamlines the delivery process, providing real-time tracking, efficient order management, and robust reporting capabilities.
+This repository contains the source code for the **Order Delivery Management System (delivery)** Android application, developed for **Radiant Pharmaceuticals Limited**. This app is a critical tool used by Radiant's delivery personnel (1000-2000+ daily users) to manage and track medicine deliveries to pharmacies and other customers.  It streamlines the delivery process, providing real-time tracking, efficient order management, and robust reporting capabilities.
 
 ## Key Features
 
@@ -78,8 +78,8 @@ The application development was divided into modules.  This README focuses on th
 2.  **Clone the Repository:**
 
     ```bash
-    git clone https://github.com/IsmailHosenIsmailJames/ODMS_app_rdl_radiant.git
-    cd ODMS_app_rdl_radiant
+    git clone https://github.com/IsmailHosenIsmailJames/delivery_app_rdl_radiant.git
+    cd delivery_app_rdl_radiant
     ```
 
 3.  **Install Dependencies:**

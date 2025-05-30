@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
-import 'package:odms/src/apis/apis.dart';
+import 'package:delivery/src/apis/apis.dart';
 
 Future<Response?> registrationAndGetJsonResponse(
   Map<String, dynamic> query,

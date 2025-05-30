@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:odms/src/screens/overdue/models/overdue_response_model.dart';
+import 'package:delivery/src/screens/overdue/models/overdue_response_model.dart';
 
 class OverdueControllerGetx extends GetxController {
   RxDouble previousDue = 0.0.obs;

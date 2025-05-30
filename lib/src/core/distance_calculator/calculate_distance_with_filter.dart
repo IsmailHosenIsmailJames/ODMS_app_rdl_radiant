@@ -1,6 +1,6 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
-import 'package:odms/src/core/distance_calculator/custom_position_model.dart';
+import 'package:delivery/src/core/distance_calculator/custom_position_model.dart';
 
 class PositionCalculationResult {
   final Duration totalDuration;

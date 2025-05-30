@@ -8,16 +8,16 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
-import 'package:odms/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
-import 'package:odms/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
-import 'package:odms/src/screens/home/page_sate_definition.dart';
-import 'package:odms/src/screens/home/product_list/product_list_page.dart';
-import 'package:odms/src/screens/home/product_list/cash_collection/product_list_cash_collection.dart';
-import 'package:odms/src/screens/maps/map_view.dart';
-import 'package:odms/src/screens/overdue/controllers/overdue_controller_getx.dart';
-import 'package:odms/src/screens/overdue/models/overdue_response_model.dart'
+import 'package:delivery/src/screens/home/delivery_remaining/models/deliver_remaining_model.dart';
+import 'package:delivery/src/screens/home/invoice_list/controller/invoice_list_controller.dart';
+import 'package:delivery/src/screens/home/page_sate_definition.dart';
+import 'package:delivery/src/screens/home/product_list/product_list_page.dart';
+import 'package:delivery/src/screens/home/product_list/cash_collection/product_list_cash_collection.dart';
+import 'package:delivery/src/screens/maps/map_view.dart';
+import 'package:delivery/src/screens/overdue/controllers/overdue_controller_getx.dart';
+import 'package:delivery/src/screens/overdue/models/overdue_response_model.dart'
     as overdue;
-import 'package:odms/src/screens/overdue/overdue_invoice_list.dart';
+import 'package:delivery/src/screens/overdue/overdue_invoice_list.dart';
 import 'package:simple_icons/simple_icons.dart';
 
 import '../../../apis/apis.dart';

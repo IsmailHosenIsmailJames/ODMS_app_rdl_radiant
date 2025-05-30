@@ -1,4 +1,4 @@
-package com.impalaintech.odms_view
+package com.example.delivery
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -13,10 +13,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
-import 'package:odms/src/core/login/login_function.dart';
-// import 'package:odms/src/screens/attendance/attendance_page.dart';
-import 'package:odms/src/screens/home/home_page.dart';
-import 'package:odms/src/screens/permissions/unable_to_connect.dart';
+import 'package:delivery/src/core/login/login_function.dart';
+// import 'package:delivery/src/screens/attendance/attendance_page.dart';
+import 'package:delivery/src/screens/home/home_page.dart';
+import 'package:delivery/src/screens/permissions/unable_to_connect.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
