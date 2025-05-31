@@ -229,7 +229,7 @@ class _VisitCustomerDetailsPageState extends State<VisitCustomerDetailsPage>
                   Gap(5),
                   FutureBuilder(
                     future: get(Uri.parse(
-                        'http://128.199.199.164:6042/api/v1/visit/visit_type')),
+                        '$base/api/v1/visit/visit_type')),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         List visitTypes = jsonDecode(snapshot.data!.body);
