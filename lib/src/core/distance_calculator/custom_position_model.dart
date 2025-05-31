@@ -31,13 +31,13 @@ class CustomPositionModel {
       CustomPositionModel(
         latitude: json['latitude']?.toDouble(),
         longitude: json['longitude']?.toDouble(),
-        timestamp: DateTime.parse(json['timestamp']),
+        timestamp: DateTime.fromMillisecondsSinceEpoch(json['timestamp']),
       );
 
   Map<String, dynamic> toMap() => {
         'latitude': latitude,
         'longitude': longitude,
-        'timestamp': timestamp.toIso8601String(),
+        'timestamp': timestamp.millisecondsSinceEpoch,
       };
 }
 
@@ -45,7 +45,7 @@ class CustomPositionModel {
 {
   "latitude": 37.7749,
   "longitude": -122.4194,
-  "timestamp": "2023-10-01T12:00:00Z"
+  "timestamp": 1748683465000
 }
 
 */

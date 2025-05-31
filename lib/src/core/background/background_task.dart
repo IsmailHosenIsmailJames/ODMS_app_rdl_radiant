@@ -121,8 +121,8 @@ class MyTaskHandler extends TaskHandler {
               sharedPrefs.getStringList('entire_working_day_position') ?? [];
 
           List<CustomPositionModel> listOfPositionOfEntireDay = entireDayPositionRaw
-              .map((e) => CustomPositionModel.fromMap(jsonDecode(e)))
-              .toList();
+                  .map((e) => CustomPositionModel.fromMap(jsonDecode(e)))
+                  .toList();
           PositionCalculationResult positionCalculationResult =
               PositionPointsCalculator(rawPositions: listOfPositionOfEntireDay)
                   .processData();
@@ -163,7 +163,7 @@ class MyTaskHandler extends TaskHandler {
         position.longitude,
       );
 
-      if (distance > (minimumDistance ?? 5)) {
+      if (distance > (minimumDistance ?? 0)) {
         await sharedPrefs.setDouble('last_position_lat', position.latitude);
         await sharedPrefs.setDouble('last_position_lon', position.longitude);
         count++;
