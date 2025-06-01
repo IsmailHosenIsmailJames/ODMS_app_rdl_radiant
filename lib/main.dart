@@ -106,7 +106,7 @@ class InitPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    inAppUpdateAndroid(context);
+    // inAppUpdateAndroid(context);
     return const Scaffold(
       body: Center(
         child: CupertinoActivityIndicator(
