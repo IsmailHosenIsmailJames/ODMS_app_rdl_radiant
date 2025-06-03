@@ -120,7 +120,8 @@ class MyTaskHandler extends TaskHandler {
           List<String> entireDayPositionRaw =
               sharedPrefs.getStringList('entire_working_day_position') ?? [];
 
-          List<CustomPositionModel> listOfPositionOfEntireDay = entireDayPositionRaw
+          List<CustomPositionModel> listOfPositionOfEntireDay =
+              entireDayPositionRaw
                   .map((e) => CustomPositionModel.fromMap(jsonDecode(e)))
                   .toList();
           PositionCalculationResult positionCalculationResult =
@@ -203,7 +204,7 @@ class MyTaskHandler extends TaskHandler {
   }
 
   @override
-  Future<void> onDestroy(DateTime timestamp) async {
+  Future<void> onDestroy(DateTime timestamp, bool timeOut) async {
     log('MyTaskHandler onDestroy');
 
     await _activitySubscription?.cancel();
